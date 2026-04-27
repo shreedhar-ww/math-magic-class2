@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Addition — Math Magic</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --yellow:#FFD93D; --orange:#FF6B35; --pink:#F15BB5;
+  --purple:#9B5DE5; --blue:#00BBF9; --green:#00F5D4; --bg:#FFF9F0;
+}
+body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overflow-x:hidden;}
+
+/* NAV */
+.topnav{
+  background:linear-gradient(135deg,#9B5DE5,#F15BB5);
+  padding:14px 20px; display:flex; align-items:center; gap:14px;
+  box-shadow:0 4px 12px rgba(0,0,0,.12); position:sticky; top:0; z-index:100;
+}
+.back-btn{
+  background:rgba(255,255,255,.3); border:none; border-radius:50%;
+  width:40px; height:40px; font-size:1.2rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:transform .15s;
+}
+.back-btn:hover{transform:scale(1.15);}
+.topnav h1{color:#fff; font-size:1.4rem; font-weight:900; text-shadow:1px 2px 0 rgba(0,0,0,.15); flex:1;}
+.stars-pill{background:rgba(255,255,255,.3);color:#fff;font-weight:900;padding:5px 14px;border-radius:20px;font-size:1rem;}
+
+/* TABS */
+.tabs{display:flex;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.07);position:sticky;top:68px;z-index:99;}
+.tab{flex:1;padding:14px;text-align:center;font-weight:900;font-size:.95rem;color:#aaa;cursor:pointer;border-bottom:3px solid transparent;transition:color .2s,border-color .2s;}
+.tab.active{color:var(--purple);border-color:var(--purple);}
+
+/* SCREENS */
+.screen{display:none;padding:24px 20px;max-width:700px;margin:0 auto;}
+.screen.active{display:block;}
+
+.scard{background:#fff;border-radius:24px;padding:24px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:20px;}
+.scard-title{font-size:1.1rem;font-weight:900;color:var(--purple);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+
+/* ══ COLUMN ADDITION ══ */
+.col-add{
+  display:flex; flex-direction:column; align-items:center;
+  font-size:2.2rem; font-weight:900; font-family:'Nunito',sans-serif;
+  gap:0; max-width:320px; margin:0 auto;
+}
+.col-row{
+  display:grid; grid-template-columns:repeat(4,56px); gap:4px;
+  justify-content:center; align-items:center;
+}
+.col-cell{
+  width:56px; height:60px; display:flex; align-items:center; justify-content:center;
+  font-size:2rem; font-weight:900; border-radius:12px;
+  transition:all .3s;
+}
+.col-cell.digit{background:#f5f0ff;color:#333;}
+.col-cell.carry{
+  background:var(--yellow); color:var(--orange);
+  font-size:1.1rem; border-radius:8px;
+  animation:popIn .4s cubic-bezier(.34,1.56,.64,1);
+  min-height:36px; height:36px;
+}
+.col-cell.result{
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  color:#fff; border-radius:12px;
+  animation:popIn .5s cubic-bezier(.34,1.56,.64,1);
+}
+.col-cell.plus{color:var(--purple);font-size:2.2rem;}
+.col-cell.blank{background:transparent;}
+.divider{width:100%;height:4px;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:2px;margin:6px 0;}
+
+@keyframes popIn{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* step controls */
+.step-btns{display:flex;gap:12px;justify-content:center;margin-top:16px;flex-wrap:wrap;}
+.sbtn{
+  padding:10px 22px; border:none; border-radius:50px; font-size:.95rem; font-weight:900;
+  cursor:pointer; font-family:'Nunito',sans-serif; transition:transform .15s;
+  box-shadow:0 3px 0 rgba(0,0,0,.15);
+}
+.sbtn:hover{transform:translateY(-2px);}
+.sbtn.primary{background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;}
+.sbtn.secondary{background:#eee;color:#555;}
+.sbtn.go{background:linear-gradient(135deg,var(--green),var(--blue));color:#111;}
+
+/* step explanation */
+.step-explain{
+  background:#f5f0ff; border-radius:16px; padding:14px 18px;
+  font-size:1rem; font-weight:700; color:#555; margin-top:14px;
+  border-left:4px solid var(--purple);
+  min-height:52px; line-height:1.5;
+  animation:fadeIn .3s ease;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* number input builder */
+.num-inputs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;}
+.num-input{
+  width:80px; padding:10px 8px; text-align:center;
+  font-size:1.5rem; font-weight:900; font-family:'Nunito',sans-serif;
+  border:3px solid #ddd; border-radius:14px; background:#fff;
+  outline:none; transition:border-color .2s;
+}
+.num-input:focus{border-color:var(--purple);}
+
+/* ══ REPEATED ADDITION ══ */
+.rep-wrap{text-align:center;}
+.rep-groups{
+  display:flex; flex-wrap:wrap; gap:12px; justify-content:center;
+  margin:16px 0; min-height:60px;
+}
+.rep-group{
+  display:flex; flex-wrap:wrap; gap:4px; align-items:center; justify-content:center;
+  background:#f5f0ff; border-radius:16px; padding:10px 14px;
+  animation:popIn .35s cubic-bezier(.34,1.56,.64,1);
+}
+.rep-dot{
+  width:28px; height:28px; border-radius:50%;
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  animation:popIn .25s cubic-bezier(.34,1.56,.64,1);
+}
+.rep-eq{
+  font-size:1.3rem; font-weight:900; color:#333; margin:10px 0;
+  animation:popIn .3s ease;
+}
+.rep-controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.rep-val{font-size:1.5rem;font-weight:900;min-width:40px;text-align:center;}
+
+/* ══ WORD PROBLEM ══ */
+.wp-card{
+  background:linear-gradient(135deg,#fff5e0,#ffe0f0);
+  border-radius:20px; padding:20px; margin-bottom:14px;
+  border:2px solid var(--yellow);
+}
+.wp-emoji{font-size:3rem;display:block;text-align:center;margin-bottom:8px;animation:bounce 2s infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.wp-text{font-size:1rem;font-weight:700;color:#444;line-height:1.7;text-align:center;}
+.wp-answer{
+  display:flex; gap:10px; align-items:center; justify-content:center; margin-top:14px;
+}
+.wp-input{
+  width:90px; padding:10px; text-align:center; font-size:1.5rem; font-weight:900;
+  border:3px solid #ddd; border-radius:14px; font-family:'Nunito',sans-serif; outline:none;
+  transition:border-color .2s;
+}
+.wp-input:focus{border-color:var(--purple);}
+.wp-check{
+  padding:10px 20px; background:linear-gradient(135deg,var(--purple),var(--pink));
+  border:none; border-radius:50px; color:#fff; font-size:1rem; font-weight:900;
+  cursor:pointer; font-family:'Nunito',sans-serif;
+}
+.wp-fb{font-size:1rem;font-weight:900;margin-top:10px;text-align:center;min-height:28px;}
+
+/* ══ QUIZ ══ */
+.quiz-score{font-size:1rem;font-weight:900;color:#aaa;margin-bottom:20px;text-align:center;}
+.qcard{background:#fff;border-radius:24px;padding:28px 22px;box-shadow:0 6px 20px rgba(0,0,0,.09);margin-bottom:20px;text-align:center;}
+.qcard .qnum{font-size:2.8rem;font-weight:900;color:#333;margin-bottom:6px;letter-spacing:2px;}
+.qcard .qask{font-size:1rem;color:#888;font-weight:700;margin-bottom:20px;}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.opt{
+  padding:14px;border:3px solid #eee;border-radius:16px;
+  font-size:1.1rem;font-weight:900;cursor:pointer;background:#fff;
+  transition:all .2s;font-family:'Nunito',sans-serif;
+}
+.opt:hover{border-color:var(--purple);transform:scale(1.03);}
+.opt.correct{background:var(--green);border-color:var(--green);color:#111;animation:bounce .4s;}
+.opt.wrong{background:#FFE0E0;border-color:#FF8A8A;color:#c00;}
+.feedback{margin-top:14px;font-size:1.1rem;font-weight:900;min-height:32px;}
+.feedback.ok{color:#00b894;} .feedback.no{color:#e17055;}
+.next-btn{
+  margin-top:16px;padding:13px 34px;
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  border:none;border-radius:50px;font-size:1rem;font-weight:900;
+  cursor:pointer;font-family:'Nunito',sans-serif;color:#fff;
+  box-shadow:0 4px 0 rgba(0,0,0,.15);transition:transform .15s;display:none;
+}
+.next-btn:hover{transform:translateY(-3px);}
+
+.finish-card{background:linear-gradient(135deg,#9B5DE5,#F15BB5);border-radius:24px;padding:36px 24px;text-align:center;color:#fff;}
+.finish-card .big{font-size:5rem;}
+.finish-card h2{font-size:2rem;font-weight:900;margin:10px 0 6px;}
+.finish-card p{font-size:1rem;opacity:.9;margin-bottom:16px;}
+.score-big{font-size:3rem;font-weight:900;background:rgba(255,255,255,.25);border-radius:16px;padding:10px 24px;display:inline-block;margin-bottom:16px;}
+.retry-btn{padding:12px 28px;background:#fff;color:var(--purple);border:none;border-radius:50px;font-size:1rem;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;}
+
+/* confetti */
+.confetti-piece{position:fixed;width:10px;height:14px;border-radius:2px;animation:fall 1.2s ease-in forwards;z-index:999;pointer-events:none;}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <button class="back-btn" onclick="history.back()">←</button>
+  <h1>➕ Addition</h1>
+  <div class="stars-pill">⭐ 12</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('learn',this)">📖 Learn</div>
+  <div class="tab" onclick="switchTab('word',this)">📝 Word Problems</div>
+  <div class="tab" onclick="switchTab('play',this)">🎮 Play</div>
+</div>
+
+<!-- ════════════════════════════
+     LEARN TAB
+════════════════════════════ -->
+<div id="learn" class="screen active">
+
+  <!-- Step-by-step column addition -->
+  <div class="scard">
+    <div class="scard-title">📐 Column Addition — Step by Step</div>
+    <p style="color:#aaa;font-size:.9rem;font-weight:700;margin-bottom:14px;">Enter two numbers and watch the carry-over magic!</p>
+
+    <div class="num-inputs">
+      <input class="num-input" id="numA" type="number" min="0" max="999" value="356" placeholder="356"/>
+      <span style="font-size:2rem;font-weight:900;color:var(--purple);line-height:60px;">+</span>
+      <input class="num-input" id="numB" type="number" min="0" max="999" value="478" placeholder="478"/>
+    </div>
+    <div style="text-align:center;margin-bottom:14px;">
+      <button class="sbtn go" onclick="startAddition()">▶ Start</button>
+    </div>
+
+    <!-- column display -->
+    <div class="col-add" id="colAdd" style="display:none;">
+      <!-- carries row -->
+      <div class="col-row" id="carryRow">
+        <div class="col-cell blank"></div>
+        <div class="col-cell carry blank" id="c2"></div>
+        <div class="col-cell carry blank" id="c1"></div>
+        <div class="col-cell blank"></div>
+      </div>
+      <!-- number A -->
+      <div class="col-row">
+        <div class="col-cell blank"></div>
+        <div class="col-cell digit" id="a2"></div>
+        <div class="col-cell digit" id="a1"></div>
+        <div class="col-cell digit" id="a0"></div>
+      </div>
+      <!-- plus + number B -->
+      <div class="col-row">
+        <div class="col-cell plus">+</div>
+        <div class="col-cell digit" id="b2"></div>
+        <div class="col-cell digit" id="b1"></div>
+        <div class="col-cell digit" id="b0"></div>
+      </div>
+      <div class="divider"></div>
+      <!-- result -->
+      <div class="col-row">
+        <div class="col-cell result blank" id="r3"></div>
+        <div class="col-cell result blank" id="r2"></div>
+        <div class="col-cell result blank" id="r1"></div>
+        <div class="col-cell result blank" id="r0"></div>
+      </div>
+    </div>
+
+    <div class="step-explain" id="stepExplain" style="display:none;"></div>
+
+    <div class="step-btns" id="stepBtns" style="display:none;">
+      <button class="sbtn secondary" onclick="prevStep()">← Back</button>
+      <button class="sbtn primary" onclick="nextStep()">Next Step →</button>
+    </div>
+  </div>
+
+  <!-- Repeated addition -->
+  <div class="scard">
+    <div class="scard-title">🔄 Repeated Addition (= Multiplication later!)</div>
+    <p style="color:#aaa;font-size:.9rem;font-weight:700;margin-bottom:14px;">Adding equal groups — the fun way!</p>
+    <div class="rep-wrap">
+      <div class="rep-controls">
+        <button class="sbtn secondary" onclick="changeRep('groups',-1)">−</button>
+        <span class="rep-val" id="repGVal">3</span>
+        <button class="sbtn primary" onclick="changeRep('groups',1)">+</button>
+        <span style="font-weight:900;color:#888;"> groups of </span>
+        <button class="sbtn secondary" onclick="changeRep('each',-1)">−</button>
+        <span class="rep-val" id="repEVal">4</span>
+        <button class="sbtn primary" onclick="changeRep('each',1)">+</button>
+      </div>
+      <div class="rep-groups" id="repGroups"></div>
+      <div class="rep-eq" id="repEq"></div>
+    </div>
+  </div>
+
+</div><!-- /learn -->
+
+
+<!-- ════════════════════════════
+     WORD PROBLEMS TAB
+════════════════════════════ -->
+<div id="word" class="screen">
+
+  <div id="wpCards"></div>
+
+  <div style="text-align:center;margin-top:4px;">
+    <button class="sbtn primary" onclick="newWordProblems()">🔀 New Problems</button>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════
+     PLAY TAB
+════════════════════════════ -->
+<div id="play" class="screen">
+  <div class="quiz-score" id="quizScore">Question 1 of 8</div>
+  <div id="quizArea"></div>
+</div>
+
+
+<script>
+// ── TAB SWITCH ──
+function switchTab(id,el){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  if(id==='play') initQuiz();
+  if(id==='word') newWordProblems();
+}
+
+// ══════════════════════════
+//  COLUMN ADDITION
+// ══════════════════════════
+let stepData=[], stepIdx=0;
+
+function startAddition(){
+  const A=Math.min(999,Math.max(0,+document.getElementById('numA').value||0));
+  const B=Math.min(999,Math.max(0,+document.getElementById('numB').value||0));
+  document.getElementById('numA').value=A;
+  document.getElementById('numB').value=B;
+
+  const a0=A%10, a1=Math.floor(A/10)%10, a2=Math.floor(A/100);
+  const b0=B%10, b1=Math.floor(B/10)%10, b2=Math.floor(B/100);
+
+  // fill static digits
+  ['a0','a1','a2'].forEach((id,i)=>{
+    document.getElementById(id).textContent=[a0,a1,a2][i]||'';
+  });
+  ['b0','b1','b2'].forEach((id,i)=>{
+    document.getElementById(id).textContent=[b0,b1,b2][i]||'';
+  });
+  // reset carries & result
+  ['c1','c2'].forEach(id=>{ const el=document.getElementById(id); el.textContent=''; el.classList.remove('carry'); el.classList.add('blank');});
+  ['r0','r1','r2','r3'].forEach(id=>{ const el=document.getElementById(id); el.textContent=''; el.classList.add('blank');});
+
+  document.getElementById('colAdd').style.display='flex';
+  document.getElementById('stepExplain').style.display='block';
+  document.getElementById('stepBtns').style.display='flex';
+
+  // build steps
+  const s0=a0+b0, carry0=Math.floor(s0/10), rem0=s0%10;
+  const s1=a1+b1+carry0, carry1=Math.floor(s1/10), rem1=s1%10;
+  const s2=a2+b2+carry1, carry2=Math.floor(s2/10), rem2=s2%10;
+  const total=A+B;
+
+  stepData=[
+    {
+      explain:`👉 Start from the <strong>Ones</strong> column (right side).<br>${a0} + ${b0} = <strong>${s0}</strong>${s0>=10?' — that\'s 10 or more, so we carry over the '+carry0+'!':''}`,
+      action:()=>{
+        set('r0',rem0,true);
+        if(carry0){ setCarry('c1',carry0); }
+      }
+    },
+    {
+      explain:`👉 Now the <strong>Tens</strong> column.<br>${a1} + ${b1}${carry0?' + '+carry0+' (carry)':''} = <strong>${s1}</strong>${s1>=10?' — carry the '+carry1+'!':''}`,
+      action:()=>{
+        set('r1',rem1,true);
+        if(carry1){ setCarry('c2',carry1); }
+      }
+    },
+    {
+      explain:`👉 Now the <strong>Hundreds</strong> column.<br>${a2} + ${b2}${carry1?' + '+carry1+' (carry)':''} = <strong>${s2}</strong>${carry2?' — carry '+carry2+' to Thousands!':''}`,
+      action:()=>{
+        set('r2',rem2,true);
+        if(carry2){ set('r3',carry2,true); }
+      }
+    },
+    {
+      explain:`🎉 <strong>${A} + ${B} = ${total}</strong> — Great job! You used the carry-over method!`,
+      action:()=>{ confettiBurst(25); }
+    }
+  ];
+
+  stepIdx=0;
+  applyStep(0);
+}
+
+function set(id,val,anim){
+  const el=document.getElementById(id);
+  el.textContent=val||'';
+  el.classList.remove('blank');
+  if(anim){el.style.animation='none'; void el.offsetWidth; el.style.animation='popIn .5s cubic-bezier(.34,1.56,.64,1)';}
+}
+function setCarry(id,val){
+  const el=document.getElementById(id);
+  el.textContent=val; el.classList.remove('blank'); el.classList.add('carry');
+  el.style.animation='none'; void el.offsetWidth; el.style.animation='popIn .4s cubic-bezier(.34,1.56,.64,1)';
+}
+
+function applyStep(idx){
+  const exp=document.getElementById('stepExplain');
+  exp.innerHTML=stepData[idx].explain;
+  exp.style.animation='none'; void exp.offsetWidth; exp.style.animation='fadeIn .3s ease';
+  stepData[idx].action();
+}
+function nextStep(){ if(stepIdx<stepData.length-1){ stepIdx++; applyStep(stepIdx); }}
+function prevStep(){ if(stepIdx>0){ stepIdx--; } }
+
+// ══════════════════════════
+//  REPEATED ADDITION
+// ══════════════════════════
+let repG=3, repE=4;
+function changeRep(type,delta){
+  if(type==='groups') repG=Math.max(1,Math.min(8,repG+delta));
+  else repE=Math.max(1,Math.min(9,repE+delta));
+  renderRep();
+}
+function renderRep(){
+  document.getElementById('repGVal').textContent=repG;
+  document.getElementById('repEVal').textContent=repE;
+  const wrap=document.getElementById('repGroups'); wrap.innerHTML='';
+  const eqParts=[];
+  for(let g=0;g<repG;g++){
+    const grp=document.createElement('div'); grp.className='rep-group';
+    grp.style.animationDelay=(g*.08)+'s';
+    for(let e=0;e<repE;e++){
+      const dot=document.createElement('div'); dot.className='rep-dot';
+      dot.style.animationDelay=(g*.08+e*.04)+'s';
+      grp.appendChild(dot);
+    }
+    wrap.appendChild(grp);
+    eqParts.push(repE);
+  }
+  document.getElementById('repEq').textContent=`${eqParts.join(' + ')} = ${repG*repE}`;
+}
+renderRep();
+
+// ══════════════════════════
+//  WORD PROBLEMS
+// ══════════════════════════
+const WP_POOL=[
+  (a,b)=>({emoji:'🍎',text:`Riya has <strong>${a}</strong> apples. Her friend gives her <strong>${b}</strong> more apples. How many apples does Riya have now?`,ans:a+b}),
+  (a,b)=>({emoji:'✏️',text:`There are <strong>${a}</strong> pencils in one box and <strong>${b}</strong> pencils in another box. How many pencils are there altogether?`,ans:a+b}),
+  (a,b)=>({emoji:'🚗',text:`A toy shop has <strong>${a}</strong> red cars and <strong>${b}</strong> blue cars. How many cars are in the shop?`,ans:a+b}),
+  (a,b)=>({emoji:'🌸',text:`A garden has <strong>${a}</strong> roses and <strong>${b}</strong> sunflowers. How many flowers are there in the garden?`,ans:a+b}),
+  (a,b)=>({emoji:'📚',text:`Ram read <strong>${a}</strong> pages on Monday and <strong>${b}</strong> pages on Tuesday. How many pages did he read in all?`,ans:a+b}),
+  (a,b)=>({emoji:'🎈',text:`At a party there are <strong>${a}</strong> red balloons and <strong>${b}</strong> yellow balloons. How many balloons in total?`,ans:a+b}),
+];
+let wpAnswered=[];
+
+function newWordProblems(){
+  const container=document.getElementById('wpCards'); container.innerHTML='';
+  wpAnswered=[];
+  const used=shuffle([...WP_POOL]).slice(0,3);
+  used.forEach((fn,i)=>{
+    const a=Math.floor(Math.random()*50)+10;
+    const b=Math.floor(Math.random()*50)+10;
+    const {emoji,text,ans}=fn(a,b);
+    wpAnswered.push({ans, revealed:false});
+    container.innerHTML+=`
+    <div class="wp-card" id="wp${i}">
+      <span class="wp-emoji">${emoji}</span>
+      <div class="wp-text">${text}</div>
+      <div class="wp-answer">
+        <input class="wp-input" id="wpi${i}" type="number" placeholder="?"/>
+        <button class="wp-check" onclick="checkWP(${i},${ans})">Check ✅</button>
+      </div>
+      <div class="wp-fb" id="wpfb${i}"></div>
+    </div>`;
+  });
+}
+
+function checkWP(i,ans){
+  const val=+document.getElementById('wpi'+i).value;
+  const fb=document.getElementById('wpfb'+i);
+  if(val===ans){
+    fb.innerHTML='🎉 Correct! <strong>'+ans+'</strong> is right!';
+    fb.style.color='#00b894';
+    confettiBurst(20);
+  } else if(val===0||isNaN(val)){
+    fb.textContent='Type your answer first!'; fb.style.color='#aaa';
+  } else {
+    fb.innerHTML='😅 Not quite. Try again or the answer is <strong>'+ans+'</strong>';
+    fb.style.color='#e17055';
+  }
+}
+
+// ══════════════════════════
+//  QUIZ
+// ══════════════════════════
+function genQ(){
+  const type=rnd(4);
+  if(type===0){
+    // 2-digit + 2-digit
+    const a=rnd(89)+10, b=rnd(89)+10;
+    return {q:`${a} + ${b}`,ans:a+b,wrongs:[a+b+10,a+b-10,a+b+1,a+b-1]};
+  } else if(type===1){
+    // 3-digit + 2-digit
+    const a=rnd(800)+100, b=rnd(89)+10;
+    return {q:`${a} + ${b}`,ans:a+b,wrongs:[a+b+100,a+b-10,a+b+10,a+b+1]};
+  } else if(type===2){
+    // 3-digit + 3-digit
+    const a=rnd(400)+100, b=rnd(400)+100;
+    return {q:`${a} + ${b}`,ans:a+b,wrongs:[a+b+10,a+b-10,a+b+100,a+b-1]};
+  } else {
+    // fill in blank: ___ + b = c
+    const b=rnd(50)+10, c=rnd(300)+100;
+    const a=c-b;
+    return {q:`___ + ${b} = ${c}`,ans:a,wrongs:[a+10,a-10,a+1,c]};
+  }
+}
+
+let qs=[], qi=0, score=0, qAnswered=false;
+function initQuiz(){
+  qs=Array.from({length:8},genQ); qi=0; score=0; qAnswered=false; renderQ();
+}
+function renderQ(){
+  if(qi>=qs.length){showFinish();return;}
+  document.getElementById('quizScore').textContent=`Question ${qi+1} of ${qs.length}  |  ⭐ ${score}`;
+  const q=qs[qi]; qAnswered=false;
+  const opts=shuffle([q.ans,...q.wrongs.filter(w=>w>0&&w!==q.ans).slice(0,3)]);
+  document.getElementById('quizArea').innerHTML=`
+    <div class="qcard">
+      <div class="qnum">${q.q}</div>
+      <div class="qask">What is the answer?</div>
+      <div class="options">${opts.map(o=>`<button class="opt" onclick="checkAns(this,${o},${q.ans})">${o}</button>`).join('')}</div>
+      <div class="feedback" id="fb"></div>
+    </div>
+    <button class="next-btn" id="nxt" onclick="nextQ()">Next ➡</button>`;
+}
+function checkAns(btn,chosen,correct){
+  if(qAnswered)return; qAnswered=true;
+  const fb=document.getElementById('fb');
+  document.getElementById('nxt').style.display='inline-block';
+  if(chosen===correct){
+    btn.classList.add('correct'); fb.textContent='🎉 Correct!'; fb.className='feedback ok';
+    score++; confettiBurst(25);
+  } else {
+    btn.classList.add('wrong');
+    fb.innerHTML=`😅 The answer is <strong>${correct}</strong>`; fb.className='feedback no';
+    document.querySelectorAll('.opt').forEach(o=>{if(+o.textContent===correct)o.classList.add('correct');});
+  }
+  document.getElementById('quizScore').textContent=`Question ${qi+1} of ${qs.length}  |  ⭐ ${score}`;
+}
+function nextQ(){qi++;renderQ();}
+function showFinish(){
+  const pct=Math.round(score/qs.length*100);
+  const msg=pct===100?'🌟 Perfect! You\'re an Addition Star!':pct>=75?'🎊 Awesome job!':pct>=50?'👍 Good effort, keep going!':'💪 Practice makes perfect!';
+  document.getElementById('quizArea').innerHTML=`<div class="finish-card"><div class="big">${pct===100?'🏆':'🎯'}</div><h2>Quiz Done!</h2><p>${msg}</p><div class="score-big">${score} / ${qs.length} ⭐</div><br><button class="retry-btn" onclick="initQuiz()">🔄 Try Again</button></div>`;
+  if(pct===100)confettiBurst(80);
+  document.getElementById('quizScore').textContent=`Final: ${score} / ${qs.length}`;
+}
+
+// helpers
+function rnd(n){return Math.floor(Math.random()*n);}
+function shuffle(a){return a.sort(()=>Math.random()-.5);}
+function confettiBurst(count=30){
+  const cols=['#FFD93D','#FF6B35','#9B5DE5','#00BBF9','#F15BB5','#00F5D4'];
+  for(let i=0;i<count;i++){
+    const c=document.createElement('div'); c.className='confetti-piece';
+    c.style.cssText=`left:${20+Math.random()*60}vw;top:30vh;background:${cols[i%cols.length]};animation-delay:${Math.random()*.4}s;animation-duration:${.9+Math.random()*.5}s;`;
+    document.body.appendChild(c); setTimeout(()=>c.remove(),1600);
+  }
+}
+
+// init
+startAddition();
+</script>
+</body>
+</html>

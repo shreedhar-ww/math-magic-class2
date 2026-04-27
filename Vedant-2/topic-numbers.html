@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Numbers up to 1000 — Math Magic</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --yellow:#FFD93D; --orange:#FF6B35; --pink:#F15BB5;
+  --purple:#9B5DE5; --blue:#00BBF9; --green:#00F5D4;
+  --bg:#FFF9F0; --card:#fff;
+}
+body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overflow-x:hidden;}
+
+/* ── TOP NAV ── */
+.topnav{
+  background:linear-gradient(135deg,#FF6B35,#FFD93D);
+  padding:14px 20px;
+  display:flex; align-items:center; gap:14px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.12);
+  position:sticky; top:0; z-index:100;
+}
+.back-btn{
+  background:rgba(255,255,255,0.3); border:none; border-radius:50%;
+  width:40px; height:40px; font-size:1.2rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .15s;
+}
+.back-btn:hover{transform:scale(1.15);}
+.topnav h1{color:#fff; font-size:1.4rem; font-weight:900; text-shadow:1px 2px 0 rgba(0,0,0,.15); flex:1;}
+.stars-pill{background:rgba(255,255,255,.3); color:#fff; font-weight:900;
+  padding:5px 14px; border-radius:20px; font-size:1rem;}
+
+/* ── TAB BAR ── */
+.tabs{
+  display:flex; background:#fff;
+  box-shadow:0 2px 8px rgba(0,0,0,.07); position:sticky; top:68px; z-index:99;
+}
+.tab{
+  flex:1; padding:14px; text-align:center; font-weight:900; font-size:.95rem;
+  color:#aaa; cursor:pointer; border-bottom:3px solid transparent;
+  transition:color .2s, border-color .2s;
+}
+.tab.active{color:var(--orange); border-color:var(--orange);}
+
+/* ── SCREENS ── */
+.screen{display:none; padding:24px 20px; max-width:700px; margin:0 auto;}
+.screen.active{display:block;}
+
+/* ── SECTION CARD ── */
+.scard{
+  background:#fff; border-radius:24px; padding:24px;
+  box-shadow:0 4px 16px rgba(0,0,0,.07); margin-bottom:20px;
+}
+.scard-title{
+  font-size:1.1rem; font-weight:900; color:var(--purple);
+  margin-bottom:16px; display:flex; align-items:center; gap:8px;
+}
+
+/* ─────────────────────────────────────────
+   SCREEN 1 — LEARN
+───────────────────────────────────────── */
+
+/* place value interactive */
+.pv-display{
+  text-align:center; margin-bottom:20px;
+}
+.pv-number{
+  font-size:4rem; font-weight:900; color:#333;
+  letter-spacing:8px; line-height:1;
+  animation:popNum .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popNum{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.pv-labels{
+  display:flex; justify-content:center; gap:0; margin-top:6px;
+}
+.pv-label{
+  font-size:.75rem; font-weight:900; width:60px; text-align:center;
+}
+.pv-label.h{color:var(--orange);}
+.pv-label.t{color:var(--purple);}
+.pv-label.o{color:var(--blue);}
+
+/* blocks area */
+.blocks-area{
+  display:flex; justify-content:center; align-items:flex-end;
+  gap:20px; min-height:120px; margin:16px 0;
+}
+.block-col{display:flex; flex-direction:column; align-items:center; gap:4px;}
+.block-col label{font-size:.8rem; font-weight:900; margin-top:6px;}
+.block-col.h label{color:var(--orange);}
+.block-col.t label{color:var(--purple);}
+.block-col.o label{color:var(--blue);}
+
+/* hundred block */
+.hblock{
+  width:48px; height:48px; background:var(--orange);
+  border-radius:8px; display:grid; grid-template-columns:repeat(5,1fr);
+  grid-template-rows:repeat(5,1fr); gap:1px; padding:3px;
+  box-shadow:2px 3px 0 rgba(0,0,0,.2);
+  animation:dropIn .3s cubic-bezier(.34,1.56,.64,1);
+}
+.hblock span{background:rgba(255,255,255,.35); border-radius:1px;}
+
+/* ten rod */
+.trod{
+  width:16px; height:56px; background:var(--purple);
+  border-radius:6px; display:flex; flex-direction:column;
+  gap:1px; padding:2px;
+  box-shadow:2px 3px 0 rgba(0,0,0,.2);
+  animation:dropIn .3s cubic-bezier(.34,1.56,.64,1);
+}
+.trod span{flex:1; background:rgba(255,255,255,.35); border-radius:1px;}
+
+/* unit cube */
+.ucube{
+  width:18px; height:18px; background:var(--blue);
+  border-radius:5px;
+  box-shadow:1px 2px 0 rgba(0,0,0,.2);
+  animation:dropIn .3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes dropIn{from{transform:translateY(-20px) scale(.5);opacity:0}to{transform:none;opacity:1}}
+
+/* sliders */
+.slider-row{display:flex; flex-direction:column; gap:14px; margin-top:8px;}
+.slider-item{display:flex; align-items:center; gap:12px;}
+.slider-item label{font-weight:900; font-size:.9rem; min-width:90px;}
+.slider-item label.h{color:var(--orange);}
+.slider-item label.t{color:var(--purple);}
+.slider-item label.o{color:var(--blue);}
+input[type=range]{
+  flex:1; accent-color:var(--purple);
+  height:8px; border-radius:4px;
+}
+.slider-val{
+  font-weight:900; font-size:1rem; min-width:24px; text-align:center;
+}
+
+/* number name */
+.num-name-box{
+  background:linear-gradient(135deg,#FF6B35,#FFD93D);
+  border-radius:16px; padding:16px 20px; text-align:center;
+  color:#fff; font-size:1.3rem; font-weight:900;
+  margin-top:16px; letter-spacing:.5px;
+  animation:popNum .4s cubic-bezier(.34,1.56,.64,1);
+}
+
+/* ── compare section ── */
+.compare-row{
+  display:flex; align-items:center; justify-content:center;
+  gap:16px; flex-wrap:wrap; margin:12px 0;
+}
+.cnum{
+  background:var(--yellow); border-radius:16px;
+  padding:12px 20px; font-size:2rem; font-weight:900;
+  cursor:pointer; user-select:none;
+  box-shadow:0 4px 0 rgba(0,0,0,.15);
+  transition:transform .15s;
+}
+.cnum:hover{transform:scale(1.08);}
+.csymbol{
+  font-size:2.5rem; font-weight:900; color:var(--orange);
+  min-width:50px; text-align:center;
+  animation:popNum .3s ease;
+}
+
+/* ascending / descending */
+.order-row{
+  display:flex; gap:10px; flex-wrap:wrap; justify-content:center;
+  margin:12px 0;
+}
+.order-bubble{
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff; font-size:1.2rem; font-weight:900;
+  padding:10px 16px; border-radius:50px;
+  box-shadow:0 3px 0 rgba(0,0,0,.15);
+  animation:slideIn .3s ease forwards;
+  opacity:0;
+}
+@keyframes slideIn{to{opacity:1;transform:translateY(0)}from{opacity:0;transform:translateY(20px)}}
+
+/* ─────────────────────────────────────────
+   SCREEN 2 — PLAY / QUIZ
+───────────────────────────────────────── */
+.quiz-wrapper{text-align:center;}
+.quiz-score{
+  font-size:1rem; font-weight:900; color:#aaa; margin-bottom:20px;
+}
+.qcard{
+  background:#fff; border-radius:24px; padding:30px 24px;
+  box-shadow:0 6px 20px rgba(0,0,0,.09); margin-bottom:20px;
+}
+.qcard .qnum{
+  font-size:3.5rem; font-weight:900; color:#333; margin-bottom:6px;
+}
+.qcard .qask{font-size:1.1rem; color:#666; font-weight:700; margin-bottom:24px;}
+
+.options{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+.opt{
+  padding:14px; border:3px solid #eee; border-radius:16px;
+  font-size:1.1rem; font-weight:900; cursor:pointer;
+  background:#fff; transition:all .2s;
+  font-family:'Nunito',sans-serif;
+}
+.opt:hover{border-color:var(--blue); transform:scale(1.03);}
+.opt.correct{background:var(--green); border-color:var(--green); color:#111; animation:bounce .4s;}
+.opt.wrong  {background:#FFE0E0;       border-color:#FF8A8A;       color:#c00;}
+@keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+
+.feedback{
+  margin-top:16px; font-size:1.2rem; font-weight:900;
+  min-height:36px; padding:8px;
+}
+.feedback.correct{color:#00b894;}
+.feedback.wrong  {color:#e17055;}
+
+.next-btn{
+  margin-top:16px; padding:14px 36px;
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  border:none; border-radius:50px; font-size:1.1rem; font-weight:900;
+  cursor:pointer; font-family:'Nunito',sans-serif; color:#fff;
+  box-shadow:0 4px 0 rgba(0,0,0,.15);
+  transition:transform .15s;
+  display:none;
+}
+.next-btn:hover{transform:translateY(-3px);}
+
+/* finish card */
+.finish-card{
+  background:linear-gradient(135deg,#9B5DE5,#F15BB5);
+  border-radius:24px; padding:36px 24px; text-align:center; color:#fff;
+}
+.finish-card .big{font-size:5rem;}
+.finish-card h2{font-size:2rem; font-weight:900; margin:10px 0 6px;}
+.finish-card p{font-size:1.1rem; opacity:.9; margin-bottom:20px;}
+.finish-card .score-big{
+  font-size:3rem; font-weight:900; background:rgba(255,255,255,.25);
+  border-radius:16px; padding:10px 24px; display:inline-block; margin-bottom:20px;
+}
+.retry-btn{
+  padding:12px 30px; background:#fff; color:var(--purple);
+  border:none; border-radius:50px; font-size:1rem; font-weight:900;
+  cursor:pointer; font-family:'Nunito',sans-serif;
+  box-shadow:0 4px 0 rgba(0,0,0,.15);
+}
+
+/* confetti */
+.confetti-piece{
+  position:fixed; width:10px; height:14px; border-radius:2px;
+  animation:fall 1.2s ease-in forwards; z-index:999; pointer-events:none;
+}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0);opacity:1}
+100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+/* ─────────────────────────────────────────
+   SCREEN 3 — CHART (number names reference)
+───────────────────────────────────────── */
+.chart-table{width:100%; border-collapse:collapse;}
+.chart-table th{
+  background:linear-gradient(135deg,#FF6B35,#FFD93D);
+  color:#fff; padding:10px 14px; font-size:.9rem;
+}
+.chart-table td{
+  padding:10px 14px; border-bottom:1px solid #f0f0f0;
+  font-weight:700; font-size:.95rem;
+}
+.chart-table tr:nth-child(even) td{background:#fafafa;}
+.chart-table tr:hover td{background:#FFF3E0;}
+.num-badge{
+  background:var(--orange); color:#fff; border-radius:8px;
+  padding:2px 10px; font-weight:900; font-size:.9rem;
+}
+
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="topnav">
+  <button class="back-btn" onclick="history.back()">←</button>
+  <h1>🔢 Numbers up to 1000</h1>
+  <div class="stars-pill">⭐ 12</div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('learn',this)">📖 Learn</div>
+  <div class="tab" onclick="switchTab('play',this)">🎮 Play</div>
+  <div class="tab" onclick="switchTab('chart',this)">📋 Chart</div>
+</div>
+
+<!-- ══════════════════════════════
+     SCREEN 1 — LEARN
+══════════════════════════════ -->
+<div id="learn" class="screen active">
+
+  <!-- PLACE VALUE BUILDER -->
+  <div class="scard">
+    <div class="scard-title">🧱 Place Value Builder</div>
+
+    <div class="pv-display">
+      <div class="pv-number" id="pvNum">462</div>
+      <div class="pv-labels">
+        <div class="pv-label h">Hundreds</div>
+        <div class="pv-label t">Tens</div>
+        <div class="pv-label o">Ones</div>
+      </div>
+    </div>
+
+    <!-- blocks -->
+    <div class="blocks-area" id="blocksArea"></div>
+
+    <!-- equation -->
+    <div style="text-align:center;font-size:1rem;font-weight:900;color:#555;margin-bottom:16px;" id="pvEq"></div>
+
+    <!-- sliders -->
+    <div class="slider-row">
+      <div class="slider-item">
+        <label class="h">Hundreds <span class="slider-val" id="hVal">4</span></label>
+        <input type="range" min="0" max="9" value="4" id="hSlide" oninput="updatePV()"/>
+      </div>
+      <div class="slider-item">
+        <label class="t">Tens &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="slider-val" id="tVal">6</span></label>
+        <input type="range" min="0" max="9" value="6" id="tSlide" oninput="updatePV()"/>
+      </div>
+      <div class="slider-item">
+        <label class="o">Ones &nbsp;&nbsp;&nbsp;&nbsp;<span class="slider-val" id="oVal">2</span></label>
+        <input type="range" min="0" max="9" value="2" id="oSlide" oninput="updatePV()"/>
+      </div>
+    </div>
+
+    <!-- number name -->
+    <div class="num-name-box" id="numName">Four Hundred and Sixty-Two</div>
+  </div>
+
+  <!-- COMPARE NUMBERS -->
+  <div class="scard">
+    <div class="scard-title">⚖️ Greater Than / Less Than</div>
+    <p style="color:#888;font-size:.9rem;margin-bottom:14px;font-weight:700;">Tap a number to generate new ones!</p>
+    <div class="compare-row">
+      <div class="cnum" id="cA" onclick="newCompare()">350</div>
+      <div class="csymbol" id="cSym">?</div>
+      <div class="cnum" id="cB" onclick="newCompare()">210</div>
+    </div>
+    <div style="text-align:center;" id="compareHint"></div>
+    <div style="text-align:center;margin-top:12px;">
+      <button class="next-btn" style="display:inline-block;margin:0;padding:10px 24px;font-size:.95rem;" onclick="revealCompare()">Show Answer ✨</button>
+    </div>
+  </div>
+
+  <!-- ASCENDING / DESCENDING -->
+  <div class="scard">
+    <div class="scard-title">📶 Ascending &amp; Descending Order</div>
+    <p style="color:#888;font-size:.9rem;margin-bottom:14px;font-weight:700;">Watch the numbers arrange themselves!</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;">
+      <button class="next-btn" style="display:inline-block;margin:0;padding:10px 20px;font-size:.9rem;background:linear-gradient(135deg,var(--blue),var(--purple));" onclick="showOrder('asc')">⬆ Ascending</button>
+      <button class="next-btn" style="display:inline-block;margin:0;padding:10px 20px;font-size:.9rem;background:linear-gradient(135deg,var(--pink),var(--purple));" onclick="showOrder('desc')">⬇ Descending</button>
+      <button class="next-btn" style="display:inline-block;margin:0;padding:10px 20px;font-size:.9rem;background:#eee;color:#555;box-shadow:none;" onclick="newOrderSet()">🔀 New Numbers</button>
+    </div>
+    <div class="order-row" id="orderRow"></div>
+    <div style="text-align:center;font-size:.9rem;font-weight:700;color:#aaa;margin-top:8px;" id="orderLabel"></div>
+  </div>
+
+</div><!-- /learn -->
+
+
+<!-- ══════════════════════════════
+     SCREEN 2 — PLAY
+══════════════════════════════ -->
+<div id="play" class="screen">
+  <div class="quiz-wrapper">
+    <div class="quiz-score" id="quizScore">Question 1 of 8</div>
+    <div id="quizArea"></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     SCREEN 3 — CHART
+══════════════════════════════ -->
+<div id="chart" class="screen">
+  <div class="scard">
+    <div class="scard-title">📋 Number Names (1 – 1000)</div>
+    <table class="chart-table">
+      <thead><tr><th>Number</th><th>Name</th><th>Place Value</th></tr></thead>
+      <tbody id="chartBody"></tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- ══════════ SCRIPTS ══════════ -->
+<script>
+// ─── tab switch ───
+function switchTab(id, el){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  if(id==='play') initQuiz();
+  if(id==='chart') buildChart();
+}
+
+// ─── number name ───
+const ones=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine',
+  'Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+const tens=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+function toWords(n){
+  if(n===0) return 'Zero';
+  if(n===1000) return 'One Thousand';
+  let w='';
+  if(n>=100){ w+=ones[Math.floor(n/100)]+' Hundred'; n%=100; if(n) w+=' and '; }
+  if(n>=20){ w+=tens[Math.floor(n/10)]; if(n%10) w+='-'+ones[n%10]; }
+  else if(n>0){ w+=ones[n]; }
+  return w;
+}
+
+// ─── place value ───
+function updatePV(){
+  const h=+document.getElementById('hSlide').value;
+  const t=+document.getElementById('tSlide').value;
+  const o=+document.getElementById('oSlide').value;
+  document.getElementById('hVal').textContent=h;
+  document.getElementById('tVal').textContent=t;
+  document.getElementById('oVal').textContent=o;
+  const num=h*100+t*10+o;
+  // number display
+  const el=document.getElementById('pvNum');
+  el.textContent=num||'0';
+  el.style.animation='none'; void el.offsetWidth; el.style.animation='popNum .4s cubic-bezier(.34,1.56,.64,1)';
+  // equation
+  document.getElementById('pvEq').textContent=
+    `${num} = ${h}×100 + ${t}×10 + ${o}×1`;
+  // blocks
+  const area=document.getElementById('blocksArea');
+  area.innerHTML='';
+  // hundreds
+  if(h>0){
+    const col=document.createElement('div'); col.className='block-col h';
+    for(let i=0;i<h;i++){
+      const b=document.createElement('div'); b.className='hblock';
+      b.style.animationDelay=(i*.07)+'s';
+      for(let j=0;j<25;j++){const sp=document.createElement('span'); b.appendChild(sp);}
+      col.appendChild(b);
+    }
+    const lbl=document.createElement('label'); lbl.textContent=`${h} Hundred${h>1?'s':''}`;
+    col.appendChild(lbl); area.appendChild(col);
+  }
+  // tens
+  if(t>0){
+    const col=document.createElement('div'); col.className='block-col t';
+    for(let i=0;i<t;i++){
+      const r=document.createElement('div'); r.className='trod';
+      r.style.animationDelay=(i*.07)+'s';
+      for(let j=0;j<10;j++){const sp=document.createElement('span'); r.appendChild(sp);}
+      col.appendChild(r);
+    }
+    const lbl=document.createElement('label'); lbl.textContent=`${t} Ten${t>1?'s':''}`;
+    col.appendChild(lbl); area.appendChild(col);
+  }
+  // ones
+  if(o>0){
+    const col=document.createElement('div'); col.className='block-col o';
+    const wrap=document.createElement('div');
+    wrap.style.cssText='display:flex;flex-wrap:wrap;gap:3px;max-width:90px;justify-content:center;';
+    for(let i=0;i<o;i++){
+      const c=document.createElement('div'); c.className='ucube';
+      c.style.animationDelay=(i*.07)+'s';
+      wrap.appendChild(c);
+    }
+    col.appendChild(wrap);
+    const lbl=document.createElement('label'); lbl.textContent=`${o} One${o>1?'s':''}`;
+    col.appendChild(lbl); area.appendChild(col);
+  }
+  if(!h&&!t&&!o) area.innerHTML='<div style="color:#aaa;font-weight:700;padding:20px;">Move the sliders! 👆</div>';
+  // name
+  const nameEl=document.getElementById('numName');
+  nameEl.textContent=toWords(num);
+  nameEl.style.animation='none'; void nameEl.offsetWidth; nameEl.style.animation='popNum .4s cubic-bezier(.34,1.56,.64,1)';
+}
+updatePV();
+
+// ─── compare ───
+let cNums=[350,210];
+function newCompare(){
+  cNums=[Math.floor(Math.random()*900)+100, Math.floor(Math.random()*900)+100];
+  document.getElementById('cA').textContent=cNums[0];
+  document.getElementById('cB').textContent=cNums[1];
+  document.getElementById('cSym').textContent='?';
+  document.getElementById('compareHint').innerHTML='';
+}
+function revealCompare(){
+  const [a,b]=cNums;
+  const sym= a>b ? '>' : a<b ? '<' : '=';
+  const word= a>b ? 'Greater Than' : a<b ? 'Less Than' : 'Equal To';
+  const el=document.getElementById('cSym');
+  el.textContent=sym;
+  el.style.animation='none'; void el.offsetWidth; el.style.animation='popNum .3s ease';
+  document.getElementById('compareHint').innerHTML=
+    `<span style="font-weight:900;color:var(--purple);font-size:1rem;">${a} is ${word} ${b}</span>`;
+}
+
+// ─── order ───
+let orderSet=[145,320,78,512,260];
+function newOrderSet(){
+  orderSet=Array.from({length:5},()=>Math.floor(Math.random()*900)+10);
+  document.getElementById('orderRow').innerHTML='';
+  document.getElementById('orderLabel').textContent='';
+  // show scrambled
+  orderSet.forEach((n,i)=>{
+    const b=document.createElement('div'); b.className='order-bubble';
+    b.textContent=n; b.style.animationDelay=(i*.08)+'s'; b.style.background='linear-gradient(135deg,#aaa,#888)';
+    document.getElementById('orderRow').appendChild(b);
+  });
+}
+function showOrder(dir){
+  const sorted=[...orderSet].sort((a,b)=>dir==='asc'?a-b:b-a);
+  const row=document.getElementById('orderRow'); row.innerHTML='';
+  sorted.forEach((n,i)=>{
+    const b=document.createElement('div'); b.className='order-bubble';
+    b.textContent=n; b.style.animationDelay=(i*.1)+'s';
+    if(dir==='desc') b.style.background='linear-gradient(135deg,var(--pink),var(--purple))';
+    row.appendChild(b);
+  });
+  document.getElementById('orderLabel').textContent=
+    dir==='asc' ? '⬆ Ascending: Smallest → Biggest' : '⬇ Descending: Biggest → Smallest';
+}
+newOrderSet();
+
+// ─── QUIZ ───
+const QUESTIONS=[
+  {type:'name',  n:500},
+  {type:'pv',    n:347},
+  {type:'compare',a:612,b:621},
+  {type:'name',  n:815},
+  {type:'pv',    n:209},
+  {type:'order', nums:[150,430,80,320]},
+  {type:'compare',a:999,b:900},
+  {type:'name',  n:730},
+];
+let qi=0, score=0, answered=false;
+
+function initQuiz(){qi=0;score=0;answered=false;renderQ();}
+
+function renderQ(){
+  const area=document.getElementById('quizArea');
+  if(qi>=QUESTIONS.length){
+    showFinish(); return;
+  }
+  document.getElementById('quizScore').textContent=`Question ${qi+1} of ${QUESTIONS.length}  |  ⭐ ${score}`;
+  const q=QUESTIONS[qi];
+  answered=false;
+  let html='';
+
+  if(q.type==='name'){
+    const correct=toWords(q.n);
+    const wrongs=genWrongNames(q.n,correct);
+    const opts=shuffle([correct,...wrongs]);
+    html=`<div class="qcard">
+      <div class="qnum">${q.n}</div>
+      <div class="qask">What is the number name?</div>
+      <div class="options">${opts.map(o=>`<button class="opt" onclick="checkAns(this,'${escQ(o)}','${escQ(correct)}')">${o}</button>`).join('')}</div>
+      <div class="feedback" id="fb"></div>
+    </div>
+    <button class="next-btn" id="nxt" onclick="nextQ()">Next ➡</button>`;
+  }
+  else if(q.type==='pv'){
+    const h=Math.floor(q.n/100), t=Math.floor((q.n%100)/10), o=q.n%10;
+    const correct=`${h} Hundreds, ${t} Tens, ${o} Ones`;
+    const wrongs=[
+      `${t} Hundreds, ${h} Tens, ${o} Ones`,
+      `${h} Hundreds, ${o} Tens, ${t} Ones`,
+      `${o} Hundreds, ${t} Tens, ${h} Ones`,
+    ];
+    const opts=shuffle([correct,...wrongs]);
+    html=`<div class="qcard">
+      <div class="qnum">${q.n}</div>
+      <div class="qask">What are the place values?</div>
+      <div class="options">${opts.map(o=>`<button class="opt" onclick="checkAns(this,'${escQ(o)}','${escQ(correct)}')">${o}</button>`).join('')}</div>
+      <div class="feedback" id="fb"></div>
+    </div>
+    <button class="next-btn" id="nxt" onclick="nextQ()">Next ➡</button>`;
+  }
+  else if(q.type==='compare'){
+    const correct= q.a>q.b ? '>' : q.a<q.b ? '<' : '=';
+    const opts=shuffle(['>','<','=']);
+    html=`<div class="qcard">
+      <div class="qnum">${q.a} ___ ${q.b}</div>
+      <div class="qask">Fill in &gt;, &lt; or = ?</div>
+      <div class="options" style="grid-template-columns:1fr 1fr 1fr;">${opts.map(o=>`<button class="opt" style="font-size:2rem;" onclick="checkAns(this,'${o}','${correct}')">${o}</button>`).join('')}</div>
+      <div class="feedback" id="fb"></div>
+    </div>
+    <button class="next-btn" id="nxt" onclick="nextQ()">Next ➡</button>`;
+  }
+  else if(q.type==='order'){
+    const asc=[...q.nums].sort((a,b)=>a-b).join(', ');
+    const wrong1=[...q.nums].sort((a,b)=>b-a).join(', ');
+    const wrong2=shuffle([...q.nums]).join(', ');
+    const wrong3=shuffle([...q.nums]).join(', ');
+    const opts=shuffle([asc,wrong1,wrong2,wrong3]);
+    html=`<div class="qcard">
+      <div style="font-size:1.4rem;font-weight:900;margin-bottom:8px;">${shuffle([...q.nums]).join('  ·  ')}</div>
+      <div class="qask">Arrange in Ascending Order (smallest first)</div>
+      <div class="options" style="grid-template-columns:1fr;">${opts.map(o=>`<button class="opt" style="text-align:left;" onclick="checkAns(this,'${o}','${asc}')">${o}</button>`).join('')}</div>
+      <div class="feedback" id="fb"></div>
+    </div>
+    <button class="next-btn" id="nxt" onclick="nextQ()">Next ➡</button>`;
+  }
+
+  area.innerHTML=html;
+}
+
+function checkAns(btn, chosen, correct){
+  if(answered) return;
+  answered=true;
+  const fb=document.getElementById('fb');
+  const nxt=document.getElementById('nxt');
+  nxt.style.display='inline-block';
+  if(chosen===correct){
+    btn.classList.add('correct');
+    fb.textContent='🎉 Correct! Well done!'; fb.className='feedback correct';
+    score++; confettiBurst();
+  } else {
+    btn.classList.add('wrong');
+    fb.innerHTML=`😅 Oops! The answer is <strong>${correct}</strong>`; fb.className='feedback wrong';
+    // highlight correct
+    document.querySelectorAll('.opt').forEach(o=>{
+      if(o.textContent===correct) o.classList.add('correct');
+    });
+  }
+  document.getElementById('quizScore').textContent=`Question ${qi+1} of ${QUESTIONS.length}  |  ⭐ ${score}`;
+}
+
+function nextQ(){ qi++; renderQ(); }
+
+function showFinish(){
+  const pct=Math.round(score/QUESTIONS.length*100);
+  const msg= pct===100 ? '🌟 Perfect Score! You are a Math Star!' :
+             pct>=75  ? '🎊 Great job! Almost perfect!' :
+             pct>=50  ? '👍 Good effort! Keep practising!' : '💪 Keep going! You can do it!';
+  document.getElementById('quizArea').innerHTML=`
+    <div class="finish-card">
+      <div class="big">${pct===100?'🏆':'🎯'}</div>
+      <h2>Quiz Done!</h2>
+      <p>${msg}</p>
+      <div class="score-big">${score} / ${QUESTIONS.length} ⭐</div><br>
+      <button class="retry-btn" onclick="initQuiz()">🔄 Try Again</button>
+    </div>`;
+  if(pct===100) confettiBurst(80);
+  document.getElementById('quizScore').textContent=`Final Score: ${score} / ${QUESTIONS.length}`;
+}
+
+// helpers
+function genWrongNames(n, correct){
+  const pool=[];
+  const candidates=[n+100,n-100,n+10,n-10,n+1,n-1,
+    Math.floor(Math.random()*900)+10, Math.floor(Math.random()*900)+10];
+  for(const c of candidates){
+    if(c>0&&c<=1000&&c!==n){
+      const w=toWords(c);
+      if(w!==correct&&!pool.includes(w)) pool.push(w);
+      if(pool.length===3) break;
+    }
+  }
+  while(pool.length<3) pool.push(toWords(Math.floor(Math.random()*900)+10));
+  return pool.slice(0,3);
+}
+function shuffle(a){return a.sort(()=>Math.random()-.5);}
+function escQ(s){return s.replace(/'/g,"\\'");}
+
+// ─── chart ───
+const chartRows=[
+  [1,'One','1 One'],[2,'Two','2 Ones'],[5,'Five','5 Ones'],[10,'Ten','1 Ten'],
+  [12,'Twelve','1 Ten, 2 Ones'],[20,'Twenty','2 Tens'],[25,'Twenty-Five','2 Tens, 5 Ones'],
+  [50,'Fifty','5 Tens'],[99,'Ninety-Nine','9 Tens, 9 Ones'],[100,'One Hundred','1 Hundred'],
+  [150,'One Hundred and Fifty','1 Hundred, 5 Tens'],
+  [200,'Two Hundred','2 Hundreds'],
+  [256,'Two Hundred and Fifty-Six','2 Hundreds, 5 Tens, 6 Ones'],
+  [300,'Three Hundred','3 Hundreds'],
+  [462,'Four Hundred and Sixty-Two','4 Hundreds, 6 Tens, 2 Ones'],
+  [500,'Five Hundred','5 Hundreds'],
+  [750,'Seven Hundred and Fifty','7 Hundreds, 5 Tens'],
+  [999,'Nine Hundred and Ninety-Nine','9 Hundreds, 9 Tens, 9 Ones'],
+  [1000,'One Thousand','10 Hundreds'],
+];
+let chartBuilt=false;
+function buildChart(){
+  if(chartBuilt) return; chartBuilt=true;
+  const tb=document.getElementById('chartBody');
+  chartRows.forEach(([n,name,pv])=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td><span class="num-badge">${n}</span></td><td>${name}</td><td style="color:#888;font-size:.85rem;">${pv}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+// ─── confetti ───
+function confettiBurst(count=30){
+  const cols=['#FFD93D','#FF6B35','#9B5DE5','#00BBF9','#F15BB5','#00F5D4'];
+  for(let i=0;i<count;i++){
+    const c=document.createElement('div'); c.className='confetti-piece';
+    c.style.cssText=`left:${20+Math.random()*60}vw;top:30vh;
+      background:${cols[Math.floor(Math.random()*cols.length)]};
+      animation-delay:${Math.random()*.4}s;
+      animation-duration:${.9+Math.random()*.5}s;
+      transform:rotate(${Math.random()*360}deg);`;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),1600);
+  }
+}
+</script>
+</body>
+</html>

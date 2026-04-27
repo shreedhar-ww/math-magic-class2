@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Math Magic — Class 2</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --yellow: #FFD93D;
+      --orange: #FF6B35;
+      --pink:   #FF6B9D;
+      --purple: #9B5DE5;
+      --blue:   #00BBF9;
+      --green:  #00F5D4;
+      --red:    #F15BB5;
+      --bg:     #FFF9F0;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    /* ── floating stars in bg ── */
+    .star {
+      position: fixed;
+      width: 8px; height: 8px;
+      background: var(--yellow);
+      clip-path: polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+      animation: floatStar 6s infinite ease-in-out;
+      opacity: 0.5;
+      z-index: 0;
+    }
+    @keyframes floatStar {
+      0%,100% { transform: translateY(0) rotate(0deg); }
+      50%      { transform: translateY(-20px) rotate(180deg); }
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #9B5DE5, #F15BB5, #FF6B35);
+      padding: 20px 30px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::after {
+      content: '';
+      position: absolute; bottom: -20px; left: 0; right: 0;
+      height: 40px;
+      background: var(--bg);
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    }
+
+    .header-emoji {
+      font-size: 60px;
+      display: block;
+      animation: bounce 1.5s infinite;
+    }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-12px); }
+    }
+
+    header h1 {
+      color: #fff;
+      font-size: 2.8rem;
+      font-weight: 900;
+      text-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+      margin: 8px 0 4px;
+    }
+    header p {
+      color: rgba(255,255,255,0.9);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    /* ── STARS BAR ── */
+    .stars-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      padding: 18px;
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .stars-bar span { font-size: 1rem; font-weight: 700; color: #555; }
+    .star-count {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--orange);
+      background: var(--yellow);
+      padding: 4px 14px;
+      border-radius: 20px;
+    }
+    .progress-wrap {
+      flex: 1; max-width: 300px;
+      height: 14px;
+      background: #eee;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 25%;
+      background: linear-gradient(90deg, var(--green), var(--blue));
+      border-radius: 10px;
+      animation: growBar 1.5s ease-out;
+    }
+    @keyframes growBar { from { width: 0; } }
+
+    /* ── TERM LABEL ── */
+    .term-label {
+      text-align: center;
+      margin: 30px 20px 10px;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--purple);
+      letter-spacing: 1px;
+      position: relative;
+      z-index: 1;
+    }
+    .term-label::before, .term-label::after {
+      content: '✦';
+      margin: 0 10px;
+      color: var(--yellow);
+    }
+
+    /* ── GRID ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 10px 30px 30px;
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── TOPIC CARD ── */
+    .card {
+      border-radius: 24px;
+      padding: 24px 16px 20px;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 6px 0 rgba(0,0,0,0.12);
+    }
+    .card:hover {
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 14px 0 rgba(0,0,0,0.10);
+    }
+    .card:active { transform: translateY(0) scale(0.97); }
+
+    .card-emoji {
+      font-size: 52px;
+      display: block;
+      margin-bottom: 10px;
+      animation: wobble 3s infinite ease-in-out;
+    }
+    @keyframes wobble {
+      0%,100% { transform: rotate(-5deg); }
+      50%      { transform: rotate(5deg); }
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 1px 2px 0 rgba(0,0,0,0.15);
+      margin-bottom: 8px;
+    }
+    .card .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.35);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    /* card colors */
+    .c1 { background: linear-gradient(135deg,#FF6B35,#FFD93D); }
+    .c2 { background: linear-gradient(135deg,#9B5DE5,#F15BB5); }
+    .c3 { background: linear-gradient(135deg,#00BBF9,#9B5DE5); }
+    .c4 { background: linear-gradient(135deg,#00F5D4,#00BBF9); }
+    .c5 { background: linear-gradient(135deg,#F15BB5,#FF6B35); }
+    .c6 { background: linear-gradient(135deg,#FFD93D,#00F5D4); }
+    .c7 { background: linear-gradient(135deg,#9B5DE5,#00BBF9); }
+    .c8 { background: linear-gradient(135deg,#FF6B35,#F15BB5); }
+    .c9 { background: linear-gradient(135deg,#00F5D4,#9B5DE5); }
+    .c10{ background: linear-gradient(135deg,#FFD93D,#FF6B35); }
+    .c11{ background: linear-gradient(135deg,#00BBF9,#F15BB5); }
+    .c12{ background: linear-gradient(135deg,#F15BB5,#9B5DE5); }
+
+    /* lock overlay */
+    .card.locked::after {
+      content: '🔒';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      border-radius: 24px;
+    }
+
+    /* ── MODAL (topic detail) ── */
+    .overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .overlay.show { display: flex; }
+
+    .modal {
+      background: #fff;
+      border-radius: 30px;
+      padding: 36px 30px 28px;
+      max-width: 480px;
+      width: 100%;
+      position: relative;
+      animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      text-align: center;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.6); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    .modal-emoji { font-size: 70px; display: block; margin-bottom: 10px; }
+    .modal h2 { font-size: 1.8rem; font-weight: 900; color: #333; margin-bottom: 8px; }
+    .modal p  { color: #666; font-size: 1rem; line-height: 1.6; margin-bottom: 20px; }
+
+    .modal-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+    }
+    .btn:hover  { transform: translateY(-3px); }
+    .btn:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(0,0,0,0.15); }
+    .btn-play  { background: var(--green); color: #1a1a1a; }
+    .btn-learn { background: var(--blue);  color: #fff; }
+    .btn-close { background: #eee; color: #555; }
+
+    /* ── CONFETTI burst ── */
+    .confetti-piece {
+      position: fixed;
+      width: 10px; height: 14px;
+      border-radius: 2px;
+      animation: confettiFall 1.2s ease-in forwards;
+      z-index: 300;
+      pointer-events: none;
+    }
+    @keyframes confettiFall {
+      0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #aaa;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+    footer span { color: var(--pink); }
+  </style>
+</head>
+<body>
+
+<!-- Floating bg stars -->
+<script>
+  const colors = ['#FFD93D','#FF6B35','#9B5DE5','#00BBF9','#F15BB5'];
+  for (let i = 0; i < 18; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.cssText = `
+      left:${Math.random()*100}vw;
+      top:${Math.random()*100}vh;
+      width:${6+Math.random()*10}px;
+      height:${6+Math.random()*10}px;
+      background:${colors[i%colors.length]};
+      animation-delay:${Math.random()*4}s;
+      animation-duration:${4+Math.random()*4}s;
+    `;
+    document.body.appendChild(s);
+  }
+</script>
+
+<!-- Header -->
+<header>
+  <span class="header-emoji">🧮</span>
+  <h1>Math Magic!</h1>
+  <p>Class 2 · Let's learn &amp; play 🎉</p>
+</header>
+
+<!-- Stars bar -->
+<div class="stars-bar">
+  <span>⭐ My Stars:</span>
+  <div class="star-count">12 ⭐</div>
+  <div class="progress-wrap">
+    <div class="progress-bar"></div>
+  </div>
+  <span style="font-size:0.85rem;color:#aaa;">3 / 12 topics done</span>
+</div>
+
+<!-- TERM 1 -->
+<div class="term-label">Term 1 — Numbers &amp; Operations</div>
+<div class="grid">
+  <div class="card c1" onclick="openModal('Numbers up to 1000','🔢','Count, name &amp; place values — Hundreds, Tens, Ones. Compare big numbers!','Numbers','Easy')">
+    <span class="card-emoji">🔢</span>
+    <h3>Numbers up to 1000</h3>
+    <span class="badge">✅ Done</span>
+  </div>
+  <div class="card c2" onclick="openModal('Addition','➕','Add 2 &amp; 3 digit numbers. Learn the carry-over method with fun word problems!','Addition','Easy')">
+    <span class="card-emoji">➕</span>
+    <h3>Addition</h3>
+    <span class="badge">✅ Done</span>
+  </div>
+  <div class="card c3" onclick="openModal('Subtraction','➖','Borrow &amp; subtract. Solve story sums — like a math detective!','Subtraction','Medium')">
+    <span class="card-emoji">➖</span>
+    <h3>Subtraction</h3>
+    <span class="badge">🔥 Current</span>
+  </div>
+  <div class="card c4 locked" onclick="">
+    <span class="card-emoji">✖️</span>
+    <h3>Multiplication</h3>
+    <span class="badge">🔒 Locked</span>
+  </div>
+</div>
+
+<!-- TERM 2 -->
+<div class="term-label">Term 2 — Time, Shapes &amp; Measurement</div>
+<div class="grid">
+  <div class="card c5 locked">
+    <span class="card-emoji">🕒</span>
+    <h3>Clock &amp; Time</h3>
+    <span class="badge">🔒 Locked</span>
+  </div>
+  <div class="card c6 locked">
+    <span class="card-emoji">➗</span>
+    <h3>Division</h3>
+    <span class="badge">🔒 Locked</span>
+  </div>
+  <div class="card c7 locked">
+    <span class="card-emoji">🔷</span>
+    <h3>Geometry</h3>
+    <span class="badge">🔒 Locked</span>
+  </div>
+  <div class="card c8 locked">
+    <span class="card-emoji">📏</span>
+    <h3>Measurement</h3>
+    <span class="badge">🔒 Locked</span>
+  </div>
+  <div class="card c9 locked">
+    <span class="card-emoji">💰</span>
+    <h3>Money</h3>
+    <span class="badge">🔒 Locked</span>
+  </div>
+</div>
+
+<!-- TERM 3 -->
+<div class="term-label">Term 3 — Logic &amp; Advanced Basics</div>
+<div class="grid">
+  <div class="card c10 locked">
+    <span class="card-emoji">🍕</span>
+    <h3>Fractions</h3>
+    <span class="badge">🔒 Locked</span>
+  </div>
+  <div class="card c11 locked">
+    <span class="card-emoji">🔁</span>
+    <h3>Patterns &amp; Skip Counting</h3>
+    <span class="badge">🔒 Locked</span>
+  </div>
+  <div class="card c12 locked">
+    <span class="card-emoji">📊</span>
+    <h3>Data Handling</h3>
+    <span class="badge">🔒 Locked</span>
+  </div>
+</div>
+
+<footer>Made with <span>♥</span> for young math wizards ✨</footer>
+
+<!-- Modal overlay -->
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <span class="modal-emoji" id="mEmoji"></span>
+    <h2 id="mTitle"></h2>
+    <p id="mDesc"></p>
+    <div id="mMeta" style="margin-bottom:16px;font-size:0.9rem;color:#aaa;font-weight:700;"></div>
+    <div class="modal-btns">
+      <button class="btn btn-play"  onclick="celebrate()">🎮 Play Game</button>
+      <button class="btn btn-learn" onclick="celebrate()">📖 Learn Now</button>
+      <button class="btn btn-close" onclick="document.getElementById('overlay').classList.remove('show')">✖ Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openModal(title, emoji, desc, topic, level) {
+    document.getElementById('mTitle').textContent = title;
+    document.getElementById('mEmoji').textContent = emoji;
+    document.getElementById('mDesc').innerHTML = desc;
+    document.getElementById('mMeta').textContent = `Topic: ${topic}  ·  Level: ${level}`;
+    document.getElementById('overlay').classList.add('show');
+  }
+
+  function closeModal(e) {
+    if (e.target.id === 'overlay') document.getElementById('overlay').classList.remove('show');
+  }
+
+  function celebrate() {
+    const colors = ['#FFD93D','#FF6B35','#9B5DE5','#00BBF9','#F15BB5','#00F5D4'];
+    for (let i = 0; i < 40; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.cssText = `
+        left: ${20 + Math.random() * 60}vw;
+        top: 40vh;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        animation-delay: ${Math.random() * 0.5}s;
+        animation-duration: ${0.9 + Math.random() * 0.6}s;
+        transform: rotate(${Math.random()*360}deg);
+      `;
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 1600);
+    }
+  }
+</script>
+</body>
+</html>
