@@ -111,7 +111,7 @@
     }
     .progress-bar {
       height: 100%;
-      width: 25%;
+      width: 100%;
       background: linear-gradient(90deg, var(--green), var(--blue));
       border-radius: 10px;
       animation: growBar 1.5s ease-out;
@@ -328,81 +328,81 @@
   <div class="progress-wrap">
     <div class="progress-bar"></div>
   </div>
-  <span style="font-size:0.85rem;color:#aaa;">3 / 12 topics done</span>
+  <span style="font-size:0.85rem;color:#aaa;">12 / 12 topics ready 🎉</span>
 </div>
 
 <!-- TERM 1 -->
 <div class="term-label">Term 1 — Numbers &amp; Operations</div>
 <div class="grid">
-  <div class="card c1" onclick="openModal('Numbers up to 1000','🔢','Count, name &amp; place values — Hundreds, Tens, Ones. Compare big numbers!','Numbers','Easy')">
+  <div class="card c1" onclick="openModal('Numbers up to 1000','🔢','Count, name &amp; place values — Hundreds, Tens, Ones. Compare big numbers!','topic-numbers.html')">
     <span class="card-emoji">🔢</span>
     <h3>Numbers up to 1000</h3>
     <span class="badge">✅ Done</span>
   </div>
-  <div class="card c2" onclick="openModal('Addition','➕','Add 2 &amp; 3 digit numbers. Learn the carry-over method with fun word problems!','Addition','Easy')">
+  <div class="card c2" onclick="openModal('Addition','➕','Add 2 &amp; 3 digit numbers. Learn the carry-over method with fun word problems!','topic-addition.html')">
     <span class="card-emoji">➕</span>
     <h3>Addition</h3>
     <span class="badge">✅ Done</span>
   </div>
-  <div class="card c3" onclick="openModal('Subtraction','➖','Borrow &amp; subtract. Solve story sums — like a math detective!','Subtraction','Medium')">
+  <div class="card c3" onclick="openModal('Subtraction','➖','Borrow &amp; subtract. Solve story sums — like a math detective!','topic-subtraction.html')">
     <span class="card-emoji">➖</span>
     <h3>Subtraction</h3>
-    <span class="badge">🔥 Current</span>
+    <span class="badge">✅ Done</span>
   </div>
-  <div class="card c4 locked" onclick="">
+  <div class="card c4" onclick="openModal('Multiplication','✖️','Repeated addition, times tables 1–10, and a fun multiplication grid!','topic-multiplication.html')">
     <span class="card-emoji">✖️</span>
     <h3>Multiplication</h3>
-    <span class="badge">🔒 Locked</span>
+    <span class="badge">✅ Done</span>
   </div>
 </div>
 
 <!-- TERM 2 -->
 <div class="term-label">Term 2 — Time, Shapes &amp; Measurement</div>
 <div class="grid">
-  <div class="card c5 locked">
+  <div class="card c5" onclick="openModal('Clock &amp; Time','🕒','Read analog &amp; digital clocks. Learn o\'clock, half past, quarter past &amp; to!','topic-clock.html')">
     <span class="card-emoji">🕒</span>
     <h3>Clock &amp; Time</h3>
-    <span class="badge">🔒 Locked</span>
+    <span class="badge">✅ Done</span>
   </div>
-  <div class="card c6 locked">
+  <div class="card c6" onclick="openModal('Division','➗','Equal sharing &amp; grouping. Simple division facts made fun!','topic-division.html')">
     <span class="card-emoji">➗</span>
     <h3>Division</h3>
-    <span class="badge">🔒 Locked</span>
+    <span class="badge">✅ Done</span>
   </div>
-  <div class="card c7 locked">
+  <div class="card c7" onclick="openModal('Geometry','🔷','2D &amp; 3D shapes — circles, triangles, cubes, spheres and more!','topic-geometry.html')">
     <span class="card-emoji">🔷</span>
     <h3>Geometry</h3>
-    <span class="badge">🔒 Locked</span>
+    <span class="badge">✅ Done</span>
   </div>
-  <div class="card c8 locked">
+  <div class="card c8" onclick="openModal('Measurement','📏','Length, weight &amp; capacity. Learn cm, m, g, kg and litres!','topic-measurement.html')">
     <span class="card-emoji">📏</span>
     <h3>Measurement</h3>
-    <span class="badge">🔒 Locked</span>
+    <span class="badge">✅ Done</span>
   </div>
-  <div class="card c9 locked">
+  <div class="card c9" onclick="openModal('Money','💰','Indian coins &amp; notes. Add and subtract money, go shopping!','topic-money.html')">
     <span class="card-emoji">💰</span>
     <h3>Money</h3>
-    <span class="badge">🔒 Locked</span>
+    <span class="badge">✅ Done</span>
   </div>
 </div>
 
 <!-- TERM 3 -->
 <div class="term-label">Term 3 — Logic &amp; Advanced Basics</div>
 <div class="grid">
-  <div class="card c10 locked">
+  <div class="card c10" onclick="openModal('Fractions','🍕','Half, one-third, one-fourth — split pizzas &amp; shapes the fun way!','topic-fractions.html')">
     <span class="card-emoji">🍕</span>
     <h3>Fractions</h3>
-    <span class="badge">🔒 Locked</span>
+    <span class="badge">✅ Done</span>
   </div>
-  <div class="card c11 locked">
+  <div class="card c11" onclick="openModal('Patterns &amp; Skip Counting','🔁','Odd &amp; even numbers, skip counting by 2s, 5s and 10s!','topic-patterns.html')">
     <span class="card-emoji">🔁</span>
     <h3>Patterns &amp; Skip Counting</h3>
-    <span class="badge">🔒 Locked</span>
+    <span class="badge">✅ Done</span>
   </div>
-  <div class="card c12 locked">
+  <div class="card c12" onclick="openModal('Data Handling','📊','Tally marks, picture graphs &amp; bar charts — read &amp; draw data!','topic-data.html')">
     <span class="card-emoji">📊</span>
     <h3>Data Handling</h3>
-    <span class="badge">🔒 Locked</span>
+    <span class="badge">✅ Done</span>
   </div>
 </div>
 
@@ -416,20 +416,28 @@
     <p id="mDesc"></p>
     <div id="mMeta" style="margin-bottom:16px;font-size:0.9rem;color:#aaa;font-weight:700;"></div>
     <div class="modal-btns">
-      <button class="btn btn-play"  onclick="celebrate()">🎮 Play Game</button>
-      <button class="btn btn-learn" onclick="celebrate()">📖 Learn Now</button>
+      <button class="btn btn-play"  onclick="goToTopic()">🎮 Play Game</button>
+      <button class="btn btn-learn" onclick="goToTopic()">📖 Learn Now</button>
       <button class="btn btn-close" onclick="document.getElementById('overlay').classList.remove('show')">✖ Close</button>
     </div>
   </div>
 </div>
 
 <script>
-  function openModal(title, emoji, desc, topic, level) {
+  let currentFile = '';
+
+  function openModal(title, emoji, desc, file) {
+    currentFile = file;
     document.getElementById('mTitle').textContent = title;
     document.getElementById('mEmoji').textContent = emoji;
     document.getElementById('mDesc').innerHTML = desc;
-    document.getElementById('mMeta').textContent = `Topic: ${topic}  ·  Level: ${level}`;
+    document.getElementById('mMeta').textContent = '';
     document.getElementById('overlay').classList.add('show');
+    celebrate();
+  }
+
+  function goToTopic() {
+    if (currentFile) window.location.href = currentFile;
   }
 
   function closeModal(e) {
