@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Multiplication — Math Magic</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --yellow:#FFD93D; --orange:#FF6B35; --pink:#F15BB5;
+  --purple:#9B5DE5; --blue:#00BBF9; --green:#00F5D4; --bg:#FFF9F0;
+}
+body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overflow-x:hidden;}
+
+/* NAV */
+.topnav{
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  padding:14px 20px;display:flex;align-items:center;gap:14px;
+  box-shadow:0 4px 12px rgba(0,0,0,.12);position:sticky;top:0;z-index:100;
+}
+.back-btn{
+  background:rgba(255,255,255,.3);border:none;border-radius:50%;
+  width:40px;height:40px;font-size:1.2rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:transform .15s;
+}
+.back-btn:hover{transform:scale(1.15);}
+.topnav h1{color:#fff;font-size:1.4rem;font-weight:900;text-shadow:1px 2px 0 rgba(0,0,0,.15);flex:1;}
+.stars-pill{background:rgba(255,255,255,.3);color:#fff;font-weight:900;padding:5px 14px;border-radius:20px;font-size:1rem;}
+
+/* TABS */
+.tabs{display:flex;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.07);position:sticky;top:68px;z-index:99;}
+.tab{flex:1;padding:14px;text-align:center;font-weight:900;font-size:.95rem;color:#aaa;cursor:pointer;border-bottom:3px solid transparent;transition:color .2s,border-color .2s;}
+.tab.active{color:var(--orange);border-color:var(--orange);}
+
+/* SCREENS */
+.screen{display:none;padding:24px 20px;max-width:700px;margin:0 auto;}
+.screen.active{display:block;}
+
+.scard{background:#fff;border-radius:24px;padding:24px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:20px;}
+.scard-title{font-size:1.1rem;font-weight:900;color:var(--orange);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+
+/* ANIMATIONS */
+@keyframes popIn{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes bounceIn{0%{transform:scale(.5);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+@keyframes wobble{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg)}40%{transform:rotate(8deg)}60%{transform:rotate(-4deg)}80%{transform:rotate(4deg)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes rowPop{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes dotPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+
+/* ═══ LEARN TAB ═══ */
+
+/* Times Table Visualizer */
+.tt-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;}
+.tt-controls label{font-weight:900;font-size:1rem;color:#555;}
+.tt-select{
+  padding:8px 16px;border-radius:50px;border:2px solid var(--orange);
+  font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;
+  background:#fff;color:var(--orange);cursor:pointer;outline:none;
+}
+.tt-btn{
+  padding:8px 20px;border-radius:50px;border:none;
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  color:#fff;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:900;
+  cursor:pointer;transition:transform .15s;
+}
+.tt-btn:hover{transform:scale(1.06);}
+.tt-table{display:flex;flex-direction:column;gap:8px;}
+.tt-row{
+  display:flex;align-items:center;gap:10px;
+  animation:rowPop .35s cubic-bezier(.34,1.56,.64,1) both;
+}
+.tt-bubble{
+  min-width:44px;height:44px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-weight:900;font-size:1.1rem;color:#fff;
+  animation:popIn .3s cubic-bezier(.34,1.56,.64,1) both;
+}
+.tt-eq{font-size:1rem;font-weight:700;color:#444;}
+.tt-ans{
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  color:#fff;font-weight:900;padding:4px 14px;border-radius:20px;font-size:1rem;
+  animation:bounceIn .4s cubic-bezier(.34,1.56,.64,1) both;
+}
+
+/* Repeated Addition */
+.ra-controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px;}
+.ra-input{
+  width:64px;padding:8px;border-radius:12px;border:2px solid var(--blue);
+  font-family:'Nunito',sans-serif;font-size:1.1rem;font-weight:700;
+  text-align:center;outline:none;color:var(--purple);
+}
+.ra-input:focus{border-color:var(--purple);}
+.ra-groups{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:14px;min-height:60px;}
+.ra-group{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  background:#f5f0ff;border-radius:16px;padding:10px 12px;
+  animation:popIn .35s cubic-bezier(.34,1.56,.64,1) both;
+}
+.ra-group-dots{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;max-width:80px;}
+.ra-dot{
+  width:24px;height:24px;border-radius:50%;
+  animation:dotPop .3s cubic-bezier(.34,1.56,.64,1) both;
+}
+.ra-group-label{font-size:.8rem;font-weight:900;color:var(--purple);}
+.ra-equation{
+  font-size:1.2rem;font-weight:900;color:#333;
+  background:linear-gradient(135deg,#f5f0ff,#fff0fa);
+  padding:10px 20px;border-radius:16px;display:inline-block;
+  animation:slideDown .4s ease both;
+}
+.ra-equation span{color:var(--orange);}
+
+/* Multiplication Grid */
+.grid-wrap{overflow-x:auto;}
+.mgrid{border-collapse:collapse;margin:0 auto;}
+.mgrid th,.mgrid td{
+  width:52px;height:52px;text-align:center;font-weight:900;
+  border:2px solid #f0e8ff;cursor:pointer;transition:background .15s,transform .1s;
+  font-size:1rem;border-radius:8px;
+}
+.mgrid th{background:linear-gradient(135deg,var(--orange),var(--yellow));color:#fff;cursor:default;font-size:.95rem;}
+.mgrid td{background:#fff;color:#444;}
+.mgrid td:hover{background:#fff0e8;transform:scale(1.08);}
+.mgrid td.row-hl{background:#ffe8d6;}
+.mgrid td.col-hl{background:#fff0e8;}
+.mgrid td.active-cell{
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  color:#fff;transform:scale(1.15);
+  box-shadow:0 4px 12px rgba(255,107,53,.4);
+  animation:pulse .6s ease;
+}
+.grid-answer{
+  text-align:center;margin-top:14px;font-size:1.2rem;font-weight:900;
+  color:var(--orange);min-height:32px;animation:bounceIn .4s ease;
+}
+
+/* ═══ WORD PROBLEMS ═══ */
+.wp-card{background:#fff;border-radius:24px;padding:24px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:20px;}
+.wp-emoji{font-size:2.8rem;display:block;text-align:center;margin-bottom:10px;animation:wobble 1.8s ease infinite;}
+.wp-question{font-size:1.05rem;font-weight:700;color:#333;margin-bottom:14px;line-height:1.5;}
+.wp-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.wp-input{
+  width:80px;padding:10px;border-radius:14px;border:2px solid #ddd;
+  font-family:'Nunito',sans-serif;font-size:1.1rem;font-weight:700;
+  text-align:center;outline:none;transition:border-color .2s;
+}
+.wp-input:focus{border-color:var(--orange);}
+.wp-check{
+  padding:10px 20px;border-radius:50px;border:none;
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  color:#fff;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:900;
+  cursor:pointer;transition:transform .15s;
+}
+.wp-check:hover{transform:scale(1.06);}
+.wp-feedback{
+  margin-top:10px;font-weight:900;font-size:1rem;
+  padding:8px 16px;border-radius:12px;display:none;
+  animation:popIn .35s cubic-bezier(.34,1.56,.64,1);
+}
+.wp-feedback.correct{background:#d4fef5;color:#00a87a;}
+.wp-feedback.wrong{background:#ffe5e5;color:#e04040;}
+.new-probs-btn{
+  padding:12px 28px;border-radius:50px;border:none;
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  color:#fff;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:900;
+  cursor:pointer;transition:transform .15s;display:block;margin:0 auto;
+}
+.new-probs-btn:hover{transform:scale(1.06);}
+
+/* ═══ PLAY TAB ═══ */
+.play-progress{
+  display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:20px;
+}
+.prog-dot{
+  width:32px;height:32px;border-radius:50%;background:#eee;
+  font-size:.75rem;font-weight:900;display:flex;align-items:center;justify-content:center;
+  transition:background .3s;
+}
+.prog-dot.done-correct{background:var(--green);color:#fff;}
+.prog-dot.done-wrong{background:var(--pink);color:#fff;}
+.prog-dot.current{background:var(--orange);color:#fff;animation:pulse .8s ease infinite;}
+.play-question-card{
+  background:linear-gradient(135deg,#fff7f0,#fff);
+  border-radius:24px;padding:28px 24px;box-shadow:0 4px 16px rgba(0,0,0,.08);
+  text-align:center;margin-bottom:20px;
+}
+.play-q-num{font-size:.9rem;font-weight:700;color:#aaa;margin-bottom:6px;}
+.play-q-text{font-size:2rem;font-weight:900;color:#333;margin-bottom:4px;animation:bounceIn .5s ease;}
+.play-q-emoji{font-size:2rem;animation:wobble 2s ease infinite;}
+.play-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.play-opt{
+  padding:16px;border-radius:18px;border:2px solid #eee;
+  background:#fff;font-family:'Nunito',sans-serif;font-size:1.2rem;font-weight:900;
+  color:#444;cursor:pointer;transition:transform .15s,border-color .2s,background .2s;
+}
+.play-opt:hover{border-color:var(--orange);background:#fff7f0;transform:scale(1.03);}
+.play-opt.correct{background:#d4fef5;border-color:var(--green);color:#00a87a;}
+.play-opt.wrong{background:#ffe5e5;border-color:var(--pink);color:#e04040;}
+.play-opt.reveal{background:#d4fef5;border-color:var(--green);color:#00a87a;}
+.play-opt:disabled{cursor:default;}
+
+/* Score Card */
+.score-card{
+  background:#fff;border-radius:24px;padding:32px 24px;
+  box-shadow:0 4px 20px rgba(0,0,0,.1);text-align:center;
+  animation:bounceIn .6s cubic-bezier(.34,1.56,.64,1);
+}
+.score-emoji{font-size:4rem;animation:wobble 1.5s ease infinite;}
+.score-title{font-size:1.6rem;font-weight:900;color:var(--orange);margin:12px 0 6px;}
+.score-sub{font-size:1rem;color:#777;margin-bottom:20px;}
+.score-bar-wrap{background:#f0e8ff;border-radius:50px;height:18px;overflow:hidden;margin-bottom:20px;}
+.score-bar{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--orange),var(--yellow));transition:width 1s ease;}
+.retry-btn{
+  padding:14px 36px;border-radius:50px;border:none;
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  color:#fff;font-family:'Nunito',sans-serif;font-size:1.1rem;font-weight:900;
+  cursor:pointer;transition:transform .15s;
+}
+.retry-btn:hover{transform:scale(1.06);}
+
+/* CONFETTI CANVAS */
+#confetti-canvas{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:9999;
+}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <button class="back-btn" onclick="history.back()">←</button>
+  <h1>✖️ Multiplication</h1>
+  <div class="stars-pill" id="stars-display">⭐ 0</div>
+</nav>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('learn',this)">📖 Learn</div>
+  <div class="tab" onclick="switchTab('word',this)">📝 Word Problems</div>
+  <div class="tab" onclick="switchTab('play',this)">🎮 Play</div>
+</div>
+
+<!-- CONFETTI CANVAS -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- ══════════════ LEARN SCREEN ══════════════ -->
+<div id="screen-learn" class="screen active">
+
+  <!-- 1. Times Table Visualizer -->
+  <div class="scard">
+    <div class="scard-title">🔢 Times Table Visualizer</div>
+    <div class="tt-controls">
+      <label for="tt-select">Pick a table:</label>
+      <select class="tt-select" id="tt-select">
+        <option value="1">1×</option><option value="2">2×</option>
+        <option value="3" selected>3×</option><option value="4">4×</option>
+        <option value="5">5×</option><option value="6">6×</option>
+        <option value="7">7×</option><option value="8">8×</option>
+        <option value="9">9×</option><option value="10">10×</option>
+      </select>
+      <button class="tt-btn" onclick="buildTimesTable()">Show Table ▶</button>
+    </div>
+    <div class="tt-table" id="tt-table"></div>
+  </div>
+
+  <!-- 2. Repeated Addition Visual -->
+  <div class="scard">
+    <div class="scard-title">➕ Repeated Addition Visual</div>
+    <div class="ra-controls">
+      <label style="font-weight:900;color:#555;">Groups:</label>
+      <input class="ra-input" id="ra-groups" type="number" min="1" max="10" value="4"/>
+      <label style="font-weight:900;color:#555;">Dots each:</label>
+      <input class="ra-input" id="ra-each" type="number" min="1" max="10" value="3"/>
+      <button class="tt-btn" onclick="buildRepeatedAddition()">Visualise ▶</button>
+    </div>
+    <div class="ra-groups" id="ra-groups-display"></div>
+    <div id="ra-eq-display"></div>
+  </div>
+
+  <!-- 3. Multiplication Grid -->
+  <div class="scard">
+    <div class="scard-title">📊 Multiplication Grid (click any cell!)</div>
+    <div class="grid-wrap">
+      <table class="mgrid" id="mgrid"></table>
+    </div>
+    <div class="grid-answer" id="grid-answer"></div>
+  </div>
+
+</div>
+
+<!-- ══════════════ WORD PROBLEMS SCREEN ══════════════ -->
+<div id="screen-word" class="screen">
+  <div id="wp-container"></div>
+  <button class="new-probs-btn" onclick="loadWordProblems()">🔄 New Problems</button>
+</div>
+
+<!-- ══════════════ PLAY SCREEN ══════════════ -->
+<div id="screen-play" class="screen">
+  <div id="play-area"></div>
+</div>
+
+<script>
+/* ════════════════════════════════════════
+   GLOBALS
+════════════════════════════════════════ */
+let stars = 0;
+function addStars(n){
+  stars += n;
+  document.getElementById('stars-display').textContent = '⭐ ' + stars;
+}
+
+/* ════════════════════════════════════════
+   TAB SWITCHING
+════════════════════════════════════════ */
+function switchTab(name, el){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  el.classList.add('active');
+  if(name==='play') initPlay();
+}
+
+/* ════════════════════════════════════════
+   CONFETTI
+════════════════════════════════════════ */
+const canvas = document.getElementById('confetti-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+resizeCanvas();
+window.addEventListener('resize',resizeCanvas);
+
+function launchConfetti(){
+  const colors=['#FF6B35','#FFD93D','#F15BB5','#9B5DE5','#00BBF9','#00F5D4'];
+  for(let i=0;i<90;i++){
+    particles.push({
+      x: Math.random()*canvas.width,
+      y: -10,
+      r: Math.random()*7+4,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      vx: (Math.random()-0.5)*6,
+      vy: Math.random()*5+3,
+      alpha: 1,
+      rot: Math.random()*360,
+      rotV: (Math.random()-0.5)*8,
+      shape: Math.random()>0.5?'circle':'rect'
+    });
+  }
+  requestAnimationFrame(animateConfetti);
+}
+function animateConfetti(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles = particles.filter(p=>p.alpha>0.05);
+  particles.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy; p.alpha-=0.012; p.rot+=p.rotV;
+    ctx.save();
+    ctx.globalAlpha=p.alpha;
+    ctx.translate(p.x,p.y);
+    ctx.rotate(p.rot*Math.PI/180);
+    ctx.fillStyle=p.color;
+    if(p.shape==='circle'){ctx.beginPath();ctx.arc(0,0,p.r,0,Math.PI*2);ctx.fill();}
+    else{ctx.fillRect(-p.r,-p.r/2,p.r*2,p.r);}
+    ctx.restore();
+  });
+  if(particles.length>0) requestAnimationFrame(animateConfetti);
+  else ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+/* ════════════════════════════════════════
+   LEARN — TIMES TABLE VISUALIZER
+════════════════════════════════════════ */
+const bubbleColors=['#FF6B35','#9B5DE5','#F15BB5','#00BBF9','#00F5D4','#FFD93D','#4CAF50','#FF9800','#E91E63','#2196F3'];
+function buildTimesTable(){
+  const n = parseInt(document.getElementById('tt-select').value);
+  const container = document.getElementById('tt-table');
+  container.innerHTML='';
+  for(let i=1;i<=10;i++){
+    (function(i){
+      setTimeout(()=>{
+        const row = document.createElement('div');
+        row.className='tt-row';
+        row.style.animationDelay='0s';
+
+        const bubble = document.createElement('div');
+        bubble.className='tt-bubble';
+        bubble.style.background=bubbleColors[(n-1)%bubbleColors.length];
+        bubble.textContent=n;
+
+        const eq = document.createElement('span');
+        eq.className='tt-eq';
+        eq.textContent=` × ${i} = `;
+
+        const ans = document.createElement('span');
+        ans.className='tt-ans';
+        ans.textContent=n*i;
+
+        row.appendChild(bubble);
+        row.appendChild(eq);
+        row.appendChild(ans);
+        container.appendChild(row);
+      }, i*120);
+    })(i);
+  }
+}
+
+/* ════════════════════════════════════════
+   LEARN — REPEATED ADDITION VISUAL
+════════════════════════════════════════ */
+const dotColors=['#FF6B35','#9B5DE5','#F15BB5','#00BBF9','#00F5D4','#FFD93D'];
+function buildRepeatedAddition(){
+  let g = parseInt(document.getElementById('ra-groups').value)||1;
+  let e = parseInt(document.getElementById('ra-each').value)||1;
+  g=Math.min(10,Math.max(1,g));
+  e=Math.min(10,Math.max(1,e));
+
+  const display = document.getElementById('ra-groups-display');
+  const eqDisplay = document.getElementById('ra-eq-display');
+  display.innerHTML='';
+  eqDisplay.innerHTML='';
+
+  const parts=[];
+  for(let gi=0;gi<g;gi++){
+    const color=dotColors[gi%dotColors.length];
+    parts.push(e);
+    (function(gi,color){
+      setTimeout(()=>{
+        const grp=document.createElement('div');
+        grp.className='ra-group';
+
+        const dotsWrap=document.createElement('div');
+        dotsWrap.className='ra-group-dots';
+        for(let di=0;di<e;di++){
+          const dot=document.createElement('div');
+          dot.className='ra-dot';
+          dot.style.background=color;
+          dot.style.animationDelay=(di*0.05)+'s';
+          dotsWrap.appendChild(dot);
+        }
+        const lbl=document.createElement('div');
+        lbl.className='ra-group-label';
+        lbl.textContent='Group '+(gi+1);
+
+        grp.appendChild(dotsWrap);
+        grp.appendChild(lbl);
+        display.appendChild(grp);
+
+        // show equation after last group
+        if(gi===g-1){
+          setTimeout(()=>{
+            const addStr=Array.from({length:g},()=>e).join(' + ');
+            eqDisplay.innerHTML=`<div class="ra-equation">
+              <span>${g}</span> × <span>${e}</span> = ${addStr} = <span>${g*e}</span>
+            </div>`;
+          },200);
+        }
+      }, gi*220);
+    })(gi,color);
+  }
+}
+
+/* ════════════════════════════════════════
+   LEARN — MULTIPLICATION GRID
+════════════════════════════════════════ */
+function buildGrid(){
+  const table=document.getElementById('mgrid');
+  table.innerHTML='';
+  // header row
+  const hrow=document.createElement('tr');
+  const corner=document.createElement('th');
+  corner.textContent='✖️';
+  hrow.appendChild(corner);
+  for(let c=1;c<=5;c++){
+    const th=document.createElement('th');
+    th.textContent=c;
+    hrow.appendChild(th);
+  }
+  table.appendChild(hrow);
+
+  for(let r=1;r<=5;r++){
+    const tr=document.createElement('tr');
+    const rh=document.createElement('th');
+    rh.textContent=r;
+    tr.appendChild(rh);
+    for(let c=1;c<=5;c++){
+      const td=document.createElement('td');
+      td.textContent=r*c;
+      td.dataset.row=r;
+      td.dataset.col=c;
+      td.addEventListener('click',()=>highlightCell(r,c));
+      tr.appendChild(td);
+    }
+    table.appendChild(tr);
+  }
+}
+function highlightCell(row,col){
+  document.querySelectorAll('#mgrid td').forEach(td=>{
+    td.classList.remove('row-hl','col-hl','active-cell');
+    const r=parseInt(td.dataset.row), c=parseInt(td.dataset.col);
+    if(r===row && c===col) td.classList.add('active-cell');
+    else if(r===row) td.classList.add('row-hl');
+    else if(c===col) td.classList.add('col-hl');
+  });
+  document.getElementById('grid-answer').textContent=`${row} × ${col} = ${row*col} 🎉`;
+}
+
+/* ════════════════════════════════════════
+   WORD PROBLEMS
+════════════════════════════════════════ */
+const wpTemplates=[
+  {emoji:'🍎',text:(a,b)=>`A fruit seller has <strong>${a} boxes</strong> of apples. Each box has <strong>${b} apples</strong>. How many apples are there in total?`,ans:(a,b)=>a*b},
+  {emoji:'🪑',text:(a,b)=>`There are <strong>${a} rows</strong> of chairs in a hall. Each row has <strong>${b} chairs</strong>. How many chairs are there altogether?`,ans:(a,b)=>a*b},
+  {emoji:'🍪',text:(a,b)=>`Mum baked <strong>${a} trays</strong> of biscuits. Each tray has <strong>${b} biscuits</strong>. How many biscuits did she bake?`,ans:(a,b)=>a*b},
+  {emoji:'🚗',text:(a,b)=>`A toy shop has <strong>${a} shelves</strong>. Each shelf holds <strong>${b} toy cars</strong>. How many toy cars are there in all?`,ans:(a,b)=>a*b},
+  {emoji:'🌸',text:(a,b)=>`A garden has <strong>${a} flower pots</strong>. Each pot has <strong>${b} flowers</strong>. How many flowers are there altogether?`,ans:(a,b)=>a*b},
+  {emoji:'🎒',text:(a,b)=>`There are <strong>${a} students</strong>. Each student has <strong>${b} pencils</strong> in their bag. How many pencils are there in total?`,ans:(a,b)=>a*b},
+];
+function rnd(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+let wpActive=[];
+function loadWordProblems(){
+  // pick 3 unique templates
+  const pool=[...wpTemplates].sort(()=>Math.random()-.5).slice(0,3);
+  wpActive=pool.map(t=>{
+    const a=rnd(2,9), b=rnd(2,9);
+    return {emoji:t.emoji,text:t.text(a,b),ans:t.ans(a,b)};
+  });
+  renderWordProblems();
+}
+function renderWordProblems(){
+  const c=document.getElementById('wp-container');
+  c.innerHTML='';
+  wpActive.forEach((p,i)=>{
+    const div=document.createElement('div');
+    div.className='wp-card';
+    div.innerHTML=`
+      <span class="wp-emoji">${p.emoji}</span>
+      <div class="wp-question">${p.text}</div>
+      <div class="wp-row">
+        <input class="wp-input" id="wp-inp-${i}" type="number" min="0" placeholder="?"/>
+        <button class="wp-check" onclick="checkWP(${i},${p.ans})">Check ✅</button>
+      </div>
+      <div class="wp-feedback" id="wp-fb-${i}"></div>
+    `;
+    c.appendChild(div);
+  });
+}
+function checkWP(i,ans){
+  const val=parseInt(document.getElementById('wp-inp-'+i).value);
+  const fb=document.getElementById('wp-fb-'+i);
+  fb.style.display='block';
+  if(val===ans){
+    fb.className='wp-feedback correct';
+    fb.textContent='🎉 Correct! Well done!';
+    addStars(2);
+    launchConfetti();
+  } else {
+    fb.className='wp-feedback wrong';
+    fb.textContent=`❌ Not quite! The answer is ${ans}. Try again!`;
+  }
+}
+
+/* ════════════════════════════════════════
+   PLAY TAB
+════════════════════════════════════════ */
+const playEmojis=['🐶','🦁','🐸','🦄','🐧','🦊','🐙','🦋','⭐','🚀','🎈','🍦'];
+let playQuestions=[], playCurrent=0, playResults=[];
+
+function genQuestions(){
+  const qs=[];
+  while(qs.length<8){
+    const a=rnd(1,10), b=rnd(1,10);
+    const ans=a*b;
+    const opts=new Set([ans]);
+    while(opts.size<4){
+      const wrong=rnd(1,100);
+      if(wrong!==ans) opts.add(wrong);
+    }
+    qs.push({a,b,ans,opts:[...opts].sort(()=>Math.random()-.5),emoji:playEmojis[rnd(0,playEmojis.length-1)]});
+  }
+  return qs;
+}
+
+function initPlay(){
+  playQuestions=genQuestions();
+  playCurrent=0;
+  playResults=[];
+  renderPlay();
+}
+
+function renderPlay(){
+  const area=document.getElementById('play-area');
+  if(playCurrent>=playQuestions.length){
+    showScoreCard();
+    return;
+  }
+  const q=playQuestions[playCurrent];
+
+  let progHTML='<div class="play-progress">';
+  playQuestions.forEach((_,i)=>{
+    let cls='prog-dot';
+    if(i<playResults.length) cls+=' '+(playResults[i]?'done-correct':'done-wrong');
+    else if(i===playCurrent) cls+=' current';
+    progHTML+=`<div class="${cls}">${i+1}</div>`;
+  });
+  progHTML+='</div>';
+
+  area.innerHTML=`
+    ${progHTML}
+    <div class="play-question-card">
+      <div class="play-q-num">Question ${playCurrent+1} of 8</div>
+      <div class="play-q-emoji">${q.emoji}</div>
+      <div class="play-q-text">${q.a} × ${q.b} = ?</div>
+    </div>
+    <div class="play-options" id="play-opts">
+      ${q.opts.map((o,i)=>`<button class="play-opt" id="popt-${i}" onclick="checkPlay(${i},${o==q.ans},${q.ans})">${o}</button>`).join('')}
+    </div>
+  `;
+}
+
+function checkPlay(idx, isCorrect, correctAns){
+  // disable all buttons
+  document.querySelectorAll('.play-opt').forEach(b=>b.disabled=true);
+  const chosen=document.getElementById('popt-'+idx);
+  if(isCorrect){
+    chosen.classList.add('correct');
+    playResults.push(true);
+    addStars(3);
+    launchConfetti();
+  } else {
+    chosen.classList.add('wrong');
+    playResults.push(false);
+    // reveal correct
+    document.querySelectorAll('.play-opt').forEach(b=>{
+      if(parseInt(b.textContent)===correctAns) b.classList.add('reveal');
+    });
+  }
+  setTimeout(()=>{
+    playCurrent++;
+    renderPlay();
+  },1200);
+}
+
+function showScoreCard(){
+  const correct=playResults.filter(Boolean).length;
+  const pct=Math.round(correct/playQuestions.length*100);
+  let emoji='😊', msg='Good effort! Keep practising!';
+  if(pct===100){emoji='🏆';msg='Perfect score! You are a Multiplication Master!';}
+  else if(pct>=75){emoji='🌟';msg='Great job! Almost there!';}
+  else if(pct>=50){emoji='😊';msg='Not bad! A bit more practice and you\'ll nail it!';}
+
+  document.getElementById('play-area').innerHTML=`
+    <div class="score-card">
+      <div class="score-emoji">${emoji}</div>
+      <div class="score-title">${correct} / 8 Correct!</div>
+      <div class="score-sub">${msg}</div>
+      <div class="score-bar-wrap">
+        <div class="score-bar" id="score-bar" style="width:0%"></div>
+      </div>
+      <button class="retry-btn" onclick="initPlay()">🔄 Play Again</button>
+    </div>
+  `;
+  if(pct===100) launchConfetti();
+  setTimeout(()=>{
+    const bar=document.getElementById('score-bar');
+    if(bar) bar.style.width=pct+'%';
+  },100);
+}
+
+/* ════════════════════════════════════════
+   INIT
+════════════════════════════════════════ */
+buildTimesTable();
+buildRepeatedAddition();
+buildGrid();
+loadWordProblems();
+</script>
+</body>
+</html>

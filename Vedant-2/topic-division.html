@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>➗ Division — Class 2 Math</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --yellow:#FFD93D;
+    --orange:#FF6B35;
+    --pink:#F15BB5;
+    --purple:#9B5DE5;
+    --blue:#00BBF9;
+    --green:#00F5D4;
+    --bg:#F8FAFF;
+    --card:#FFFFFF;
+    --text:#2D2D2D;
+    --radius:18px;
+    --shadow:0 4px 20px rgba(0,0,0,0.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+  /* NAV */
+  .nav{
+    background:linear-gradient(135deg,var(--green),var(--blue));
+    padding:14px 20px;
+    display:flex;align-items:center;gap:14px;
+    position:sticky;top:0;z-index:100;
+    box-shadow:0 2px 16px rgba(0,187,249,0.3);
+  }
+  .back-btn{
+    background:rgba(255,255,255,0.25);border:none;border-radius:50%;
+    width:40px;height:40px;font-size:20px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;transition:background .2s;text-decoration:none;
+  }
+  .back-btn:hover{background:rgba(255,255,255,0.4);}
+  .nav-title{font-size:1.5rem;font-weight:900;color:#fff;flex:1;text-shadow:0 1px 4px rgba(0,0,0,0.15);}
+  .stars-pill{
+    background:rgba(255,255,255,0.25);border-radius:20px;
+    padding:6px 14px;color:#fff;font-weight:800;font-size:0.95rem;
+    display:flex;align-items:center;gap:5px;
+  }
+  .stars-pill span{font-size:1.1rem;}
+
+  /* TABS */
+  .tabs{display:flex;gap:6px;padding:16px 16px 0;justify-content:center;}
+  .tab-btn{
+    flex:1;max-width:160px;
+    padding:10px 8px;border:none;border-radius:14px 14px 0 0;
+    font-family:'Nunito',sans-serif;font-size:0.9rem;font-weight:800;
+    cursor:pointer;transition:all .2s;
+    background:#e2e8f0;color:#64748b;
+  }
+  .tab-btn.active{background:#fff;color:var(--purple);box-shadow:0 -2px 10px rgba(0,0,0,0.07);}
+  .tab-btn:hover:not(.active){background:#d1d5db;}
+
+  /* TAB PANELS */
+  .tab-panel{display:none;padding:20px 16px 40px;max-width:860px;margin:0 auto;}
+  .tab-panel.active{display:block;}
+
+  /* SECTION CARDS */
+  .section-card{
+    background:var(--card);border-radius:var(--radius);
+    padding:24px;margin-bottom:22px;
+    box-shadow:var(--shadow);
+  }
+  .section-title{
+    font-size:1.15rem;font-weight:900;margin-bottom:16px;
+    display:flex;align-items:center;gap:8px;
+  }
+
+  /* CONTROLS */
+  .ctrl-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px;}
+  .ctrl-label{font-weight:700;font-size:0.95rem;color:#555;}
+  .num-ctrl{display:flex;align-items:center;gap:6px;}
+  .num-btn{
+    width:34px;height:34px;border-radius:50%;border:none;
+    font-size:1.3rem;font-weight:900;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .1s;
+  }
+  .num-btn:active{transform:scale(0.9);}
+  .num-val{
+    min-width:38px;text-align:center;font-size:1.1rem;
+    font-weight:900;background:#f1f5f9;border-radius:8px;padding:4px 8px;
+  }
+  .btn-minus{background:var(--orange);color:#fff;}
+  .btn-plus{background:var(--green);color:#333;}
+
+  /* VISUAL SHARE */
+  .equation-display{
+    font-size:1.6rem;font-weight:900;text-align:center;
+    margin:14px 0;color:var(--purple);
+    background:linear-gradient(135deg,#f0e6ff,#e6f9ff);
+    border-radius:12px;padding:12px;
+  }
+  .groups-container{
+    display:flex;gap:14px;flex-wrap:wrap;justify-content:center;
+    min-height:110px;margin:10px 0;
+  }
+  .group-circle{
+    border:3px dashed var(--blue);border-radius:50%;
+    width:100px;height:100px;
+    display:flex;align-items:center;justify-content:center;
+    flex-wrap:wrap;gap:4px;padding:10px;
+    position:relative;background:#f0fbff;
+    transition:border-color .3s;
+  }
+  .group-circle.filled{border-color:var(--green);background:#f0fff8;}
+  .group-label{
+    position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);
+    font-size:0.75rem;font-weight:700;color:#888;white-space:nowrap;
+  }
+  .dot{
+    width:16px;height:16px;border-radius:50%;
+    background:var(--orange);display:inline-block;
+    animation:popIn .3s ease;
+  }
+  @keyframes popIn{from{transform:scale(0);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .dot:nth-child(even){background:var(--pink);}
+  .dot:nth-child(3n){background:var(--purple);}
+  .dot:nth-child(4n){background:var(--yellow);}
+
+  .animate-btn{
+    display:block;margin:10px auto 0;
+    padding:10px 28px;border:none;border-radius:30px;
+    font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;
+    background:linear-gradient(135deg,var(--purple),var(--pink));
+    color:#fff;cursor:pointer;transition:transform .2s,box-shadow .2s;
+    box-shadow:0 4px 14px rgba(155,93,229,0.35);
+  }
+  .animate-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(155,93,229,0.45);}
+  .animate-btn:active{transform:scale(0.97);}
+
+  /* GROUPING METHOD */
+  .grouping-vis{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:14px 0;}
+  .group-box{
+    border:2.5px solid var(--orange);border-radius:12px;
+    padding:8px 12px;background:#fff8f0;
+    display:flex;gap:5px;align-items:center;flex-wrap:wrap;
+    animation:slideIn .4s ease;
+  }
+  @keyframes slideIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  .group-box .dot{width:14px;height:14px;}
+
+  /* FACTS TABLE */
+  .facts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}
+  .fact-card{
+    border-radius:12px;padding:10px 8px;text-align:center;
+    font-size:1rem;font-weight:800;color:#fff;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+    transition:transform .2s;cursor:default;
+  }
+  .fact-card:hover{transform:scale(1.05);}
+  .divby-2{background:linear-gradient(135deg,var(--blue),#007ac2);}
+  .divby-3{background:linear-gradient(135deg,var(--purple),#6b3fa0);}
+  .divby-4{background:linear-gradient(135deg,var(--orange),#c04a1a);}
+  .divby-5{background:linear-gradient(135deg,var(--pink),#a8297a);}
+  .divby-header{
+    font-size:1rem;font-weight:900;padding:10px;border-radius:10px;
+    color:#fff;text-align:center;margin-bottom:8px;
+  }
+  .divby-section{margin-bottom:20px;}
+
+  /* TABS DIVIDER for facts */
+  .facts-tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+  .facts-tab{
+    padding:7px 16px;border-radius:20px;border:none;
+    font-family:'Nunito',sans-serif;font-weight:800;font-size:0.9rem;
+    cursor:pointer;transition:all .2s;background:#e2e8f0;color:#555;
+  }
+  .facts-tab.active{color:#fff;}
+  .facts-tab[data-d="2"].active{background:var(--blue);}
+  .facts-tab[data-d="3"].active{background:var(--purple);}
+  .facts-tab[data-d="4"].active{background:var(--orange);}
+  .facts-tab[data-d="5"].active{background:var(--pink);}
+
+  /* WORD PROBLEMS */
+  .problem-card{
+    background:linear-gradient(135deg,#fff8e6,#fff);
+    border:2px solid var(--yellow);border-radius:var(--radius);
+    padding:20px;margin-bottom:16px;
+  }
+  .problem-text{font-size:1.05rem;font-weight:700;line-height:1.6;margin-bottom:14px;}
+  .problem-emoji{font-size:2rem;margin-bottom:8px;display:block;}
+  .problem-input-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .answer-input{
+    width:80px;padding:8px 12px;border-radius:10px;
+    border:2.5px solid #ddd;font-family:'Nunito',sans-serif;
+    font-size:1.1rem;font-weight:800;text-align:center;
+    transition:border-color .2s;
+  }
+  .answer-input:focus{outline:none;border-color:var(--purple);}
+  .check-btn{
+    padding:9px 22px;border:none;border-radius:20px;
+    font-family:'Nunito',sans-serif;font-size:0.95rem;font-weight:800;
+    cursor:pointer;background:var(--purple);color:#fff;
+    transition:transform .15s;
+  }
+  .check-btn:hover{transform:scale(1.04);}
+  .feedback{
+    margin-top:10px;font-size:1rem;font-weight:800;
+    padding:8px 14px;border-radius:10px;display:none;
+  }
+  .feedback.correct{background:#d1fae5;color:#065f46;display:block;}
+  .feedback.wrong{background:#fee2e2;color:#991b1b;display:block;}
+  .new-prob-btn{
+    display:block;margin:18px auto 0;
+    padding:11px 32px;border:none;border-radius:30px;
+    font-family:'Nunito',sans-serif;font-size:1rem;font-weight:900;
+    background:linear-gradient(135deg,var(--yellow),var(--orange));
+    color:#fff;cursor:pointer;
+    box-shadow:0 4px 14px rgba(255,107,53,0.35);
+    transition:transform .2s;
+  }
+  .new-prob-btn:hover{transform:translateY(-2px);}
+
+  /* PLAY TAB */
+  .play-header{text-align:center;margin-bottom:20px;}
+  .play-header h2{font-size:1.4rem;font-weight:900;color:var(--purple);}
+  .progress-bar-wrap{background:#e2e8f0;border-radius:20px;height:12px;margin:10px 0;overflow:hidden;}
+  .progress-bar{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--green),var(--blue));transition:width .5s;}
+  .q-counter{font-weight:700;font-size:0.9rem;color:#888;}
+
+  .quiz-card{
+    background:var(--card);border-radius:var(--radius);padding:28px 24px;
+    box-shadow:var(--shadow);text-align:center;
+  }
+  .quiz-question{font-size:2rem;font-weight:900;color:var(--text);margin-bottom:8px;}
+  .quiz-question span{color:var(--purple);}
+  .quiz-subtitle{font-size:0.95rem;color:#888;font-weight:600;margin-bottom:22px;}
+  .options-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .opt-btn{
+    padding:16px;border:3px solid #e2e8f0;border-radius:14px;
+    font-family:'Nunito',sans-serif;font-size:1.2rem;font-weight:900;
+    cursor:pointer;background:#fff;transition:all .2s;color:var(--text);
+  }
+  .opt-btn:hover:not(:disabled){border-color:var(--purple);background:#f5f0ff;transform:scale(1.02);}
+  .opt-btn.correct{border-color:#10b981;background:#d1fae5;color:#065f46;}
+  .opt-btn.wrong{border-color:#ef4444;background:#fee2e2;color:#991b1b;}
+  .opt-btn:disabled{cursor:default;}
+
+  /* SCOREBOARD */
+  .scoreboard{
+    background:var(--card);border-radius:var(--radius);padding:36px 24px;
+    box-shadow:var(--shadow);text-align:center;display:none;
+  }
+  .score-emoji{font-size:4rem;margin-bottom:10px;}
+  .score-big{font-size:3rem;font-weight:900;color:var(--purple);}
+  .score-msg{font-size:1.1rem;font-weight:700;color:#555;margin:8px 0 22px;}
+  .score-stars{font-size:2.5rem;letter-spacing:4px;margin:10px 0;}
+  .play-again-btn{
+    padding:13px 38px;border:none;border-radius:30px;
+    font-family:'Nunito',sans-serif;font-size:1.1rem;font-weight:900;
+    background:linear-gradient(135deg,var(--purple),var(--pink));
+    color:#fff;cursor:pointer;
+    box-shadow:0 4px 16px rgba(155,93,229,0.4);
+    transition:transform .2s;
+  }
+  .play-again-btn:hover{transform:translateY(-2px);}
+
+  /* CONFETTI */
+  .confetti-piece{
+    position:fixed;width:10px;height:10px;border-radius:2px;
+    pointer-events:none;z-index:9999;
+    animation:confettiFall linear forwards;
+  }
+  @keyframes confettiFall{
+    0%{transform:translateY(-10px) rotate(0deg);opacity:1;}
+    100%{transform:translateY(100vh) rotate(720deg);opacity:0;}
+  }
+
+  /* RESPONSIVE */
+  @media(max-width:520px){
+    .groups-container{gap:8px;}
+    .group-circle{width:82px;height:82px;}
+    .options-grid{grid-template-columns:1fr;}
+    .facts-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#" class="back-btn" onclick="history.back();return false;">←</a>
+  <div class="nav-title">➗ Division</div>
+  <div class="stars-pill"><span>⭐</span> <span id="totalStars">0</span> Stars</div>
+</nav>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('learn',this)">📖 Learn</button>
+  <button class="tab-btn" onclick="switchTab('words',this)">📝 Word Problems</button>
+  <button class="tab-btn" onclick="switchTab('play',this)">🎮 Play</button>
+</div>
+
+<!-- ═══════════════ LEARN TAB ═══════════════ -->
+<div id="tab-learn" class="tab-panel active">
+
+  <!-- 1. EQUAL SHARING -->
+  <div class="section-card">
+    <div class="section-title">🍬 Equal Sharing — Distribute the Dots!</div>
+    <div class="ctrl-row">
+      <span class="ctrl-label">Total items:</span>
+      <div class="num-ctrl">
+        <button class="num-btn btn-minus" onclick="changeVal('total',-1)">−</button>
+        <div class="num-val" id="totalVal">12</div>
+        <button class="num-btn btn-plus" onclick="changeVal('total',+1)">+</button>
+      </div>
+      <span class="ctrl-label">÷  Groups:</span>
+      <div class="num-ctrl">
+        <button class="num-btn btn-minus" onclick="changeVal('groups',-1)">−</button>
+        <div class="num-val" id="groupsVal">3</div>
+        <button class="num-btn btn-plus" onclick="changeVal('groups',+1)">+</button>
+      </div>
+    </div>
+    <div class="equation-display" id="shareEquation">12 ÷ 3 = ?</div>
+    <div class="groups-container" id="groupsContainer"></div>
+    <button class="animate-btn" id="distributeBtn" onclick="distributeAnimate()">▶ Distribute!</button>
+  </div>
+
+  <!-- 2. GROUPING METHOD -->
+  <div class="section-card">
+    <div class="section-title">📦 Grouping Method — How Many Groups?</div>
+    <p style="font-size:0.95rem;font-weight:600;color:#666;margin-bottom:14px;">
+      Using the same numbers above — how many groups of <strong id="groupOfN">3</strong> can we make from <strong id="groupFromX">12</strong>?
+    </p>
+    <div class="grouping-vis" id="groupingVis"></div>
+    <div class="equation-display" id="groupingEq" style="margin-top:10px;">12 ÷ 3 = 4 groups</div>
+    <button class="animate-btn" onclick="showGrouping()">▶ Show Groups!</button>
+  </div>
+
+  <!-- 3. FACTS TABLE -->
+  <div class="section-card">
+    <div class="section-title">📋 Division Facts — Quick Reference</div>
+    <div class="facts-tabs">
+      <button class="facts-tab active" data-d="2" onclick="showFacts(2,this)">÷ 2</button>
+      <button class="facts-tab" data-d="3" onclick="showFacts(3,this)">÷ 3</button>
+      <button class="facts-tab" data-d="4" onclick="showFacts(4,this)">÷ 4</button>
+      <button class="facts-tab" data-d="5" onclick="showFacts(5,this)">÷ 5</button>
+    </div>
+    <div class="facts-grid" id="factsGrid"></div>
+  </div>
+
+</div>
+
+<!-- ═══════════════ WORD PROBLEMS TAB ═══════════════ -->
+<div id="tab-words" class="tab-panel">
+  <div class="section-card">
+    <div class="section-title">📖 Story Problems</div>
+    <p style="font-size:0.9rem;color:#888;font-weight:600;margin-bottom:18px;">Read each story, work it out, and type your answer!</p>
+    <div id="wordProblemsContainer"></div>
+    <button class="new-prob-btn" onclick="generateWordProblems()">🔄 New Problems!</button>
+  </div>
+</div>
+
+<!-- ═══════════════ PLAY TAB ═══════════════ -->
+<div id="tab-play" class="tab-panel">
+  <div class="play-header">
+    <h2>🎮 Division Quiz!</h2>
+    <div class="q-counter">Question <span id="qNum">1</span> of 8</div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+  </div>
+  <div class="quiz-card" id="quizCard">
+    <div class="quiz-question" id="quizQ">Loading…</div>
+    <div class="quiz-subtitle">Choose the correct answer!</div>
+    <div class="options-grid" id="optionsGrid"></div>
+  </div>
+  <div class="scoreboard" id="scoreboard">
+    <div class="score-emoji" id="scoreEmoji">🏆</div>
+    <div class="score-big" id="scoreBig">8/8</div>
+    <div class="score-stars" id="scoreStars">⭐⭐⭐</div>
+    <div class="score-msg" id="scoreMsg">Amazing work!</div>
+    <button class="play-again-btn" onclick="startQuiz()">🔄 Play Again!</button>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────
+let totalItems = 12;
+let numGroups  = 3;
+let totalStars = 0;
+let distributeTimer = null;
+
+// ─────────────────────────────────────────
+//  TAB SWITCHING
+// ─────────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'play') startQuiz();
+}
+
+// ─────────────────────────────────────────
+//  LEARN — EQUAL SHARING
+// ─────────────────────────────────────────
+function changeVal(type, delta) {
+  if (type === 'total') {
+    totalItems = Math.max(2, Math.min(20, totalItems + delta));
+    // ensure divisible (snap to nearest clean value)
+    document.getElementById('totalVal').textContent = totalItems;
+  } else {
+    numGroups = Math.max(2, Math.min(5, numGroups + delta));
+    document.getElementById('groupsVal').textContent = numGroups;
+  }
+  resetShareVis();
+  syncGroupingText();
+}
+
+function resetShareVis() {
+  if (distributeTimer) { clearTimeout(distributeTimer); distributeTimer = null; }
+  const eq = document.getElementById('shareEquation');
+  eq.textContent = `${totalItems} ÷ ${numGroups} = ?`;
+  buildEmptyGroups();
+}
+
+function buildEmptyGroups() {
+  const c = document.getElementById('groupsContainer');
+  c.innerHTML = '';
+  for (let g = 0; g < numGroups; g++) {
+    const div = document.createElement('div');
+    div.className = 'group-circle';
+    div.id = 'gc-' + g;
+    const lbl = document.createElement('span');
+    lbl.className = 'group-label';
+    lbl.textContent = `Group ${g+1}`;
+    div.appendChild(lbl);
+    c.appendChild(div);
+  }
+}
+
+function distributeAnimate() {
+  if (distributeTimer) { clearTimeout(distributeTimer); distributeTimer = null; }
+  buildEmptyGroups();
+  document.getElementById('shareEquation').textContent = `${totalItems} ÷ ${numGroups} = ?`;
+  const btn = document.getElementById('distributeBtn');
+  btn.disabled = true;
+
+  const perGroup = Math.floor(totalItems / numGroups);
+  const remainder = totalItems % numGroups;
+
+  // dots: group-by-group order for "one at a time into each group"
+  let seq = [];
+  for (let d = 0; d < perGroup; d++) {
+    for (let g = 0; g < numGroups; g++) {
+      seq.push(g);
+    }
+  }
+  // leftover dots go nowhere special — show as remainder
+  let i = 0;
+  function drop() {
+    if (i >= seq.length) {
+      const eq = document.getElementById('shareEquation');
+      if (remainder === 0) {
+        eq.textContent = `${totalItems} ÷ ${numGroups} = ${perGroup} in each group ✅`;
+      } else {
+        eq.textContent = `${totalItems} ÷ ${numGroups} = ${perGroup} in each group (remainder ${remainder})`;
+      }
+      // mark filled
+      for (let g = 0; g < numGroups; g++) {
+        document.getElementById('gc-'+g).classList.add('filled');
+      }
+      btn.disabled = false;
+      addStars(1);
+      return;
+    }
+    const g = seq[i];
+    const circ = document.getElementById('gc-' + g);
+    const dot = document.createElement('span');
+    dot.className = 'dot';
+    circ.insertBefore(dot, circ.lastChild); // before label
+    i++;
+    distributeTimer = setTimeout(drop, 150);
+  }
+  drop();
+}
+
+// ─────────────────────────────────────────
+//  LEARN — GROUPING METHOD
+// ─────────────────────────────────────────
+function syncGroupingText() {
+  document.getElementById('groupOfN').textContent = numGroups;
+  document.getElementById('groupFromX').textContent = totalItems;
+  document.getElementById('groupingVis').innerHTML = '';
+  document.getElementById('groupingEq').textContent = `${totalItems} ÷ ${numGroups} = ?`;
+}
+
+function showGrouping() {
+  const vis = document.getElementById('groupingVis');
+  vis.innerHTML = '';
+  const perGroup = Math.floor(totalItems / numGroups);
+  const numGroupsOfN = Math.floor(totalItems / numGroups);
+  // Here grouping = how many groups of (perGroup) fit in total
+  // Reinterpret: groups of numGroups fit in totalItems
+  const count = Math.floor(totalItems / numGroups);
+  for (let g = 0; g < count; g++) {
+    setTimeout(() => {
+      const box = document.createElement('div');
+      box.className = 'group-box';
+      for (let d = 0; d < numGroups; d++) {
+        const dot = document.createElement('span');
+        dot.className = 'dot';
+        box.appendChild(dot);
+      }
+      vis.appendChild(box);
+    }, g * 220);
+  }
+  setTimeout(() => {
+    const remainder = totalItems % numGroups;
+    const eq = document.getElementById('groupingEq');
+    eq.textContent = remainder === 0
+      ? `${totalItems} ÷ ${numGroups} = ${count} groups of ${numGroups} ✅`
+      : `${totalItems} ÷ ${numGroups} = ${count} groups of ${numGroups} (and ${remainder} left over)`;
+    addStars(1);
+  }, count * 220 + 200);
+}
+
+// ─────────────────────────────────────────
+//  LEARN — FACTS TABLE
+// ─────────────────────────────────────────
+function showFacts(divisor, btn) {
+  document.querySelectorAll('.facts-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const grid = document.getElementById('factsGrid');
+  grid.innerHTML = '';
+  const cls = ['divby-2','divby-3','divby-4','divby-5'][divisor-2];
+  const max = divisor * 10;
+  for (let n = divisor; n <= max; n += divisor) {
+    const card = document.createElement('div');
+    card.className = `fact-card ${cls}`;
+    card.textContent = `${n} ÷ ${divisor} = ${n/divisor}`;
+    grid.appendChild(card);
+  }
+}
+
+// ─────────────────────────────────────────
+//  WORD PROBLEMS
+// ─────────────────────────────────────────
+const problemTemplates = [
+  {
+    emoji:'🍬',
+    gen:()=>{
+      const g=pick([2,3,4,5]),n=g*pick([2,3,4,5,6]);
+      return {
+        text:`Priya has <strong>${n} sweets</strong>. She wants to share them equally among <strong>${g} friends</strong>. How many sweets does each friend get?`,
+        answer: n/g,
+        hint:`${n} ÷ ${g}`
+      };
+    }
+  },
+  {
+    emoji:'⚽',
+    gen:()=>{
+      const t=pick([2,3,4,5]),n=t*pick([3,4,5,6]);
+      return {
+        text:`There are <strong>${n} children</strong> playing in the park. The coach puts them into teams of <strong>${t}</strong>. How many teams are there?`,
+        answer: n/t,
+        hint:`${n} ÷ ${t}`
+      };
+    }
+  },
+  {
+    emoji:'🍪',
+    gen:()=>{
+      const b=pick([2,3,4,5]),n=b*pick([3,4,5,6,7]);
+      return {
+        text:`Grandma baked <strong>${n} cookies</strong> and put them into boxes of <strong>${b}</strong> each. How many boxes did she fill?`,
+        answer: n/b,
+        hint:`${n} ÷ ${b}`
+      };
+    }
+  },
+  {
+    emoji:'🖍️',
+    gen:()=>{
+      const s=pick([2,3,4,5]),n=s*pick([2,3,4,5,6]);
+      return {
+        text:`A teacher has <strong>${n} crayons</strong> and shares them equally among <strong>${s} students</strong>. How many crayons does each student get?`,
+        answer: n/s,
+        hint:`${n} ÷ ${s}`
+      };
+    }
+  },
+  {
+    emoji:'🌸',
+    gen:()=>{
+      const v=pick([2,3,4,5]),n=v*pick([3,4,5,6]);
+      return {
+        text:`Mia picked <strong>${n} flowers</strong> and wants to put <strong>${v} flowers</strong> in each vase. How many vases does she need?`,
+        answer: n/v,
+        hint:`${n} ÷ ${v}`
+      };
+    }
+  },
+  {
+    emoji:'🚌',
+    gen:()=>{
+      const r=pick([2,3,4,5]),n=r*pick([4,5,6,7]);
+      return {
+        text:`<strong>${n} children</strong> are going on a trip. Each row of the bus holds <strong>${r} children</strong>. How many rows will be filled?`,
+        answer: n/r,
+        hint:`${n} ÷ ${r}`
+      };
+    }
+  }
+];
+
+let currentProblems = [];
+
+function generateWordProblems() {
+  // pick 3 unique templates
+  const indices = shuffleArr([0,1,2,3,4,5]).slice(0,3);
+  currentProblems = indices.map(i => ({...problemTemplates[i].gen(), emoji: problemTemplates[i].emoji}));
+  renderWordProblems();
+}
+
+function renderWordProblems() {
+  const c = document.getElementById('wordProblemsContainer');
+  c.innerHTML = '';
+  currentProblems.forEach((p,i) => {
+    const div = document.createElement('div');
+    div.className = 'problem-card';
+    div.innerHTML = `
+      <span class="problem-emoji">${p.emoji}</span>
+      <div class="problem-text">${p.text}</div>
+      <div class="problem-input-row">
+        <label style="font-weight:700;font-size:0.95rem;">Answer:</label>
+        <input type="number" class="answer-input" id="wp-input-${i}" placeholder="?" min="0" onkeydown="if(event.key==='Enter')checkWord(${i})"/>
+        <button class="check-btn" onclick="checkWord(${i})">✓ Check</button>
+      </div>
+      <div class="feedback" id="wp-fb-${i}"></div>
+    `;
+    c.appendChild(div);
+  });
+}
+
+function checkWord(i) {
+  const input = document.getElementById(`wp-input-${i}`);
+  const fb    = document.getElementById(`wp-fb-${i}`);
+  const val   = parseInt(input.value);
+  if (isNaN(val)) { fb.textContent = '⚠️ Please type a number!'; fb.className='feedback wrong'; return; }
+  if (val === currentProblems[i].answer) {
+    fb.textContent = `🎉 Correct! ${currentProblems[i].hint} = ${currentProblems[i].answer}`;
+    fb.className = 'feedback correct';
+    addStars(2);
+    launchConfetti(10);
+  } else {
+    fb.textContent = `❌ Not quite! Try again. Hint: think about ${currentProblems[i].hint}`;
+    fb.className = 'feedback wrong';
+  }
+}
+
+// ─────────────────────────────────────────
+//  PLAY — QUIZ
+// ─────────────────────────────────────────
+let questions = [];
+let qIndex    = 0;
+let score     = 0;
+let answered  = false;
+
+function startQuiz() {
+  questions = generateQuestions(8);
+  qIndex = 0; score = 0; answered = false;
+  document.getElementById('scoreboard').style.display = 'none';
+  document.getElementById('quizCard').style.display = 'block';
+  renderQuestion();
+}
+
+function generateQuestions(n) {
+  const qs = [];
+  while (qs.length < n) {
+    const divisor  = randInt(2,10);
+    const quotient = randInt(1,Math.floor(50/divisor));
+    const dividend = divisor * quotient;
+    // avoid duplicates
+    if (!qs.find(q => q.dividend===dividend && q.divisor===divisor)) {
+      qs.push({dividend, divisor, answer: quotient});
+    }
+  }
+  return qs;
+}
+
+function renderQuestion() {
+  answered = false;
+  const q = questions[qIndex];
+  document.getElementById('qNum').textContent = qIndex+1;
+  document.getElementById('progressBar').style.width = ((qIndex/8)*100)+'%';
+  document.getElementById('quizQ').innerHTML = `<span>${q.dividend}</span> ÷ <span>${q.divisor}</span> = ?`;
+
+  // generate 4 options
+  const opts = new Set([q.answer]);
+  while (opts.size < 4) {
+    let fake = q.answer + randInt(-5,5);
+    if (fake > 0 && fake !== q.answer) opts.add(fake);
+  }
+  const optArr = shuffleArr([...opts]);
+
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+  optArr.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.textContent = o;
+    btn.onclick = () => selectAnswer(o, q.answer, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function selectAnswer(chosen, correct, btn) {
+  if (answered) return;
+  answered = true;
+  const allBtns = document.querySelectorAll('.opt-btn');
+  allBtns.forEach(b => {
+    b.disabled = true;
+    if (parseInt(b.textContent) === correct) b.classList.add('correct');
+  });
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    score++;
+    addStars(3);
+    launchConfetti(25);
+  } else {
+    btn.classList.add('wrong');
+  }
+  setTimeout(() => {
+    qIndex++;
+    if (qIndex < 8) renderQuestion();
+    else showScore();
+  }, 1100);
+}
+
+function showScore() {
+  document.getElementById('progressBar').style.width = '100%';
+  document.getElementById('quizCard').style.display = 'none';
+  const sb = document.getElementById('scoreboard');
+  sb.style.display = 'block';
+  document.getElementById('scoreBig').textContent = `${score}/8`;
+  let emoji, msg, stars;
+  if (score === 8)      { emoji='🏆'; msg='Perfect score! You\'re a Division Star! 🌟'; stars='⭐⭐⭐'; }
+  else if (score >= 6)  { emoji='😄'; msg='Great job! Almost perfect!'; stars='⭐⭐⭐'; }
+  else if (score >= 4)  { emoji='🙂'; msg='Good effort! Keep practising!'; stars='⭐⭐'; }
+  else                  { emoji='💪'; msg='Don\'t give up — try again!'; stars='⭐'; }
+  document.getElementById('scoreEmoji').textContent = emoji;
+  document.getElementById('scoreMsg').textContent   = msg;
+  document.getElementById('scoreStars').textContent = stars;
+  addStars(score * 2);
+}
+
+// ─────────────────────────────────────────
+//  STARS
+// ─────────────────────────────────────────
+function addStars(n) {
+  totalStars += n;
+  document.getElementById('totalStars').textContent = totalStars;
+}
+
+// ─────────────────────────────────────────
+//  CONFETTI
+// ─────────────────────────────────────────
+const confColors = ['#FFD93D','#FF6B35','#F15BB5','#9B5DE5','#00BBF9','#00F5D4'];
+function launchConfetti(count) {
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.cssText = `
+        left:${Math.random()*100}vw;
+        top:-12px;
+        background:${confColors[Math.floor(Math.random()*confColors.length)]};
+        width:${6+Math.random()*8}px;
+        height:${6+Math.random()*8}px;
+        border-radius:${Math.random()>0.5?'50%':'2px'};
+        animation-duration:${0.8+Math.random()*1.2}s;
+        animation-delay:${Math.random()*0.3}s;
+        transform:rotate(${Math.random()*360}deg);
+      `;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 2500);
+    }, i * 35);
+  }
+}
+
+// ─────────────────────────────────────────
+//  HELPERS
+// ─────────────────────────────────────────
+function randInt(a,b){ return a + Math.floor(Math.random()*(b-a+1)); }
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function shuffleArr(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+// ─────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────
+(function init() {
+  buildEmptyGroups();
+  syncGroupingText();
+  showFacts(2, document.querySelector('.facts-tab[data-d="2"]'));
+  generateWordProblems();
+  startQuiz();
+})();
+</script>
+</body>
+</html>

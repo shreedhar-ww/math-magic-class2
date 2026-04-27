@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Subtraction — Math Magic</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --yellow:#FFD93D;--orange:#FF6B35;--pink:#F15BB5;
+  --purple:#9B5DE5;--blue:#00BBF9;--green:#00F5D4;--bg:#FFF9F0;
+  --red:#FF4757;--teal:#1e90ff;
+}
+body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overflow-x:hidden;}
+
+/* NAV */
+.topnav{
+  background:linear-gradient(135deg,#00BBF9,#9B5DE5);
+  padding:14px 20px;display:flex;align-items:center;gap:14px;
+  box-shadow:0 4px 12px rgba(0,0,0,.12);position:sticky;top:0;z-index:100;
+}
+.back-btn{background:rgba(255,255,255,.3);border:none;border-radius:50%;width:40px;height:40px;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s;}
+.back-btn:hover{transform:scale(1.15);}
+.topnav h1{color:#fff;font-size:1.4rem;font-weight:900;text-shadow:1px 2px 0 rgba(0,0,0,.15);flex:1;}
+.stars-pill{background:rgba(255,255,255,.3);color:#fff;font-weight:900;padding:5px 14px;border-radius:20px;font-size:1rem;}
+
+/* TABS */
+.tabs{display:flex;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.07);position:sticky;top:68px;z-index:99;}
+.tab{flex:1;padding:14px;text-align:center;font-weight:900;font-size:.95rem;color:#aaa;cursor:pointer;border-bottom:3px solid transparent;transition:color .2s,border-color .2s;}
+.tab.active{color:var(--blue);border-color:var(--blue);}
+
+/* SCREENS */
+.screen{display:none;padding:24px 20px;max-width:700px;margin:0 auto;}
+.screen.active{display:block;}
+.scard{background:#fff;border-radius:24px;padding:24px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:20px;}
+.scard-title{font-size:1.1rem;font-weight:900;color:var(--blue);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+
+/* ══ COLUMN SUBTRACTION ══ */
+.num-inputs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;}
+.num-input{width:90px;padding:10px 8px;text-align:center;font-size:1.5rem;font-weight:900;font-family:'Nunito',sans-serif;border:3px solid #ddd;border-radius:14px;background:#fff;outline:none;transition:border-color .2s;}
+.num-input:focus{border-color:var(--blue);}
+
+.col-add{display:flex;flex-direction:column;align-items:center;max-width:320px;margin:0 auto;gap:0;}
+.col-row{display:grid;grid-template-columns:repeat(4,60px);gap:4px;justify-content:center;align-items:center;}
+.col-cell{width:60px;height:62px;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:900;border-radius:12px;transition:all .3s;position:relative;}
+.col-cell.digit{background:#e8f4ff;color:#333;}
+.col-cell.minus{color:var(--blue);font-size:2.2rem;}
+.col-cell.blank{background:transparent;}
+
+/* borrow: crossed out original, small new value above */
+.col-cell.borrowed{background:#ffe8e8;color:#ccc;text-decoration:line-through;text-decoration-color:#FF4757;}
+.col-cell .new-val{
+  position:absolute;top:4px;right:6px;
+  font-size:.85rem;font-weight:900;color:var(--red);
+  background:#fff3e0;border-radius:6px;padding:0 4px;
+  animation:popIn .4s cubic-bezier(.34,1.56,.64,1);
+}
+.col-cell.result{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;border-radius:12px;animation:popIn .5s cubic-bezier(.34,1.56,.64,1);}
+.col-cell.result.blank{background:transparent;}
+
+.divider{width:100%;height:4px;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:2px;margin:6px 0;}
+@keyframes popIn{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+
+.step-explain{background:#e8f4ff;border-radius:16px;padding:14px 18px;font-size:1rem;font-weight:700;color:#444;margin-top:14px;border-left:4px solid var(--blue);min-height:52px;line-height:1.6;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.step-btns{display:flex;gap:12px;justify-content:center;margin-top:14px;flex-wrap:wrap;}
+.sbtn{padding:10px 22px;border:none;border-radius:50px;font-size:.95rem;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;transition:transform .15s;box-shadow:0 3px 0 rgba(0,0,0,.15);}
+.sbtn:hover{transform:translateY(-2px);}
+.sbtn.primary{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;}
+.sbtn.secondary{background:#eee;color:#555;}
+.sbtn.go{background:linear-gradient(135deg,var(--green),var(--blue));color:#111;}
+
+/* ══ BORROW VISUAL ══ */
+.borrow-scene{display:flex;align-items:flex-end;justify-content:center;gap:20px;flex-wrap:wrap;margin:16px 0;min-height:100px;}
+.borrow-block-wrap{text-align:center;}
+.borrow-block-wrap label{display:block;font-weight:900;font-size:.85rem;color:#666;margin-top:6px;}
+
+.block-grid{display:flex;flex-wrap:wrap;gap:3px;width:fit-content;max-width:130px;justify-content:center;}
+.sq{width:22px;height:22px;border-radius:5px;transition:all .4s;}
+.sq.active{background:linear-gradient(135deg,var(--blue),var(--purple));box-shadow:1px 2px 0 rgba(0,0,0,.15);}
+.sq.removed{background:#eee;border:2px dashed #ccc;}
+.sq.borrowed-in{background:linear-gradient(135deg,var(--orange),var(--yellow));animation:popIn .3s ease;}
+
+.arrow-label{font-size:2rem;font-weight:900;color:var(--red);align-self:center;}
+
+/* ══ WORD PROBLEMS ══ */
+.wp-card{background:linear-gradient(135deg,#e8f4ff,#f0e8ff);border-radius:20px;padding:20px;margin-bottom:14px;border:2px solid #c0d8ff;}
+.wp-emoji{font-size:3rem;display:block;text-align:center;margin-bottom:8px;animation:bounce 2s infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.wp-text{font-size:1rem;font-weight:700;color:#444;line-height:1.7;text-align:center;}
+.wp-answer{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:14px;}
+.wp-input{width:90px;padding:10px;text-align:center;font-size:1.5rem;font-weight:900;border:3px solid #ddd;border-radius:14px;font-family:'Nunito',sans-serif;outline:none;transition:border-color .2s;}
+.wp-input:focus{border-color:var(--blue);}
+.wp-check{padding:10px 20px;background:linear-gradient(135deg,var(--blue),var(--purple));border:none;border-radius:50px;color:#fff;font-size:1rem;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;}
+.wp-fb{font-size:1rem;font-weight:900;margin-top:10px;text-align:center;min-height:28px;}
+
+/* ══ QUIZ ══ */
+.quiz-score{font-size:1rem;font-weight:900;color:#aaa;margin-bottom:20px;text-align:center;}
+.qcard{background:#fff;border-radius:24px;padding:28px 22px;box-shadow:0 6px 20px rgba(0,0,0,.09);margin-bottom:20px;text-align:center;}
+.qcard .qnum{font-size:2.8rem;font-weight:900;color:#333;margin-bottom:6px;letter-spacing:2px;}
+.qcard .qask{font-size:1rem;color:#888;font-weight:700;margin-bottom:20px;}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.opt{padding:14px;border:3px solid #eee;border-radius:16px;font-size:1.1rem;font-weight:900;cursor:pointer;background:#fff;transition:all .2s;font-family:'Nunito',sans-serif;}
+.opt:hover{border-color:var(--blue);transform:scale(1.03);}
+.opt.correct{background:var(--green);border-color:var(--green);color:#111;animation:bop .4s;}
+.opt.wrong{background:#FFE0E0;border-color:#FF8A8A;color:#c00;}
+@keyframes bop{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.feedback{margin-top:14px;font-size:1.1rem;font-weight:900;min-height:32px;}
+.feedback.ok{color:#00b894;} .feedback.no{color:#e17055;}
+.next-btn{margin-top:16px;padding:13px 34px;background:linear-gradient(135deg,var(--blue),var(--purple));border:none;border-radius:50px;font-size:1rem;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.15);transition:transform .15s;display:none;}
+.next-btn:hover{transform:translateY(-3px);}
+.finish-card{background:linear-gradient(135deg,#00BBF9,#9B5DE5);border-radius:24px;padding:36px 24px;text-align:center;color:#fff;}
+.finish-card .big{font-size:5rem;}
+.finish-card h2{font-size:2rem;font-weight:900;margin:10px 0 6px;}
+.finish-card p{font-size:1rem;opacity:.9;margin-bottom:16px;}
+.score-big{font-size:3rem;font-weight:900;background:rgba(255,255,255,.25);border-radius:16px;padding:10px 24px;display:inline-block;margin-bottom:16px;}
+.retry-btn{padding:12px 28px;background:#fff;color:var(--blue);border:none;border-radius:50px;font-size:1rem;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;}
+
+/* confetti */
+.confetti-piece{position:fixed;width:10px;height:14px;border-radius:2px;animation:fall 1.2s ease-in forwards;z-index:999;pointer-events:none;}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <button class="back-btn" onclick="history.back()">←</button>
+  <h1>➖ Subtraction</h1>
+  <div class="stars-pill">⭐ 12</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('learn',this)">📖 Learn</div>
+  <div class="tab" onclick="switchTab('word',this)">📝 Word Problems</div>
+  <div class="tab" onclick="switchTab('play',this)">🎮 Play</div>
+</div>
+
+<!-- ════════════════════════ LEARN ════════════════════════ -->
+<div id="learn" class="screen active">
+
+  <!-- Column subtraction stepper -->
+  <div class="scard">
+    <div class="scard-title">📐 Column Subtraction — Step by Step</div>
+    <p style="color:#aaa;font-size:.9rem;font-weight:700;margin-bottom:14px;">Enter two numbers and see the borrowing method!</p>
+
+    <div class="num-inputs">
+      <input class="num-input" id="numA" type="number" min="10" max="999" value="700"/>
+      <span style="font-size:2rem;font-weight:900;color:var(--blue);line-height:58px;">−</span>
+      <input class="num-input" id="numB" type="number" min="1"  max="998" value="245"/>
+    </div>
+    <div style="text-align:center;margin-bottom:14px;">
+      <button class="sbtn go" onclick="startSub()">▶ Start</button>
+    </div>
+
+    <!-- column layout: 4 cols = [sign, H, T, O] -->
+    <div class="col-add" id="colSub" style="display:none;">
+      <!-- row A -->
+      <div class="col-row" id="rowA">
+        <div class="col-cell blank"></div>
+        <div class="col-cell digit" id="a2"></div>
+        <div class="col-cell digit" id="a1"></div>
+        <div class="col-cell digit" id="a0"></div>
+      </div>
+      <!-- row B -->
+      <div class="col-row">
+        <div class="col-cell minus">−</div>
+        <div class="col-cell digit" id="b2"></div>
+        <div class="col-cell digit" id="b1"></div>
+        <div class="col-cell digit" id="b0"></div>
+      </div>
+      <div class="divider"></div>
+      <!-- result -->
+      <div class="col-row">
+        <div class="col-cell blank"></div>
+        <div class="col-cell result blank" id="r2"></div>
+        <div class="col-cell result blank" id="r1"></div>
+        <div class="col-cell result blank" id="r0"></div>
+      </div>
+    </div>
+
+    <div class="step-explain" id="stepExp" style="display:none;"></div>
+    <div class="step-btns" id="stepBtns" style="display:none;">
+      <button class="sbtn secondary" onclick="prevStep()">← Back</button>
+      <button class="sbtn primary"   onclick="nextStep()">Next Step →</button>
+    </div>
+  </div>
+
+  <!-- Borrow visual -->
+  <div class="scard">
+    <div class="scard-title">🔄 What is Borrowing? — See it!</div>
+    <p style="color:#aaa;font-size:.9rem;font-weight:700;margin-bottom:6px;">When a digit is too small to subtract, we <strong style="color:var(--red);">borrow</strong> from the next column!</p>
+
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:12px 0;">
+      <button class="sbtn primary" onclick="showBorrow()">👀 Show Borrowing</button>
+      <button class="sbtn secondary" onclick="resetBorrow()">🔄 Reset</button>
+    </div>
+
+    <!-- Visual: 32 - 8 -->
+    <div style="text-align:center;font-size:1.3rem;font-weight:900;color:#333;margin-bottom:10px;" id="borrowTitle">32 − 8 = ?</div>
+    <div class="borrow-scene" id="borrowScene">
+      <!-- rendered by JS -->
+    </div>
+    <div style="text-align:center;font-size:1rem;font-weight:700;color:#666;margin-top:8px;" id="borrowDesc"></div>
+  </div>
+
+</div><!-- /learn -->
+
+
+<!-- ════════════════════════ WORD PROBLEMS ════════════════════════ -->
+<div id="word" class="screen">
+  <div id="wpCards"></div>
+  <div style="text-align:center;margin-top:4px;">
+    <button class="sbtn primary" onclick="newWordProblems()">🔀 New Problems</button>
+  </div>
+</div>
+
+
+<!-- ════════════════════════ PLAY ════════════════════════ -->
+<div id="play" class="screen">
+  <div class="quiz-score" id="quizScore">Question 1 of 8</div>
+  <div id="quizArea"></div>
+</div>
+
+
+<script>
+// ── tab switch ──
+function switchTab(id,el){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  if(id==='play') initQuiz();
+  if(id==='word') newWordProblems();
+  if(id==='learn') resetBorrow();
+}
+
+// ══════════════════════════════
+//  COLUMN SUBTRACTION STEPPER
+// ══════════════════════════════
+let steps=[], stepIdx=0;
+
+function startSub(){
+  let A=Math.min(999,Math.max(10,+document.getElementById('numA').value||700));
+  let B=Math.min(998,Math.max(1, +document.getElementById('numB').value||245));
+  if(B>=A){ B=A-1; document.getElementById('numB').value=B; }
+
+  document.getElementById('numA').value=A;
+
+  const a0=A%10,       a1=Math.floor(A/10)%10, a2=Math.floor(A/100);
+  const b0=B%10,       b1=Math.floor(B/10)%10, b2=Math.floor(B/100);
+
+  // static: fill B digits
+  setCell('b0',b0); setCell('b1',b1); setCell('b2',b2);
+  // fill A digits initially (may be overwritten by borrowing steps)
+  setCell('a0',a0); setCell('a1',a1); setCell('a2',a2);
+  // reset results
+  ['r0','r1','r2'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.textContent=''; el.className='col-cell result blank';
+  });
+  // remove any previous new-val overlays
+  ['a0','a1','a2'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.className='col-cell digit';
+    el.querySelectorAll('.new-val').forEach(n=>n.remove());
+  });
+
+  document.getElementById('colSub').style.display='flex';
+  document.getElementById('stepExp').style.display='block';
+  document.getElementById('stepBtns').style.display='flex';
+
+  // ── work out borrowing ──
+  // We'll track effective digits after borrowing
+  let eff=[a0,a1,a2]; // [ones, tens, hundreds]
+  let borrowed=[false,false,false];
+  let newVals=[null,null,null];
+
+  // ones
+  let need0=false, need1=false;
+  if(eff[0]<b0){
+    // borrow from tens — but tens might be 0, cascade
+    if(eff[1]===0 && eff[2]>0){
+      // borrow hundreds into tens first
+      newVals[2]=eff[2]-1; borrowed[2]=true;
+      newVals[1]=9; borrowed[1]=true; // tens becomes 9 after giving 10 to ones
+      // actually: hundreds gives 10 to tens column → tens becomes 10+eff[1]-1=9 (gave 1 to ones)
+      // let's do it simply:
+      eff[2]--; eff[1]+=10; // borrow from hundreds to tens
+    }
+    eff[1]--; eff[0]+=10;
+    newVals[0]=eff[0]; borrowed[0]=true; // a0 will show 10+a0 effectively
+    if(!newVals[1]&&borrowed[1]) newVals[1]=eff[1];
+    else if(!newVals[1]) newVals[1]=eff[1];
+  }
+  if(eff[1]<b1){
+    eff[2]--; eff[1]+=10;
+    if(!borrowed[1]) newVals[1]=eff[1]; borrowed[1]=true;
+    if(!borrowed[2]){ newVals[2]=eff[2]; borrowed[2]=true; }
+  }
+
+  const r0=eff[0]-b0, r1=eff[1]-b1, r2=eff[2]-b2;
+
+  steps=[];
+
+  // Step 0: intro
+  steps.push({
+    explain:`👉 We are solving <strong>${A} − ${B}</strong>.<br>Start from the <strong>Ones</strong> column (right side). Is ${a0} big enough to subtract ${b0}?`,
+    action:()=>{}
+  });
+
+  // Step 1: ones
+  if(borrowed[0]){
+    steps.push({
+      explain:`😮 ${a0} is <strong>less than</strong> ${b0} — we can't subtract!<br>So we <strong style="color:var(--red);">borrow 1 ten</strong> from the Tens column.<br>Ones becomes <strong>${eff[0]}</strong> (${a0} + 10).`,
+      action:()=>{
+        markBorrowed('a0', a0, eff[0]);
+        if(newVals[1]!==null) markBorrowed('a1', a1, eff[1]===eff[0]?a1-1:eff[1]);
+      }
+    });
+  }
+  steps.push({
+    explain:`✅ <strong>Ones:</strong> ${eff[0]} − ${b0} = <strong>${r0}</strong>`,
+    action:()=>{ revealResult('r0',r0); }
+  });
+
+  // Step 2: tens
+  if(borrowed[1] && eff[1]!==a1){
+    const showTens = newVals[1]!==null ? newVals[1] : eff[1];
+    steps.push({
+      explain:`😮 Tens column: we already gave away 1 ten.<br>Now we have <strong>${showTens}</strong> tens. Is ${showTens} ≥ ${b1}?${showTens<b1?' No — borrow from Hundreds!':''}`,
+      action:()=>{ if(showTens<b1) markBorrowed('a2',a2,eff[2]); }
+    });
+  }
+  steps.push({
+    explain:`✅ <strong>Tens:</strong> ${eff[1]} − ${b1} = <strong>${r1}</strong>`,
+    action:()=>{ revealResult('r1',r1); }
+  });
+
+  // Step 3: hundreds
+  steps.push({
+    explain:`✅ <strong>Hundreds:</strong> ${eff[2]} − ${b2} = <strong>${r2}</strong>`,
+    action:()=>{ revealResult('r2',r2); }
+  });
+
+  // Step 4: done
+  steps.push({
+    explain:`🎉 <strong>${A} − ${B} = ${A-B}</strong> — Amazing! You used borrowing like a pro! 🦸`,
+    action:()=>{ confettiBurst(25); }
+  });
+
+  stepIdx=0; applyStep(0);
+}
+
+function setCell(id,val){
+  const el=document.getElementById(id);
+  el.textContent=(val===0&&id[0]==='a'&&val===0)?'0':val||'';
+  // show 0 properly
+  el.textContent=val;
+}
+
+function markBorrowed(id, orig, newV){
+  const el=document.getElementById(id);
+  el.className='col-cell digit borrowed';
+  el.textContent=orig;
+  // add new value overlay
+  const nv=document.createElement('span'); nv.className='new-val'; nv.textContent=newV;
+  el.querySelectorAll('.new-val').forEach(n=>n.remove());
+  el.appendChild(nv);
+}
+
+function revealResult(id,val){
+  const el=document.getElementById(id);
+  el.textContent=val;
+  el.className='col-cell result';
+  el.style.animation='none'; void el.offsetWidth; el.style.animation='popIn .5s cubic-bezier(.34,1.56,.64,1)';
+}
+
+function applyStep(idx){
+  const exp=document.getElementById('stepExp');
+  exp.innerHTML=steps[idx].explain;
+  exp.style.animation='none'; void exp.offsetWidth; exp.style.animation='fadeIn .3s ease';
+  steps[idx].action();
+}
+function nextStep(){ if(stepIdx<steps.length-1){ stepIdx++; applyStep(stepIdx); }}
+function prevStep(){ if(stepIdx>0){ stepIdx--; } }
+
+// ══════════════════════════════
+//  BORROW VISUAL (32 - 8)
+// ══════════════════════════════
+let borrowPhase=0;
+function resetBorrow(){
+  borrowPhase=0;
+  document.getElementById('borrowTitle').textContent='32 − 8 = ?';
+  document.getElementById('borrowDesc').textContent='We have 32 blocks. We need to take away 8.';
+  renderBorrow(0);
+}
+function showBorrow(){
+  borrowPhase=(borrowPhase+1)%4;
+  renderBorrow(borrowPhase);
+}
+function renderBorrow(phase){
+  const scene=document.getElementById('borrowScene');
+  scene.innerHTML='';
+  const desc=document.getElementById('borrowDesc');
+  const title=document.getElementById('borrowTitle');
+
+  // Phase 0: show 3 tens + 2 ones = 32
+  // Phase 1: try to take 8 from 2 ones — can't!
+  // Phase 2: break one ten into 10 ones → 2 tens + 12 ones
+  // Phase 3: take away 8 → 2 tens + 4 ones = 24
+
+  if(phase===0){
+    title.textContent='32 − 8 = ?';
+    desc.textContent='We have 3 tens and 2 ones = 32 blocks total.';
+    appendGroup(scene,'Tens (3)',3,'ten',false,false);
+    appendGroup(scene,'Ones (2)',2,'one',false,false);
+  } else if(phase===1){
+    title.textContent='Oops! 2 < 8 😮';
+    desc.innerHTML='We only have <strong>2 ones</strong> but need to take <strong>8</strong>. We need to <strong style="color:var(--red);">borrow!</strong>';
+    appendGroup(scene,'Tens (3)',3,'ten',false,false);
+    appendGroup(scene,'Ones (2)',2,'one',true,false);
+  } else if(phase===2){
+    title.textContent='Borrow 1 ten → 10 ones! 🔄';
+    desc.innerHTML='Break 1 ten into <strong>10 ones</strong>. Now we have <strong>2 tens + 12 ones</strong>.';
+    appendGroup(scene,'Tens (2)',2,'ten',false,false);
+    appendGroup(scene,'Ones (12)',12,'one',false,true);
+  } else {
+    title.textContent='32 − 8 = 24 ✅';
+    desc.innerHTML='Take away 8 ones. Left with <strong>2 tens + 4 ones = 24</strong> 🎉';
+    appendGroup(scene,'Tens (2)',2,'ten',false,false);
+    appendGroup(scene,'Kept (4)',4,'one',false,false);
+    appendGroup(scene,'Taken (8)',8,'one-taken',false,false);
+    confettiBurst(15);
+  }
+}
+function appendGroup(scene,label,count,type,warn,highlight){
+  const wrap=document.createElement('div'); wrap.className='borrow-block-wrap';
+  const grid=document.createElement('div'); grid.className='block-grid';
+  for(let i=0;i<count;i++){
+    const sq=document.createElement('div');
+    if(type==='ten'){
+      // draw as a rod (vertical)
+      sq.style.cssText=`width:18px;height:52px;border-radius:6px;background:linear-gradient(135deg,var(--blue),var(--purple));box-shadow:1px 2px 0 rgba(0,0,0,.15);animation:popIn .3s ease;animation-delay:${i*.06}s;opacity:0;animation-fill-mode:forwards;`;
+    } else if(type==='one'){
+      sq.className='sq active';
+      if(warn) sq.style.cssText='width:22px;height:22px;border-radius:5px;background:var(--red);animation:popIn .3s ease;';
+      if(highlight) sq.style.cssText+=`animation-delay:${i*.04}s;background:linear-gradient(135deg,var(--orange),var(--yellow));`;
+    } else {
+      // taken
+      sq.className='sq removed';
+    }
+    grid.appendChild(sq);
+  }
+  const lbl=document.createElement('label'); lbl.textContent=label;
+  wrap.appendChild(grid); wrap.appendChild(lbl);
+  scene.appendChild(wrap);
+}
+resetBorrow();
+
+// ══════════════════════════════
+//  WORD PROBLEMS
+// ══════════════════════════════
+const WP_POOL=[
+  (a,b)=>({emoji:'🍬',text:`Anika had <strong>${a}</strong> sweets. She ate <strong>${b}</strong> sweets. How many sweets are left?`,ans:a-b}),
+  (a,b)=>({emoji:'🚂',text:`A train has <strong>${a}</strong> passengers. <strong>${b}</strong> passengers get off at the station. How many are still on the train?`,ans:a-b}),
+  (a,b)=>({emoji:'🎈',text:`There were <strong>${a}</strong> balloons at the party. <strong>${b}</strong> balloons burst. How many balloons are left?`,ans:a-b}),
+  (a,b)=>({emoji:'📦',text:`A shop had <strong>${a}</strong> boxes. The shopkeeper sold <strong>${b}</strong> boxes. How many boxes remain?`,ans:a-b}),
+  (a,b)=>({emoji:'🐦',text:`There were <strong>${a}</strong> birds on a tree. <strong>${b}</strong> birds flew away. How many birds are still on the tree?`,ans:a-b}),
+  (a,b)=>({emoji:'💧',text:`A water tank has <strong>${a}</strong> litres of water. <strong>${b}</strong> litres are used. How many litres are left?`,ans:a-b}),
+];
+
+function newWordProblems(){
+  const container=document.getElementById('wpCards'); container.innerHTML='';
+  shuffle([...WP_POOL]).slice(0,3).forEach((fn,i)=>{
+    const b=rnd(40)+10;
+    const a=b+rnd(50)+10;
+    const {emoji,text,ans}=fn(a,b);
+    container.innerHTML+=`
+    <div class="wp-card">
+      <span class="wp-emoji">${emoji}</span>
+      <div class="wp-text">${text}</div>
+      <div class="wp-answer">
+        <input class="wp-input" id="wpi${i}" type="number" placeholder="?"/>
+        <button class="wp-check" onclick="checkWP(${i},${ans})">Check ✅</button>
+      </div>
+      <div class="wp-fb" id="wpfb${i}"></div>
+    </div>`;
+  });
+}
+function checkWP(i,ans){
+  const val=+document.getElementById('wpi'+i).value;
+  const fb=document.getElementById('wpfb'+i);
+  if(!val&&val!==0){fb.textContent='Type your answer first!';fb.style.color='#aaa';return;}
+  if(val===ans){fb.innerHTML='🎉 Correct! <strong>'+ans+'</strong> is right!';fb.style.color='#00b894';confettiBurst(20);}
+  else{fb.innerHTML='😅 Not quite. The answer is <strong>'+ans+'</strong>';fb.style.color='#e17055';}
+}
+
+// ══════════════════════════════
+//  QUIZ
+// ══════════════════════════════
+function genQ(){
+  const type=rnd(4);
+  if(type===0){
+    const a=rnd(80)+20, b=rnd(a-1)+1;
+    return {q:`${a} − ${b}`,ans:a-b,wrongs:[a-b+10,a-b-5,a-b+1,a+b]};
+  } else if(type===1){
+    const a=rnd(700)+200, b=rnd(150)+10;
+    return {q:`${a} − ${b}`,ans:a-b,wrongs:[a-b+10,a-b-10,a-b+100,a-b-1]};
+  } else if(type===2){
+    // fill blank: a − ___ = c
+    const c=rnd(80)+10, b=rnd(60)+5;
+    const a=c+b;
+    return {q:`${a} − ___ = ${c}`,ans:b,wrongs:[b+10,b-5,c,a]};
+  } else {
+    // which is bigger to subtract correctly
+    const a=rnd(500)+300, b=rnd(200)+50;
+    return {q:`${a} − ${b}`,ans:a-b,wrongs:[a-b+100,a-b-100,b-a<0?b:a-b+50,a+b]};
+  }
+}
+
+let qs=[],qi=0,score=0,qAnswered=false;
+function initQuiz(){qs=Array.from({length:8},genQ);qi=0;score=0;qAnswered=false;renderQ();}
+function renderQ(){
+  if(qi>=qs.length){showFinish();return;}
+  document.getElementById('quizScore').textContent=`Question ${qi+1} of ${qs.length}  |  ⭐ ${score}`;
+  const q=qs[qi]; qAnswered=false;
+  const opts=shuffle([q.ans,...q.wrongs.filter(w=>w>=0&&w!==q.ans).slice(0,3)]);
+  document.getElementById('quizArea').innerHTML=`
+    <div class="qcard">
+      <div class="qnum">${q.q}</div>
+      <div class="qask">What is the answer?</div>
+      <div class="options">${opts.map(o=>`<button class="opt" onclick="checkAns(this,${o},${q.ans})">${o}</button>`).join('')}</div>
+      <div class="feedback" id="fb"></div>
+    </div>
+    <button class="next-btn" id="nxt" onclick="nextQ()">Next ➡</button>`;
+}
+function checkAns(btn,chosen,correct){
+  if(qAnswered)return; qAnswered=true;
+  const fb=document.getElementById('fb');
+  document.getElementById('nxt').style.display='inline-block';
+  if(chosen===correct){
+    btn.classList.add('correct');fb.textContent='🎉 Correct!';fb.className='feedback ok';
+    score++;confettiBurst(25);
+  } else {
+    btn.classList.add('wrong');
+    fb.innerHTML=`😅 The answer is <strong>${correct}</strong>`;fb.className='feedback no';
+    document.querySelectorAll('.opt').forEach(o=>{if(+o.textContent===correct)o.classList.add('correct');});
+  }
+  document.getElementById('quizScore').textContent=`Question ${qi+1} of ${qs.length}  |  ⭐ ${score}`;
+}
+function nextQ(){qi++;renderQ();}
+function showFinish(){
+  const pct=Math.round(score/qs.length*100);
+  const msg=pct===100?'🌟 Perfect! You\'re a Subtraction Star!':pct>=75?'🎊 Awesome!':pct>=50?'👍 Good effort!':'💪 Keep practising!';
+  document.getElementById('quizArea').innerHTML=`<div class="finish-card"><div class="big">${pct===100?'🏆':'🎯'}</div><h2>Quiz Done!</h2><p>${msg}</p><div class="score-big">${score} / ${qs.length} ⭐</div><br><button class="retry-btn" onclick="initQuiz()">🔄 Try Again</button></div>`;
+  if(pct===100)confettiBurst(80);
+  document.getElementById('quizScore').textContent=`Final: ${score} / ${qs.length}`;
+}
+
+function rnd(n){return Math.floor(Math.random()*n);}
+function shuffle(a){return a.sort(()=>Math.random()-.5);}
+function confettiBurst(count=30){
+  const cols=['#FFD93D','#FF6B35','#9B5DE5','#00BBF9','#F15BB5','#00F5D4'];
+  for(let i=0;i<count;i++){
+    const c=document.createElement('div');c.className='confetti-piece';
+    c.style.cssText=`left:${20+Math.random()*60}vw;top:30vh;background:${cols[i%cols.length]};animation-delay:${Math.random()*.4}s;animation-duration:${.9+Math.random()*.5}s;`;
+    document.body.appendChild(c);setTimeout(()=>c.remove(),1600);
+  }
+}
+
+startSub();
+</script>
+</body>
+</html>

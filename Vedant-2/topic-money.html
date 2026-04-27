@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💰 Money — Class 2 Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #FFD93D;
+    --orange: #FF6B35;
+    --pink: #F15BB5;
+    --purple: #9B5DE5;
+    --blue: #00BBF9;
+    --green: #00F5D4;
+    --white: #ffffff;
+    --bg: #FFF9F0;
+    --card: #ffffff;
+    --text: #2D2D2D;
+    --radius: 18px;
+    --shadow: 0 4px 20px rgba(0,0,0,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: linear-gradient(135deg, var(--yellow) 0%, var(--orange) 100%);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 3px 16px rgba(255,107,53,0.35);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .back-btn {
+    background: rgba(255,255,255,0.35);
+    border: none;
+    border-radius: 50%;
+    width: 40px; height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s;
+    color: #fff;
+    font-weight: 900;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.55); }
+  nav h1 {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    flex: 1;
+  }
+  .stars-pill {
+    background: rgba(255,255,255,0.35);
+    border-radius: 50px;
+    padding: 6px 16px;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #fff;
+    display: flex; align-items: center; gap: 4px;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    padding: 16px 20px 0;
+    background: var(--bg);
+    position: sticky;
+    top: 68px;
+    z-index: 90;
+    border-bottom: 3px solid #f0e4d0;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 10px 6px;
+    border: none;
+    border-radius: 14px 14px 0 0;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    background: #f0e4d0;
+    color: #888;
+    transition: all .2s;
+  }
+  .tab-btn.active {
+    background: linear-gradient(135deg, var(--yellow), var(--orange));
+    color: #fff;
+    box-shadow: 0 -3px 12px rgba(255,107,53,0.3);
+  }
+
+  /* ── SECTIONS ── */
+  .tab-section { display: none; padding: 24px 16px 40px; }
+  .tab-section.active { display: block; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 22px;
+    margin-bottom: 22px;
+    box-shadow: var(--shadow);
+  }
+  .card-title {
+    font-size: 1.15rem;
+    font-weight: 900;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ── COINS CSS ── */
+  .gallery { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
+  .coin {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 900;
+    font-size: 0.75rem;
+    transition: transform .15s;
+    position: relative;
+    box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2), 0 4px 10px rgba(0,0,0,0.15);
+  }
+  .coin:active, .coin.bounce { animation: bounce .4s; }
+  .coin .sym { font-size: 1.3rem; line-height: 1; }
+  .coin .val { font-size: 0.75rem; margin-top: 1px; }
+
+  .coin-1  { background: radial-gradient(circle at 38% 35%, #e8c97a, #b8860b); color: #6b4c00; border: 3px solid #c8a030; }
+  .coin-2  { background: radial-gradient(circle at 38% 35%, #dcdcdc, #a8a8a8); color: #444; border: 3px solid #b0b0b0; }
+  .coin-5  { background: radial-gradient(circle at 38% 35%, #f5d060, #d4a010); color: #5a3a00; border: 3px solid #c89820; }
+  .coin-10 { background: radial-gradient(circle at 38% 35%, #e0c86a, #9a7a00); color: #3a2800; border: 3px solid #b89010; }
+
+  /* ── NOTES CSS ── */
+  .note {
+    width: 110px; height: 58px;
+    border-radius: 8px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    cursor: pointer;
+    font-weight: 900;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+    border: 2px solid rgba(255,255,255,0.6);
+    overflow: hidden;
+    transition: transform .15s;
+  }
+  .note:active, .note.bounce { animation: bounce .4s; }
+  .note::before {
+    content: '';
+    position: absolute;
+    top: 6px; left: 6px; right: 6px; bottom: 6px;
+    border: 1.5px dashed rgba(255,255,255,0.45);
+    border-radius: 5px;
+    pointer-events: none;
+  }
+  .note .n-sym { font-size: 1.1rem; color: rgba(255,255,255,0.9); }
+  .note .n-val { font-size: 0.8rem; color: rgba(255,255,255,0.85); }
+
+  .note-10  { background: linear-gradient(135deg, #43a830, #2e7d20); }
+  .note-20  { background: linear-gradient(135deg, #e07b20, #b85c00); }
+  .note-50  { background: linear-gradient(135deg, #9b3fb5, #6d2080); }
+  .note-100 { background: linear-gradient(135deg, #1a78c2, #0d4e8a); }
+
+  @keyframes bounce {
+    0%   { transform: scale(1); }
+    30%  { transform: scale(1.18) rotate(-4deg); }
+    60%  { transform: scale(0.92) rotate(3deg); }
+    100% { transform: scale(1); }
+  }
+
+  .gallery-label {
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #888;
+    margin-top: 4px;
+  }
+  .gallery-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+
+  /* ── MAKE THE AMOUNT ── */
+  .target-box {
+    background: linear-gradient(135deg, #fff3c4, #ffe08a);
+    border-radius: 14px;
+    padding: 14px 20px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--orange);
+    margin-bottom: 16px;
+    border: 2px solid var(--yellow);
+  }
+  .mta-coins { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 16px; }
+  .mta-coin {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    cursor: pointer;
+  }
+  .running-total {
+    background: #f0fff8;
+    border: 2px solid var(--green);
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-align: center;
+    color: #007a5e;
+    margin-bottom: 12px;
+  }
+  .mta-reset {
+    background: var(--pink);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 8px 22px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: opacity .2s;
+  }
+  .mta-reset:hover { opacity: .85; }
+  .mta-selected { display: flex; flex-wrap: wrap; gap: 6px; min-height: 32px; margin-bottom: 10px; }
+  .sel-tag {
+    background: var(--blue);
+    color: #fff;
+    border-radius: 50px;
+    padding: 3px 10px;
+    font-size: 0.85rem;
+    font-weight: 800;
+  }
+
+  /* ── ADDITION / SUBTRACTION ── */
+  .column-add {
+    font-size: 1.6rem;
+    font-weight: 900;
+    font-family: 'Nunito', monospace;
+    line-height: 1.8;
+    text-align: right;
+    padding-right: 20px;
+  }
+  .column-add .line { border-top: 3px solid #333; padding-top: 4px; }
+  .add-step { opacity: 0; transition: opacity .5s; }
+  .add-step.show { opacity: 1; }
+  .step-btn {
+    background: var(--purple);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 8px 22px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: opacity .2s;
+  }
+  .step-btn:hover { opacity: .85; }
+
+  /* ── SHOPPING ── */
+  .shop-scene {
+    background: linear-gradient(135deg, #fff5e6, #ffe0b2);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+  .shop-items { display: flex; flex-wrap: wrap; gap: 14px; margin: 12px 0; }
+  .shop-item {
+    background: #fff;
+    border-radius: 12px;
+    padding: 10px 14px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    min-width: 90px;
+  }
+  .shop-item .item-icon { font-size: 2rem; }
+  .shop-item .item-price { font-size: 0.9rem; font-weight: 800; color: var(--orange); margin-top: 4px; }
+  .shop-item .item-name { font-size: 0.78rem; color: #666; }
+  .shop-question { font-size: 1rem; font-weight: 700; color: #444; margin: 10px 0 6px; }
+  .shop-input-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .shop-input {
+    border: 2.5px solid var(--blue);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    width: 100px;
+    color: #333;
+    outline: none;
+  }
+  .shop-input:focus { border-color: var(--purple); }
+  .check-btn {
+    background: var(--green);
+    border: none;
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #007a5e;
+    cursor: pointer;
+    transition: opacity .2s;
+  }
+  .check-btn:hover { opacity: .85; }
+  .feedback {
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 6px 0;
+    min-height: 26px;
+  }
+  .feedback.correct { color: #00a86b; }
+  .feedback.wrong   { color: #e03030; }
+
+  /* ── PLAY TAB ── */
+  .quiz-progress {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .q-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: #e0d4c0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #aaa;
+    transition: background .3s;
+  }
+  .q-dot.done-c { background: var(--green); color: #005a44; }
+  .q-dot.done-w { background: var(--pink); color: #7a0040; }
+  .q-dot.active { background: var(--yellow); color: #7a4a00; }
+
+  .quiz-card {
+    background: linear-gradient(135deg, #f0f8ff, #e8f0fe);
+    border-radius: 16px;
+    padding: 22px;
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  .quiz-qnum { font-size: 0.85rem; color: #888; font-weight: 700; margin-bottom: 6px; }
+  .quiz-q { font-size: 1.3rem; font-weight: 900; color: #333; margin-bottom: 0; }
+  .quiz-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .opt-btn {
+    background: #fff;
+    border: 3px solid #ddd;
+    border-radius: 14px;
+    padding: 14px 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all .2s;
+    color: #444;
+  }
+  .opt-btn:hover:not(:disabled) { border-color: var(--purple); color: var(--purple); background: #f5eeff; }
+  .opt-btn.correct { background: #d4fce8; border-color: var(--green); color: #006644; }
+  .opt-btn.wrong   { background: #ffe0e0; border-color: #e03030; color: #9a0000; }
+  .opt-btn:disabled { cursor: default; }
+
+  .quiz-feedback {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 800;
+    min-height: 32px;
+    padding: 6px 0;
+  }
+  .quiz-feedback.c { color: #00a86b; }
+  .quiz-feedback.w { color: #e03030; }
+
+  .next-btn {
+    display: block;
+    margin: 14px auto 0;
+    background: linear-gradient(135deg, var(--yellow), var(--orange));
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 30px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(255,107,53,0.4);
+    transition: opacity .2s;
+  }
+  .next-btn:hover { opacity: .88; }
+
+  /* ── SCORE CARD ── */
+  .score-card {
+    display: none;
+    text-align: center;
+    padding: 30px 20px;
+  }
+  .score-card.show { display: block; }
+  .score-big {
+    font-size: 4rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--yellow), var(--orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .score-msg { font-size: 1.2rem; font-weight: 800; color: #555; margin: 8px 0 20px; }
+  .replay-btn {
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 36px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(155,93,229,0.4);
+    transition: opacity .2s;
+  }
+  .replay-btn:hover { opacity: .88; }
+
+  /* ── CONFETTI ── */
+  .confetti-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+  }
+  .confetti-piece {
+    position: absolute;
+    width: 10px; height: 10px;
+    top: -12px;
+    animation: fall linear forwards;
+    border-radius: 2px;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ── SUBTRACTION STEP ── */
+  .sub-step {
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin: 6px 0;
+    opacity: 0;
+    transition: opacity .5s;
+  }
+  .sub-step.show { opacity: 1; }
+  .sub-step.s1 { background: #fff3c4; }
+  .sub-step.s2 { background: #ffe0e0; }
+  .sub-step.s3 { background: #d4fce8; font-size: 1.3rem; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 400px) {
+    nav h1 { font-size: 1.3rem; }
+    .coin { width: 60px; height: 60px; }
+    .note { width: 96px; height: 52px; }
+    .quiz-opts { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CONFETTI LAYER -->
+<div class="confetti-container" id="confettiContainer"></div>
+
+<!-- NAV -->
+<nav>
+  <button class="back-btn" onclick="history.back()">←</button>
+  <h1>💰 Money</h1>
+  <div class="stars-pill" id="starsPill">⭐ <span id="starCount">0</span></div>
+</nav>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('learn',this)">📖 Learn</button>
+  <button class="tab-btn"        onclick="showTab('shop',this)">🛒 Shopping</button>
+  <button class="tab-btn"        onclick="showTab('play',this)">🎮 Play</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     LEARN TAB
+══════════════════════════════════════════ -->
+<section class="tab-section active" id="tab-learn">
+
+  <!-- 1. GALLERY -->
+  <div class="card">
+    <div class="card-title">🪙 Coins &amp; Notes Gallery</div>
+    <p style="font-size:.9rem;color:#666;margin-bottom:14px;">Tap any coin or note to see it jump!</p>
+
+    <p style="font-weight:800;color:#888;font-size:.85rem;margin-bottom:10px;">COINS</p>
+    <div class="gallery">
+      <div class="gallery-item">
+        <div class="coin coin-1" onclick="bounce(this)"><span class="sym">₹</span><span class="val">1</span></div>
+        <div class="gallery-label">One Rupee</div>
+      </div>
+      <div class="gallery-item">
+        <div class="coin coin-2" onclick="bounce(this)"><span class="sym">₹</span><span class="val">2</span></div>
+        <div class="gallery-label">Two Rupees</div>
+      </div>
+      <div class="gallery-item">
+        <div class="coin coin-5" onclick="bounce(this)"><span class="sym">₹</span><span class="val">5</span></div>
+        <div class="gallery-label">Five Rupees</div>
+      </div>
+      <div class="gallery-item">
+        <div class="coin coin-10" onclick="bounce(this)"><span class="sym">₹</span><span class="val">10</span></div>
+        <div class="gallery-label">Ten Rupees</div>
+      </div>
+    </div>
+
+    <p style="font-weight:800;color:#888;font-size:.85rem;margin:18px 0 10px;">NOTES</p>
+    <div class="gallery">
+      <div class="gallery-item">
+        <div class="note note-10" onclick="bounce(this)"><span class="n-sym">₹</span><span class="n-val">10</span></div>
+        <div class="gallery-label">Ten Rupees</div>
+      </div>
+      <div class="gallery-item">
+        <div class="note note-20" onclick="bounce(this)"><span class="n-sym">₹</span><span class="n-val">20</span></div>
+        <div class="gallery-label">Twenty Rupees</div>
+      </div>
+      <div class="gallery-item">
+        <div class="note note-50" onclick="bounce(this)"><span class="n-sym">₹</span><span class="n-val">50</span></div>
+        <div class="gallery-label">Fifty Rupees</div>
+      </div>
+      <div class="gallery-item">
+        <div class="note note-100" onclick="bounce(this)"><span class="n-sym">₹</span><span class="n-val">100</span></div>
+        <div class="gallery-label">One Hundred</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. MAKE THE AMOUNT -->
+  <div class="card">
+    <div class="card-title">🎯 Make the Amount</div>
+    <div class="target-box" id="mtaTarget">Make ₹<span id="mtaVal">35</span></div>
+    <p style="font-size:.9rem;color:#666;margin-bottom:12px;">Click coins / notes to add them up:</p>
+
+    <div class="mta-coins" id="mtaCoins">
+      <!-- coins -->
+      <div class="mta-coin" onclick="mtaAdd(1,'coin coin-1')">
+        <div class="coin coin-1" style="width:54px;height:54px"><span class="sym">₹</span><span class="val">1</span></div>
+        <span style="font-size:.75rem;font-weight:700;color:#888">+₹1</span>
+      </div>
+      <div class="mta-coin" onclick="mtaAdd(2,'coin coin-2')">
+        <div class="coin coin-2" style="width:54px;height:54px"><span class="sym">₹</span><span class="val">2</span></div>
+        <span style="font-size:.75rem;font-weight:700;color:#888">+₹2</span>
+      </div>
+      <div class="mta-coin" onclick="mtaAdd(5,'coin coin-5')">
+        <div class="coin coin-5" style="width:54px;height:54px"><span class="sym">₹</span><span class="val">5</span></div>
+        <span style="font-size:.75rem;font-weight:700;color:#888">+₹5</span>
+      </div>
+      <div class="mta-coin" onclick="mtaAdd(10,'coin coin-10')">
+        <div class="coin coin-10" style="width:54px;height:54px"><span class="sym">₹</span><span class="val">10</span></div>
+        <span style="font-size:.75rem;font-weight:700;color:#888">+₹10</span>
+      </div>
+      <!-- notes -->
+      <div class="mta-coin" onclick="mtaAdd(20,'note note-20')">
+        <div class="note note-20" style="width:76px;height:42px"><span class="n-sym">₹</span><span class="n-val">20</span></div>
+        <span style="font-size:.75rem;font-weight:700;color:#888">+₹20</span>
+      </div>
+      <div class="mta-coin" onclick="mtaAdd(50,'note note-50')">
+        <div class="note note-50" style="width:76px;height:42px"><span class="n-sym">₹</span><span class="n-val">50</span></div>
+        <span style="font-size:.75rem;font-weight:700;color:#888">+₹50</span>
+      </div>
+    </div>
+
+    <div class="running-total">Total so far: ₹<span id="mtaTotal">0</span></div>
+    <div class="mta-selected" id="mtaSelected"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="mta-reset" onclick="mtaReset()">🔄 Reset</button>
+      <button class="mta-reset" style="background:var(--blue);color:#fff;" onclick="mtaNewTarget()">🎲 New Target</button>
+    </div>
+  </div>
+
+  <!-- 3. ADDITION -->
+  <div class="card">
+    <div class="card-title">➕ Adding Money</div>
+    <p style="font-size:.9rem;color:#666;margin-bottom:16px;">Riya has <strong>₹45</strong>. She earns <strong>₹38</strong> more. How much does she have now?</p>
+    <div class="column-add">
+      <div class="add-step" id="as1">&nbsp;&nbsp;₹ 4 5</div>
+      <div class="add-step" id="as2">+ ₹ 3 8</div>
+      <div class="add-step line" id="as3" style="color:var(--orange)">= ₹ 8 3</div>
+    </div>
+    <button class="step-btn" id="addStepBtn" onclick="nextAddStep()">▶ Show Step</button>
+    <div id="addMsg" style="margin-top:12px;font-size:1rem;font-weight:800;color:#007a5e;min-height:24px;"></div>
+  </div>
+
+  <!-- 4. SUBTRACTION -->
+  <div class="card">
+    <div class="card-title">➖ Subtracting Money</div>
+    <p style="font-size:.9rem;color:#666;margin-bottom:14px;">Arjun had <strong>₹100</strong>. He spent <strong>₹35</strong>. How much is left?</p>
+    <div id="subSteps">
+      <div class="sub-step s1" id="ss1">Start with: <strong>₹100</strong></div>
+      <div class="sub-step s2" id="ss2">Spend: <strong>₹35</strong></div>
+      <div class="sub-step s3" id="ss3">₹100 − ₹35 = <span style="color:var(--green)">₹65 🎉</span></div>
+    </div>
+    <button class="step-btn" id="subStepBtn" onclick="nextSubStep()" style="background:var(--pink);">▶ Show Step</button>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════
+     SHOPPING TAB
+══════════════════════════════════════════ -->
+<section class="tab-section" id="tab-shop">
+
+  <!-- Problem 1 -->
+  <div class="card">
+    <div class="card-title">🛍️ Problem 1</div>
+    <div class="shop-scene">
+      <p style="font-weight:800;">You have <span style="color:var(--orange)">₹50</span>.</p>
+      <div class="shop-items">
+        <div class="shop-item"><div class="item-icon">✏️</div><div class="item-name">Pencil</div><div class="item-price">₹12</div></div>
+        <div class="shop-item"><div class="item-icon">🧹</div><div class="item-name">Eraser</div><div class="item-price">₹8</div></div>
+      </div>
+      <div class="shop-question">Q1: How much do you spend in total?</div>
+      <div class="shop-input-row">
+        <span>₹</span>
+        <input class="shop-input" id="s1q1" type="number" min="0" placeholder="?">
+        <button class="check-btn" onclick="checkShop(1,1,20)">✔ Check</button>
+      </div>
+      <div class="feedback" id="fb1-1"></div>
+
+      <div class="shop-question">Q2: How much change do you get back?</div>
+      <div class="shop-input-row">
+        <span>₹</span>
+        <input class="shop-input" id="s1q2" type="number" min="0" placeholder="?">
+        <button class="check-btn" onclick="checkShop(1,2,30)">✔ Check</button>
+      </div>
+      <div class="feedback" id="fb1-2"></div>
+    </div>
+  </div>
+
+  <!-- Problem 2 -->
+  <div class="card">
+    <div class="card-title">🛍️ Problem 2</div>
+    <div class="shop-scene">
+      <p style="font-weight:800;">You have <span style="color:var(--orange)">₹100</span>.</p>
+      <div class="shop-items">
+        <div class="shop-item"><div class="item-icon">📒</div><div class="item-name">Notebook</div><div class="item-price">₹35</div></div>
+        <div class="shop-item"><div class="item-icon">🖊️</div><div class="item-name">Pen</div><div class="item-price">₹15</div></div>
+        <div class="shop-item"><div class="item-icon">📐</div><div class="item-name">Scale</div><div class="item-price">₹10</div></div>
+      </div>
+      <div class="shop-question">Q1: Total cost of all 3 items?</div>
+      <div class="shop-input-row">
+        <span>₹</span>
+        <input class="shop-input" id="s2q1" type="number" min="0" placeholder="?">
+        <button class="check-btn" onclick="checkShop(2,1,60)">✔ Check</button>
+      </div>
+      <div class="feedback" id="fb2-1"></div>
+
+      <div class="shop-question">Q2: Change received from ₹100?</div>
+      <div class="shop-input-row">
+        <span>₹</span>
+        <input class="shop-input" id="s2q2" type="number" min="0" placeholder="?">
+        <button class="check-btn" onclick="checkShop(2,2,40)">✔ Check</button>
+      </div>
+      <div class="feedback" id="fb2-2"></div>
+    </div>
+  </div>
+
+  <!-- Problem 3 -->
+  <div class="card">
+    <div class="card-title">🛍️ Problem 3</div>
+    <div class="shop-scene">
+      <p style="font-weight:800;">Mango costs <span style="color:var(--orange)">₹25</span> each. You buy <span style="color:var(--orange)">2 mangoes</span> and a <span style="color:var(--orange)">₹20</span> juice.</p>
+      <div class="shop-items">
+        <div class="shop-item"><div class="item-icon">🥭</div><div class="item-name">Mango ×2</div><div class="item-price">₹25 each</div></div>
+        <div class="shop-item"><div class="item-icon">🧃</div><div class="item-name">Juice</div><div class="item-price">₹20</div></div>
+      </div>
+      <div class="shop-question">Q1: Total amount to pay?</div>
+      <div class="shop-input-row">
+        <span>₹</span>
+        <input class="shop-input" id="s3q1" type="number" min="0" placeholder="?">
+        <button class="check-btn" onclick="checkShop(3,1,70)">✔ Check</button>
+      </div>
+      <div class="feedback" id="fb3-1"></div>
+
+      <div class="shop-question">Q2: Change from ₹100?</div>
+      <div class="shop-input-row">
+        <span>₹</span>
+        <input class="shop-input" id="s3q2" type="number" min="0" placeholder="?">
+        <button class="check-btn" onclick="checkShop(3,2,30)">✔ Check</button>
+      </div>
+      <div class="feedback" id="fb3-2"></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════
+     PLAY TAB
+══════════════════════════════════════════ -->
+<section class="tab-section" id="tab-play">
+  <div class="card" id="quizArea">
+    <div class="card-title">🎮 Money Quiz</div>
+    <div class="quiz-progress" id="quizProgress"></div>
+    <div class="quiz-card" id="quizCard">
+      <div class="quiz-qnum" id="quizQNum"></div>
+      <div class="quiz-q" id="quizQ"></div>
+    </div>
+    <div class="quiz-opts" id="quizOpts"></div>
+    <div class="quiz-feedback" id="quizFeedback"></div>
+    <button class="next-btn" id="nextQBtn" style="display:none;" onclick="nextQuestion()">Next ➜</button>
+  </div>
+  <div class="score-card card" id="scoreCard">
+    <div style="font-size:3rem;">🏆</div>
+    <div class="score-big" id="scoreBig"></div>
+    <div class="score-msg" id="scoreMsg"></div>
+    <button class="replay-btn" onclick="restartQuiz()">🔁 Play Again</button>
+  </div>
+</section>
+
+<script>
+// ─────────────────────────────────────────────
+// UTILS
+// ─────────────────────────────────────────────
+let stars = 0;
+
+function addStar(n=1){
+  stars += n;
+  document.getElementById('starCount').textContent = stars;
+}
+
+function bounce(el){
+  el.classList.remove('bounce');
+  void el.offsetWidth;
+  el.classList.add('bounce');
+  setTimeout(()=>el.classList.remove('bounce'), 450);
+}
+
+function showTab(id, btn){
+  document.querySelectorAll('.tab-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ─────────────────────────────────────────────
+// CONFETTI
+// ─────────────────────────────────────────────
+function fireConfetti(){
+  const container = document.getElementById('confettiContainer');
+  const colors = ['#FFD93D','#FF6B35','#F15BB5','#9B5DE5','#00BBF9','#00F5D4','#ff4444','#44ff88'];
+  for(let i=0;i<60;i++){
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.left = Math.random()*100+'vw';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.width = (8+Math.random()*8)+'px';
+    p.style.height = (8+Math.random()*8)+'px';
+    p.style.borderRadius = Math.random()>.5 ? '50%' : '2px';
+    const dur = 1.5+Math.random()*1.5;
+    p.style.animation = `fall ${dur}s linear forwards`;
+    p.style.animationDelay = Math.random()*0.6+'s';
+    container.appendChild(p);
+    setTimeout(()=>p.remove(), (dur+0.7)*1000);
+  }
+}
+
+// ─────────────────────────────────────────────
+// MAKE THE AMOUNT
+// ─────────────────────────────────────────────
+const mtaTargets = [15,20,25,35,42,48,55,63,70,80];
+let mtaCurrent = 35, mtaSum = 0, mtaPicked = [];
+
+function mtaReset(){
+  mtaSum = 0; mtaPicked = [];
+  document.getElementById('mtaTotal').textContent = '0';
+  document.getElementById('mtaSelected').innerHTML = '';
+}
+
+function mtaNewTarget(){
+  mtaCurrent = mtaTargets[Math.floor(Math.random()*mtaTargets.length)];
+  document.getElementById('mtaVal').textContent = mtaCurrent;
+  mtaReset();
+}
+
+function mtaAdd(val, cls){
+  if(mtaSum >= mtaCurrent) return;
+  mtaSum += val;
+  mtaPicked.push(val);
+  document.getElementById('mtaTotal').textContent = mtaSum;
+  const sel = document.getElementById('mtaSelected');
+  const tag = document.createElement('span');
+  tag.className = 'sel-tag';
+  tag.textContent = '₹'+val;
+  sel.appendChild(tag);
+
+  if(mtaSum === mtaCurrent){
+    fireConfetti();
+    addStar(2);
+    setTimeout(()=>{
+      document.getElementById('mtaTotal').style.color = '#00a86b';
+      document.getElementById('mtaTotal').parentElement.style.borderColor = '#00f5d4';
+    },100);
+    setTimeout(()=>{
+      document.getElementById('mtaTotal').style.color = '';
+      document.getElementById('mtaTotal').parentElement.style.borderColor = '';
+    },2500);
+  } else if(mtaSum > mtaCurrent){
+    document.getElementById('mtaTotal').style.color = '#e03030';
+    setTimeout(()=>{ document.getElementById('mtaTotal').style.color=''; }, 1200);
+  }
+}
+
+// ─────────────────────────────────────────────
+// ADDITION STEPS
+// ─────────────────────────────────────────────
+let addStep = 0;
+const addSteps = ['as1','as2','as3'];
+const addMsgs = ['','₹45 — first amount 📝','₹45 + ₹38 = ₹83 🎉 Great adding!'];
+
+function nextAddStep(){
+  if(addStep < addSteps.length){
+    document.getElementById(addSteps[addStep]).classList.add('show');
+    document.getElementById('addMsg').textContent = addMsgs[addStep];
+    addStep++;
+    if(addStep === addSteps.length){
+      document.getElementById('addStepBtn').textContent = '🔄 Restart';
+      addStar(1);
+    }
+  } else {
+    addStep = 0;
+    addSteps.forEach(id=>document.getElementById(id).classList.remove('show'));
+    document.getElementById('addMsg').textContent = '';
+    document.getElementById('addStepBtn').textContent = '▶ Show Step';
+  }
+}
+
+// ─────────────────────────────────────────────
+// SUBTRACTION STEPS
+// ─────────────────────────────────────────────
+let subStep = 0;
+const subSteps = ['ss1','ss2','ss3'];
+
+function nextSubStep(){
+  if(subStep < subSteps.length){
+    document.getElementById(subSteps[subStep]).classList.add('show');
+    subStep++;
+    if(subStep === subSteps.length){
+      document.getElementById('subStepBtn').textContent = '🔄 Restart';
+      addStar(1);
+    }
+  } else {
+    subStep = 0;
+    subSteps.forEach(id=>document.getElementById(id).classList.remove('show'));
+    document.getElementById('subStepBtn').textContent = '▶ Show Step';
+  }
+}
+
+// ─────────────────────────────────────────────
+// SHOPPING
+// ─────────────────────────────────────────────
+function checkShop(prob, q, answer){
+  const inputId = `s${prob}q${q}`;
+  const feedId  = `fb${prob}-${q}`;
+  const val = parseInt(document.getElementById(inputId).value, 10);
+  const fb  = document.getElementById(feedId);
+  if(isNaN(val)){
+    fb.textContent = '⚠️ Please enter a number!';
+    fb.className = 'feedback wrong';
+    return;
+  }
+  if(val === answer){
+    fb.textContent = '✅ Correct! ₹'+answer+' 🎉';
+    fb.className = 'feedback correct';
+    fireConfetti();
+    addStar(2);
+  } else {
+    fb.textContent = '❌ Not quite! Hint: the answer is ₹'+answer;
+    fb.className = 'feedback wrong';
+  }
+}
+
+// ─────────────────────────────────────────────
+// QUIZ
+// ─────────────────────────────────────────────
+const questions = [
+  { q:'₹25 + ₹15 = ?',          opts:['₹30','₹40','₹45','₹35'], ans:1 },
+  { q:'₹50 − ₹20 = ?',          opts:['₹25','₹30','₹35','₹70'], ans:1 },
+  { q:'₹10 + ₹10 + ₹5 = ?',     opts:['₹20','₹25','₹15','₹30'], ans:1 },
+  { q:'₹100 − ₹45 = ?',         opts:['₹55','₹60','₹65','₹50'], ans:0 },
+  { q:'₹30 + ₹28 = ?',          opts:['₹60','₹56','₹58','₹62'], ans:2 },
+  { q:'₹75 − ₹30 = ?',          opts:['₹50','₹40','₹45','₹35'], ans:2 },
+  { q:'₹20 + ₹20 + ₹20 = ?',    opts:['₹50','₹55','₹60','₹65'], ans:2 },
+  { q:'₹90 − ₹55 = ?',          opts:['₹40','₹35','₹30','₹45'], ans:1 },
+];
+
+let qIdx = 0, qScore = 0, qAnswered = false;
+
+function buildProgress(){
+  const p = document.getElementById('quizProgress');
+  p.innerHTML = '';
+  questions.forEach((_,i)=>{
+    const d = document.createElement('div');
+    d.className = 'q-dot';
+    d.textContent = i+1;
+    d.id = 'qdot-'+i;
+    p.appendChild(d);
+  });
+}
+
+function loadQuestion(){
+  qAnswered = false;
+  document.getElementById('nextQBtn').style.display = 'none';
+  document.getElementById('quizFeedback').textContent = '';
+  document.getElementById('quizFeedback').className = 'quiz-feedback';
+
+  const q = questions[qIdx];
+  document.getElementById('quizQNum').textContent = `Question ${qIdx+1} of ${questions.length}`;
+  document.getElementById('quizQ').textContent = q.q;
+
+  const opts = document.getElementById('quizOpts');
+  opts.innerHTML = '';
+  q.opts.forEach((opt, i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.textContent = opt;
+    btn.onclick = ()=>answerQ(i);
+    opts.appendChild(btn);
+  });
+
+  document.querySelectorAll('.q-dot').forEach((d,i)=>{
+    d.classList.remove('active');
+    if(i===qIdx) d.classList.add('active');
+  });
+}
+
+function answerQ(chosen){
+  if(qAnswered) return;
+  qAnswered = true;
+  const q = questions[qIdx];
+  const btns = document.querySelectorAll('.opt-btn');
+  btns.forEach(b=>b.disabled=true);
+  const fb = document.getElementById('quizFeedback');
+  const dot = document.getElementById('qdot-'+qIdx);
+  if(chosen === q.ans){
+    btns[chosen].classList.add('correct');
+    fb.textContent = '🎉 Correct! Well done!';
+    fb.className = 'quiz-feedback c';
+    qScore++;
+    dot.classList.add('done-c');
+    dot.classList.remove('active');
+    fireConfetti();
+    addStar(2);
+  } else {
+    btns[chosen].classList.add('wrong');
+    btns[q.ans].classList.add('correct');
+    fb.textContent = '❌ The answer was '+q.opts[q.ans];
+    fb.className = 'quiz-feedback w';
+    dot.classList.add('done-w');
+    dot.classList.remove('active');
+  }
+  document.getElementById('nextQBtn').style.display = 'block';
+}
+
+function nextQuestion(){
+  qIdx++;
+  if(qIdx >= questions.length){
+    showScore();
+  } else {
+    loadQuestion();
+  }
+}
+
+function showScore(){
+  document.getElementById('quizArea').style.display = 'none';
+  const sc = document.getElementById('scoreCard');
+  sc.classList.add('show');
+  document.getElementById('scoreBig').textContent = qScore + ' / ' + questions.length;
+  const pct = qScore / questions.length;
+  let msg = '';
+  if(pct === 1)       msg = '🌟 Perfect Score! You are a Money Master!';
+  else if(pct >= .75) msg = '👏 Great job! Almost perfect!';
+  else if(pct >= .5)  msg = '😊 Good effort! Keep practising!';
+  else                msg = '💪 Nice try! Let\'s practise more!';
+  document.getElementById('scoreMsg').textContent = msg;
+  if(pct === 1) fireConfetti();
+}
+
+function restartQuiz(){
+  qIdx = 0; qScore = 0; qAnswered = false;
+  document.getElementById('quizArea').style.display = 'block';
+  document.getElementById('scoreCard').classList.remove('show');
+  buildProgress();
+  loadQuestion();
+}
+
+// init
+buildProgress();
+loadQuestion();
+</script>
+</body>
+</html>

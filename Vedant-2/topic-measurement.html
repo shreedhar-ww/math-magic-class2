@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📏 Measurement — Class 2 Math</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #FFD93D;
+    --orange: #FF6B35;
+    --pink: #F15BB5;
+    --purple: #9B5DE5;
+    --blue: #00BBF9;
+    --green: #00F5D4;
+    --white: #ffffff;
+    --bg: #FFF8F0;
+    --card: #ffffff;
+    --text: #2D2D2D;
+    --shadow: 0 4px 20px rgba(0,0,0,0.10);
+    --radius: 20px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: linear-gradient(135deg, var(--orange) 0%, var(--pink) 100%);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 16px rgba(241,91,181,0.35);
+  }
+
+  .back-btn {
+    background: rgba(255,255,255,0.25);
+    border: none;
+    color: #fff;
+    font-size: 1.3rem;
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+    font-family: 'Nunito', sans-serif;
+    flex-shrink: 0;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.4); }
+
+  .nav-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #fff;
+    flex: 1;
+    letter-spacing: 0.5px;
+  }
+
+  .stars-pill {
+    background: rgba(255,255,255,0.25);
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.9rem;
+    padding: 6px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  /* ── TABS ── */
+  .tab-bar {
+    display: flex;
+    gap: 8px;
+    padding: 18px 20px 0;
+    justify-content: center;
+  }
+
+  .tab-btn {
+    flex: 1;
+    max-width: 160px;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 14px 14px 0 0;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.95rem;
+    cursor: pointer;
+    background: rgba(0,0,0,0.06);
+    color: #888;
+    transition: all 0.2s;
+  }
+
+  .tab-btn.active {
+    background: var(--white);
+    color: var(--orange);
+    box-shadow: 0 -4px 12px rgba(255,107,53,0.15);
+  }
+
+  .tab-content {
+    display: none;
+    padding: 20px;
+    max-width: 780px;
+    margin: 0 auto;
+    animation: fadeIn 0.35s ease;
+  }
+  .tab-content.active { display: block; }
+
+  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  .card-title {
+    font-size: 1.2rem;
+    font-weight: 900;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ── SLIDER ── */
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 10px;
+    border-radius: 8px;
+    outline: none;
+    cursor: pointer;
+    margin: 10px 0;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--orange);
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    cursor: pointer;
+  }
+  #rulerSlider { background: linear-gradient(to right, var(--yellow) 0%, var(--orange) 100%); }
+  #leftSlider  { background: linear-gradient(to right, var(--blue) 0%, var(--purple) 100%); }
+  #rightSlider { background: linear-gradient(to right, var(--green) 0%, var(--blue) 100%); }
+  #capacitySlider { background: linear-gradient(to right, var(--blue) 0%, var(--green) 100%); }
+
+  .slider-label {
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--purple);
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  /* ── TOGGLE ── */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .toggle-btn {
+    padding: 8px 18px;
+    border: 2px solid var(--orange);
+    border-radius: 30px;
+    background: transparent;
+    color: var(--orange);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .toggle-btn.active {
+    background: var(--orange);
+    color: #fff;
+  }
+
+  .conversion-box {
+    background: linear-gradient(135deg, #FFF3E0, #FCE4EC);
+    border-radius: 14px;
+    padding: 12px 18px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--purple);
+    margin-top: 14px;
+    text-align: center;
+  }
+
+  /* ── RULER VISUAL ── */
+  .ruler-wrap {
+    margin: 18px 0;
+    position: relative;
+  }
+
+  .ruler-outer {
+    background: #F5DEB3;
+    border: 3px solid #C49A3C;
+    border-radius: 8px;
+    height: 56px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.12);
+  }
+
+  .ruler-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--orange), var(--yellow));
+    transition: width 0.4s cubic-bezier(.4,0,.2,1);
+    border-radius: 5px 0 0 5px;
+  }
+
+  .ruler-ticks {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 2px;
+    pointer-events: none;
+  }
+
+  .ruler-ticks span {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 7px;
+    font-weight: 700;
+    color: rgba(0,0,0,0.5);
+  }
+
+  .ruler-ticks span::before {
+    content: '';
+    display: block;
+    width: 1.5px;
+    background: rgba(0,0,0,0.3);
+    height: 10px;
+    margin-bottom: 2px;
+  }
+
+  .ruler-ticks span:nth-child(5n)::before { height: 18px; }
+
+  .ruler-arrow {
+    position: absolute;
+    top: -6px;
+    transform: translateX(-50%);
+    transition: left 0.4s cubic-bezier(.4,0,.2,1);
+    font-size: 1.1rem;
+    z-index: 2;
+  }
+
+  /* ── BALANCE SCALE ── */
+  .scale-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+    height: 200px;
+    position: relative;
+    user-select: none;
+  }
+
+  .scale-pole {
+    width: 12px;
+    height: 120px;
+    background: linear-gradient(to bottom, #888, #555);
+    border-radius: 6px;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+
+  .scale-pole::before {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70px; height: 14px;
+    background: linear-gradient(to bottom, #666, #444);
+    border-radius: 7px;
+  }
+
+  .scale-beam {
+    width: 260px;
+    height: 14px;
+    background: linear-gradient(to right, #9B5DE5, #F15BB5);
+    border-radius: 7px;
+    position: absolute;
+    top: 36px;
+    left: 50%;
+    transform: translateX(-50%) rotate(0deg);
+    transform-origin: center center;
+    transition: transform 0.6s cubic-bezier(.4,0,.2,1);
+    z-index: 2;
+  }
+
+  .scale-string {
+    position: absolute;
+    width: 2px;
+    background: #888;
+    top: 50px;
+    transition: height 0.6s, top 0.6s;
+    z-index: 1;
+  }
+
+  .scale-string.left  { left: calc(50% - 104px); }
+  .scale-string.right { left: calc(50% + 102px); }
+
+  .scale-pan {
+    position: absolute;
+    width: 80px;
+    height: 28px;
+    border-radius: 0 0 50px 50px;
+    border: 3px solid;
+    transition: top 0.6s cubic-bezier(.4,0,.2,1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 800;
+    z-index: 3;
+  }
+
+  .scale-pan.left  { border-color: var(--blue);   background: rgba(0,187,249,0.15); left: calc(50% - 143px); color: var(--blue); }
+  .scale-pan.right { border-color: var(--green);  background: rgba(0,245,212,0.15); left: calc(50% + 63px);  color: #00B89C; }
+
+  .weight-display {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 12px;
+  }
+
+  .weight-badge {
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  .weight-badge.left  { background: rgba(0,187,249,0.15); color: var(--blue); }
+  .weight-badge.right { background: rgba(0,245,212,0.2);  color: #009E86; }
+
+  .scale-result {
+    text-align: center;
+    font-weight: 800;
+    font-size: 1.05rem;
+    margin-top: 10px;
+    padding: 10px 20px;
+    border-radius: 30px;
+    background: linear-gradient(135deg, var(--yellow), var(--orange));
+    color: #fff;
+    display: inline-block;
+  }
+
+  /* ── BOTTLE / CAPACITY ── */
+  .bottle-scene {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 40px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+
+  .bottle-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .bottle {
+    width: 60px;
+    height: 150px;
+    border: 4px solid #00BBF9;
+    border-top: none;
+    border-radius: 0 0 18px 18px;
+    position: relative;
+    overflow: hidden;
+    background: rgba(0,187,249,0.06);
+  }
+
+  .bottle::before {
+    content: '';
+    position: absolute;
+    top: -30px; left: 10px; right: 10px;
+    height: 30px;
+    border: 4px solid #00BBF9;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .bottle-water {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, var(--blue), var(--green));
+    transition: height 0.6s cubic-bezier(.4,0,.2,1);
+    opacity: 0.7;
+  }
+
+  .bottle-label {
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: var(--blue);
+  }
+
+  .cup {
+    width: 50px;
+    height: 70px;
+    border: 4px solid var(--green);
+    border-top: none;
+    border-radius: 0 0 14px 14px;
+    position: relative;
+    overflow: hidden;
+    background: rgba(0,245,212,0.06);
+  }
+
+  .cup-water {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, var(--green), var(--blue));
+    transition: height 0.6s cubic-bezier(.4,0,.2,1);
+    opacity: 0.75;
+  }
+
+  /* ── UNITS REFERENCE ── */
+  .units-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+  }
+
+  .unit-card {
+    border-radius: 16px;
+    padding: 18px 14px;
+    text-align: center;
+  }
+
+  .unit-card.length   { background: linear-gradient(135deg, #FFF3CD, #FFE082); }
+  .unit-card.weight   { background: linear-gradient(135deg, #E8D5FB, #CE93D8); }
+  .unit-card.capacity { background: linear-gradient(135deg, #B2EBF2, #80DEEA); }
+
+  .unit-icon { font-size: 2.5rem; margin-bottom: 8px; }
+  .unit-name { font-size: 1.1rem; font-weight: 900; margin-bottom: 4px; }
+  .unit-eq   { font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; color: #555; }
+  .unit-eg   { font-size: 0.8rem;  font-weight: 600; color: #777; }
+
+  /* ── COMPARE TAB ── */
+  .challenge-card {
+    background: linear-gradient(135deg, #FFF9F0, #F9F0FF);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+    text-align: center;
+  }
+
+  .challenge-question {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--purple);
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .challenge-visual {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 30px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .obj-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .obj-bar {
+    border-radius: 6px;
+    transition: height 0.5s;
+  }
+
+  .obj-label { font-size: 0.85rem; font-weight: 800; color: #555; }
+  .obj-val   { font-size: 0.8rem;  font-weight: 700; color: var(--orange); }
+
+  .answer-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .ans-btn {
+    padding: 11px 22px;
+    border: none;
+    border-radius: 30px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--yellow);
+    color: #333;
+  }
+
+  .ans-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
+  .ans-btn.correct  { background: var(--green);  color: #fff; }
+  .ans-btn.wrong    { background: #FF6B6B;        color: #fff; }
+  .ans-btn:disabled { opacity: 0.65; cursor: default; transform: none; }
+
+  .feedback-msg {
+    font-size: 1.05rem;
+    font-weight: 800;
+    min-height: 28px;
+    margin-bottom: 6px;
+  }
+  .feedback-msg.ok  { color: #00B89C; }
+  .feedback-msg.err { color: #e53935; }
+
+  .new-challenge-btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, var(--orange), var(--pink));
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 14px rgba(241,91,181,0.35);
+  }
+  .new-challenge-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(241,91,181,0.4); }
+
+  /* ── PLAY TAB ── */
+  .quiz-progress-bar {
+    background: #eee;
+    border-radius: 10px;
+    height: 10px;
+    margin-bottom: 18px;
+    overflow: hidden;
+  }
+
+  .quiz-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--orange), var(--pink));
+    border-radius: 10px;
+    transition: width 0.5s;
+  }
+
+  .quiz-q-num {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #aaa;
+    margin-bottom: 6px;
+  }
+
+  .quiz-question {
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--purple);
+    margin-bottom: 20px;
+    line-height: 1.55;
+  }
+
+  .quiz-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .quiz-opt {
+    padding: 14px 10px;
+    border: 3px solid #e0e0e0;
+    border-radius: 14px;
+    background: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    color: var(--text);
+  }
+
+  .quiz-opt:hover:not(:disabled) { border-color: var(--orange); background: #FFF3E0; transform: scale(1.02); }
+  .quiz-opt.correct  { border-color: var(--green);  background: rgba(0,245,212,0.15); color: #007A6A; }
+  .quiz-opt.wrong    { border-color: #FF6B6B;        background: rgba(255,107,107,0.1); color: #c62828; }
+  .quiz-opt:disabled { cursor: default; transform: none; }
+
+  .quiz-feedback {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 800;
+    min-height: 28px;
+    margin-bottom: 8px;
+  }
+  .quiz-feedback.ok  { color: #00B89C; }
+  .quiz-feedback.err { color: #e53935; }
+
+  .next-btn {
+    display: block;
+    margin: 0 auto;
+    padding: 12px 36px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(155,93,229,0.35);
+  }
+  .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(155,93,229,0.4); }
+
+  /* ── SCORE CARD ── */
+  .score-card {
+    text-align: center;
+    padding: 36px 24px;
+  }
+
+  .score-emoji { font-size: 4rem; margin-bottom: 12px; }
+  .score-title { font-size: 1.6rem; font-weight: 900; color: var(--purple); margin-bottom: 8px; }
+  .score-val   { font-size: 3rem; font-weight: 900; color: var(--orange); margin-bottom: 6px; }
+  .score-sub   { font-size: 1rem; font-weight: 700; color: #888; margin-bottom: 24px; }
+
+  .replay-btn {
+    padding: 14px 36px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, var(--orange), var(--pink));
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1.05rem;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(241,91,181,0.35);
+    transition: all 0.2s;
+  }
+  .replay-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(241,91,181,0.45); }
+
+  /* ── CONFETTI ── */
+  .confetti-piece {
+    position: fixed;
+    width: 10px; height: 12px;
+    top: -20px;
+    border-radius: 3px;
+    animation: confettiFall linear forwards;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  @keyframes confettiFall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ── MISC ── */
+  .section-divider {
+    border: none;
+    border-top: 2px dashed #f0d0e0;
+    margin: 4px 0 20px;
+  }
+
+  @media (max-width: 500px) {
+    .quiz-options { grid-template-columns: 1fr; }
+    .scale-beam { width: 200px; }
+    .scale-pan.left  { left: calc(50% - 113px); }
+    .scale-pan.right { left: calc(50% + 33px); }
+    .scale-string.left  { left: calc(50% - 84px); }
+    .scale-string.right { left: calc(50% + 82px); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <button class="back-btn" onclick="history.back()">←</button>
+  <div class="nav-title">📏 Measurement</div>
+  <div class="stars-pill" id="starsPill">⭐ 0 Stars</div>
+</nav>
+
+<!-- TABS -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('learn', this)">📖 Learn</button>
+  <button class="tab-btn" onclick="switchTab('compare', this)">⚖️ Compare</button>
+  <button class="tab-btn" onclick="switchTab('play', this)">🎮 Play</button>
+</div>
+
+<!-- ═══════════════════ LEARN TAB ═══════════════════ -->
+<div id="tab-learn" class="tab-content active">
+
+  <!-- LENGTH -->
+  <div class="card">
+    <div class="card-title">📏 Length</div>
+    <div class="slider-label" id="rulerValLabel">Value: 10 cm</div>
+    <input type="range" id="rulerSlider" min="1" max="100" value="10" oninput="updateRuler()">
+
+    <div class="ruler-wrap">
+      <div class="ruler-outer" id="rulerOuter">
+        <div class="ruler-fill" id="rulerFill" style="width:10%"></div>
+        <div class="ruler-ticks" id="rulerTicks"></div>
+        <div class="ruler-arrow" id="rulerArrow" style="left:10%">▼</div>
+      </div>
+    </div>
+
+    <div class="toggle-row">
+      <span style="font-weight:700; color:#555">Show in:</span>
+      <button class="toggle-btn active" id="btnCm" onclick="setUnit('cm')">cm</button>
+      <button class="toggle-btn"        id="btnM"  onclick="setUnit('m')">m</button>
+    </div>
+    <div class="conversion-box" id="rulerConvBox">
+      10 cm &nbsp;=&nbsp; 0.10 m &nbsp;|&nbsp; 100 cm = 1 m
+    </div>
+  </div>
+
+  <!-- WEIGHT -->
+  <div class="card">
+    <div class="card-title">⚖️ Weight</div>
+
+    <div class="scale-container" id="scaleContainer">
+      <div class="scale-pole"></div>
+      <div class="scale-beam" id="scaleBeam"></div>
+      <div class="scale-string left"  id="strLeft"  style="height:40px; top:43px"></div>
+      <div class="scale-string right" id="strRight" style="height:40px; top:43px"></div>
+      <div class="scale-pan left"  id="panLeft">LEFT</div>
+      <div class="scale-pan right" id="panRight">RIGHT</div>
+    </div>
+
+    <div class="weight-display">
+      <div>
+        <div class="slider-label" style="color:var(--blue)" id="leftLabel">Left: 200 g</div>
+        <input type="range" id="leftSlider" min="0" max="1000" step="10" value="200" oninput="updateScale()">
+      </div>
+      <div>
+        <div class="slider-label" style="color:#009E86" id="rightLabel">Right: 200 g</div>
+        <input type="range" id="rightSlider" min="0" max="1000" step="10" value="200" oninput="updateScale()">
+      </div>
+    </div>
+
+    <div style="display:flex; gap:10px; justify-content:center; margin-top:12px; flex-wrap:wrap">
+      <div class="weight-badge left"  id="leftBadge">200 g = 0.200 kg</div>
+      <div class="weight-badge right" id="rightBadge">200 g = 0.200 kg</div>
+    </div>
+
+    <div style="text-align:center; margin-top:12px">
+      <span class="scale-result" id="scaleResult">⚖️ Both sides are equal!</span>
+    </div>
+  </div>
+
+  <!-- CAPACITY -->
+  <div class="card">
+    <div class="card-title">🧴 Capacity</div>
+    <div class="slider-label" id="capValLabel">Volume: 2.0 L</div>
+    <input type="range" id="capacitySlider" min="0" max="50" step="1" value="20" oninput="updateCapacity()">
+
+    <div class="bottle-scene">
+      <div class="bottle-wrap">
+        <div class="bottle" id="bottle1">
+          <div class="bottle-water" id="bottleWater" style="height:40%"></div>
+        </div>
+        <div class="bottle-label">Bottle (5 L)</div>
+      </div>
+      <div class="bottle-wrap">
+        <div class="cup" id="cup1">
+          <div class="cup-water" id="cupWater" style="height:0%"></div>
+        </div>
+        <div class="bottle-label">Cup (250 mL)</div>
+      </div>
+    </div>
+
+    <div class="conversion-box" id="capConvBox">
+      2.0 L &nbsp;=&nbsp; 2000 mL &nbsp;|&nbsp; 1 L = 1000 mL
+    </div>
+  </div>
+
+  <!-- UNITS REFERENCE -->
+  <div class="card">
+    <div class="card-title">📋 Units Quick Reference</div>
+    <div class="units-grid">
+      <div class="unit-card length">
+        <div class="unit-icon">📏</div>
+        <div class="unit-name">Length</div>
+        <div class="unit-eq">100 cm = 1 m</div>
+        <div class="unit-eg">e.g. Ruler = 30 cm<br>Door ≈ 2 m</div>
+      </div>
+      <div class="unit-card weight">
+        <div class="unit-icon">🍎</div>
+        <div class="unit-name">Weight</div>
+        <div class="unit-eq">1000 g = 1 kg</div>
+        <div class="unit-eg">e.g. Apple ≈ 200 g<br>Bag ≈ 5 kg</div>
+      </div>
+      <div class="unit-card capacity">
+        <div class="unit-icon">💧</div>
+        <div class="unit-name">Capacity</div>
+        <div class="unit-eq">1000 mL = 1 L</div>
+        <div class="unit-eg">e.g. Cup = 250 mL<br>Bottle = 1 L</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════ COMPARE TAB ═══════════════════ -->
+<div id="tab-compare" class="tab-content">
+
+  <div class="challenge-card" id="compareCard">
+    <div class="challenge-question" id="compareQ">Loading…</div>
+    <div class="challenge-visual" id="compareVisual"></div>
+    <div class="answer-btns" id="compareAnswerBtns"></div>
+    <div class="feedback-msg" id="compareFeedback"></div>
+    <button class="new-challenge-btn" onclick="newChallenge()">🔀 New Challenge</button>
+  </div>
+
+  <div class="card" style="background: linear-gradient(135deg,#f0fff4,#e8f5e9)">
+    <div class="card-title" style="color:#2E7D32">💡 Tips for Comparing</div>
+    <ul style="padding-left:20px; line-height:2; font-weight:600; color:#388E3C; font-size:0.95rem">
+      <li>Bigger number = longer / heavier / more</li>
+      <li>Make sure units are the same before comparing</li>
+      <li>1 m = 100 cm &nbsp;|&nbsp; 1 kg = 1000 g &nbsp;|&nbsp; 1 L = 1000 mL</li>
+      <li>Always look at the unit label!</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ═══════════════════ PLAY TAB ═══════════════════ -->
+<div id="tab-play" class="tab-content">
+  <div class="card" id="quizArea">
+    <!-- filled by JS -->
+  </div>
+</div>
+
+<script>
+/* ──────────── GLOBAL STATE ──────────── */
+let totalStars = 0;
+let rulerUnit  = 'cm';
+
+/* ──────────── TAB SWITCHING ──────────── */
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'compare') buildCompareTab();
+  if (name === 'play') initQuiz();
+}
+
+/* ──────────── STARS ──────────── */
+function addStars(n) {
+  totalStars += n;
+  document.getElementById('starsPill').textContent = '⭐ ' + totalStars + ' Stars';
+}
+
+/* ══════════════════════════════════════
+   LEARN — RULER
+══════════════════════════════════════ */
+(function buildTicks() {
+  const container = document.getElementById('rulerTicks');
+  for (let i = 1; i <= 20; i++) {
+    const s = document.createElement('span');
+    if (i % 5 === 0) s.textContent = i * 5;
+    container.appendChild(s);
+  }
+})();
+
+function updateRuler() {
+  const v   = parseInt(document.getElementById('rulerSlider').value);
+  const pct = v + '%';
+  document.getElementById('rulerFill').style.width = pct;
+  document.getElementById('rulerArrow').style.left = pct;
+  if (rulerUnit === 'cm') {
+    document.getElementById('rulerValLabel').textContent = 'Value: ' + v + ' cm';
+    document.getElementById('rulerConvBox').innerHTML =
+      v + ' cm &nbsp;=&nbsp; ' + (v / 100).toFixed(2) + ' m &nbsp;|&nbsp; 100 cm = 1 m';
+  } else {
+    const m = (v / 100).toFixed(2);
+    document.getElementById('rulerValLabel').textContent = 'Value: ' + m + ' m';
+    document.getElementById('rulerConvBox').innerHTML =
+      m + ' m &nbsp;=&nbsp; ' + v + ' cm &nbsp;|&nbsp; 1 m = 100 cm';
+  }
+}
+
+function setUnit(u) {
+  rulerUnit = u;
+  document.getElementById('btnCm').classList.toggle('active', u === 'cm');
+  document.getElementById('btnM').classList.toggle('active',  u === 'm');
+  updateRuler();
+}
+
+updateRuler();
+
+/* ══════════════════════════════════════
+   LEARN — SCALE
+══════════════════════════════════════ */
+function updateScale() {
+  const L   = parseInt(document.getElementById('leftSlider').value);
+  const R   = parseInt(document.getElementById('rightSlider').value);
+  const max = 1000;
+
+  document.getElementById('leftLabel').textContent  = 'Left: '  + L + ' g';
+  document.getElementById('rightLabel').textContent = 'Right: ' + R + ' g';
+  document.getElementById('leftBadge').textContent  = L + ' g = ' + (L / 1000).toFixed(3) + ' kg';
+  document.getElementById('rightBadge').textContent = R + ' g = ' + (R / 1000).toFixed(3) + ' kg';
+
+  const diff    = L - R;
+  const maxTilt = 22;
+  const angle   = Math.max(-maxTilt, Math.min(maxTilt, (diff / max) * maxTilt * 2));
+
+  document.getElementById('scaleBeam').style.transform =
+    'translateX(-50%) rotate(' + angle + 'deg)';
+
+  /* pan positions: left pan goes DOWN when L is heavier */
+  const baseTop   = 68;
+  const leftDrop  = angle > 0 ? Math.abs(angle) * 2.2 : 0;
+  const rightDrop = angle < 0 ? Math.abs(angle) * 2.2 : 0;
+
+  document.getElementById('panLeft').style.top   = (baseTop + leftDrop)  + 'px';
+  document.getElementById('panRight').style.top  = (baseTop + rightDrop) + 'px';
+  document.getElementById('strLeft').style.height  = (40 + leftDrop)  + 'px';
+  document.getElementById('strRight').style.height = (40 + rightDrop) + 'px';
+
+  const res = document.getElementById('scaleResult');
+  if (L === R)       { res.textContent = '⚖️ Both sides are equal!'; }
+  else if (L > R)    { res.textContent = '⬇️ Left side is heavier!'; }
+  else               { res.textContent = '⬇️ Right side is heavier!'; }
+}
+
+updateScale();
+
+/* ══════════════════════════════════════
+   LEARN — CAPACITY
+══════════════════════════════════════ */
+function updateCapacity() {
+  const raw  = parseInt(document.getElementById('capacitySlider').value); // 0–50 → 0–5.0 L
+  const litres = raw / 10;
+  const ml     = Math.round(litres * 1000);
+
+  document.getElementById('capValLabel').textContent = 'Volume: ' + litres.toFixed(1) + ' L';
+
+  /* Bottle: full at 5L → fill % of height */
+  const bottlePct = (litres / 5) * 100;
+  document.getElementById('bottleWater').style.height = bottlePct + '%';
+
+  /* Cup: 250mL capacity; one full cup = 250mL */
+  const cupPct = Math.min((ml / 250) * 100, 100);
+  document.getElementById('cupWater').style.height = cupPct + '%';
+
+  document.getElementById('capConvBox').innerHTML =
+    litres.toFixed(1) + ' L &nbsp;=&nbsp; ' + ml + ' mL &nbsp;|&nbsp; 1 L = 1000 mL';
+}
+
+updateCapacity();
+
+/* ══════════════════════════════════════
+   COMPARE TAB
+══════════════════════════════════════ */
+const challenges = [
+  {
+    question: '🖊️ A pencil is 15 cm long.\n📚 A book is 28 cm long.\nWhich one is longer?',
+    objects: [
+      { label: '🖊️ Pencil', val: 15, unit: 'cm', color: '#FFD93D' },
+      { label: '📚 Book',   val: 28, unit: 'cm', color: '#00BBF9' }
+    ],
+    options: ['Pencil', 'Book', 'Same length'],
+    correct: 1,
+    explanation: 'A book at 28 cm is longer than a pencil at 15 cm!'
+  },
+  {
+    question: '🍎 An apple weighs 200 g.\n🎒 A school bag weighs 3 kg.\nWhich one is heavier?',
+    objects: [
+      { label: '🍎 Apple',    val: 200,  unit: 'g',  color: '#FF6B35' },
+      { label: '🎒 School Bag', val: 3000, unit: 'g', color: '#9B5DE5' }
+    ],
+    options: ['Apple', 'School Bag', 'Same weight'],
+    correct: 1,
+    explanation: 'School bag = 3 kg = 3000 g, much heavier than an apple (200 g)!'
+  },
+  {
+    question: '🥛 A glass holds 250 mL.\n🧴 A water bottle holds 1 L.\nWhich holds more?',
+    objects: [
+      { label: '🥛 Glass',    val: 250,  unit: 'mL', color: '#00F5D4' },
+      { label: '🧴 Bottle',   val: 1000, unit: 'mL', color: '#00BBF9' }
+    ],
+    options: ['Glass', 'Bottle', 'Same capacity'],
+    correct: 1,
+    explanation: 'Bottle = 1 L = 1000 mL, which is more than a glass (250 mL)!'
+  },
+  {
+    question: '📐 A table is 1 m wide.\n🪑 A chair is 60 cm wide.\nWhich is wider?',
+    objects: [
+      { label: '📐 Table', val: 100, unit: 'cm', color: '#F15BB5' },
+      { label: '🪑 Chair', val: 60,  unit: 'cm', color: '#FFD93D' }
+    ],
+    options: ['Table', 'Chair', 'Same width'],
+    correct: 0,
+    explanation: 'Table = 1 m = 100 cm, wider than the chair (60 cm)!'
+  },
+  {
+    question: '🐇 A rabbit weighs 1.5 kg.\n🐱 A cat weighs 1500 g.\nWhich is heavier?',
+    objects: [
+      { label: '🐇 Rabbit', val: 1500, unit: 'g', color: '#FF6B35' },
+      { label: '🐱 Cat',    val: 1500, unit: 'g', color: '#9B5DE5' }
+    ],
+    options: ['Rabbit', 'Cat', 'Same weight'],
+    correct: 2,
+    explanation: 'Both weigh the same! 1.5 kg = 1500 g!'
+  },
+  {
+    question: '🍵 A cup holds 200 mL.\n🪣 A bucket holds 5 L.\nWhich holds more?',
+    objects: [
+      { label: '🍵 Cup',    val: 200,  unit: 'mL', color: '#00F5D4' },
+      { label: '🪣 Bucket', val: 5000, unit: 'mL', color: '#00BBF9' }
+    ],
+    options: ['Cup', 'Bucket', 'Same capacity'],
+    correct: 1,
+    explanation: 'Bucket = 5 L = 5000 mL, much more than a cup (200 mL)!'
+  }
+];
+
+let currentChallenge = null;
+let challengeAnswered = false;
+
+function buildCompareTab() { newChallenge(); }
+
+function newChallenge() {
+  let idx;
+  do { idx = Math.floor(Math.random() * challenges.length); }
+  while (challenges[idx] === currentChallenge && challenges.length > 1);
+
+  currentChallenge  = challenges[idx];
+  challengeAnswered = false;
+
+  document.getElementById('compareQ').textContent = currentChallenge.question;
+  document.getElementById('compareFeedback').textContent = '';
+  document.getElementById('compareFeedback').className = 'feedback-msg';
+
+  /* visual bars */
+  const visual = document.getElementById('compareVisual');
+  visual.innerHTML = '';
+  const maxVal = Math.max(...currentChallenge.objects.map(o => o.val));
+  currentChallenge.objects.forEach(obj => {
+    const barH = Math.max(20, Math.round((obj.val / maxVal) * 110));
+    const div  = document.createElement('div');
+    div.className = 'obj-wrap';
+    div.innerHTML = `
+      <div class="obj-bar" style="width:50px;height:${barH}px;background:${obj.color};border-radius:8px 8px 4px 4px;opacity:0.85"></div>
+      <div class="obj-label">${obj.label}</div>
+      <div class="obj-val">${obj.val} ${obj.unit}</div>`;
+    visual.appendChild(div);
+  });
+
+  /* answer buttons */
+  const btnArea = document.getElementById('compareAnswerBtns');
+  btnArea.innerHTML = '';
+  currentChallenge.options.forEach((opt, i) => {
+    const b = document.createElement('button');
+    b.className = 'ans-btn';
+    b.textContent = opt;
+    b.onclick = () => checkCompare(i, b);
+    btnArea.appendChild(b);
+  });
+}
+
+function checkCompare(idx, btn) {
+  if (challengeAnswered) return;
+  challengeAnswered = true;
+  const fb = document.getElementById('compareFeedback');
+  const allBtns = document.querySelectorAll('#compareAnswerBtns .ans-btn');
+  allBtns.forEach(b => b.disabled = true);
+  allBtns[currentChallenge.correct].classList.add('correct');
+
+  if (idx === currentChallenge.correct) {
+    btn.classList.add('correct');
+    fb.textContent = '🎉 Correct! ' + currentChallenge.explanation;
+    fb.className   = 'feedback-msg ok';
+    addStars(2);
+    launchConfetti(20);
+  } else {
+    btn.classList.add('wrong');
+    fb.textContent = '❌ Not quite! ' + currentChallenge.explanation;
+    fb.className   = 'feedback-msg err';
+  }
+}
+
+/* ══════════════════════════════════════
+   PLAY TAB — QUIZ
+══════════════════════════════════════ */
+const quizQuestions = [
+  {
+    q:       'How many centimetres are in 1 metre?',
+    opts:    ['10 cm', '100 cm', '1000 cm', '50 cm'],
+    correct: 1,
+    hint:    '1 m = 100 cm'
+  },
+  {
+    q:       'A bag of sugar weighs 1 kg. How many grams is that?',
+    opts:    ['100 g', '500 g', '10 g', '1000 g'],
+    correct: 3,
+    hint:    '1 kg = 1000 g'
+  },
+  {
+    q:       'How many millilitres are in 1 litre?',
+    opts:    ['100 mL', '500 mL', '1000 mL', '10 mL'],
+    correct: 2,
+    hint:    '1 L = 1000 mL'
+  },
+  {
+    q:       'A ribbon is 250 cm long. How many metres is that?',
+    opts:    ['2.5 m', '25 m', '0.25 m', '250 m'],
+    correct: 0,
+    hint:    '250 ÷ 100 = 2.5 m'
+  },
+  {
+    q:       'Which unit would you use to measure the weight of a feather?',
+    opts:    ['Kilometres', 'Kilograms', 'Grams', 'Litres'],
+    correct: 2,
+    hint:    'Grams measure light things!'
+  },
+  {
+    q:       'A water tank holds 3000 mL. How many litres is that?',
+    opts:    ['300 L', '3 L', '0.3 L', '30 L'],
+    correct: 1,
+    hint:    '3000 ÷ 1000 = 3 L'
+  },
+  {
+    q:       'A pencil is 15 cm and a pen is 18 cm. How much longer is the pen?',
+    opts:    ['2 cm', '4 cm', '3 cm', '5 cm'],
+    correct: 2,
+    hint:    '18 − 15 = 3 cm'
+  },
+  {
+    q:       'You have 500 g of flour and 1 kg of sugar. How much flour and sugar in total (in grams)?',
+    opts:    ['1500 g', '5100 g', '600 g', '1050 g'],
+    correct: 0,
+    hint:    '1 kg = 1000 g, 1000 + 500 = 1500 g'
+  }
+];
+
+let quizIdx   = 0;
+let quizScore = 0;
+let quizAnswered = false;
+
+function initQuiz() {
+  quizIdx      = 0;
+  quizScore    = 0;
+  quizAnswered = false;
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const area = document.getElementById('quizArea');
+  if (quizIdx >= quizQuestions.length) {
+    renderScore();
+    return;
+  }
+
+  const q    = quizQuestions[quizIdx];
+  const pct  = Math.round((quizIdx / quizQuestions.length) * 100);
+
+  area.innerHTML = `
+    <div class="quiz-progress-bar">
+      <div class="quiz-progress-fill" style="width:${pct}%"></div>
+    </div>
+    <div class="quiz-q-num">Question ${quizIdx + 1} of ${quizQuestions.length}</div>
+    <div class="quiz-question">${q.q}</div>
+    <div class="quiz-options" id="qOpts">
+      ${q.opts.map((o, i) => `<button class="quiz-opt" onclick="checkQuiz(${i})">${o}</button>`).join('')}
+    </div>
+    <div class="quiz-feedback" id="qFb"></div>
+    <button class="next-btn" id="nextBtn" style="display:none" onclick="nextQuestion()">Next ➜</button>
+  `;
+
+  quizAnswered = false;
+}
+
+function checkQuiz(idx) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const q    = quizQuestions[quizIdx];
+  const opts = document.querySelectorAll('#qOpts .quiz-opt');
+  const fb   = document.getElementById('qFb');
+
+  opts.forEach(o => o.disabled = true);
+  opts[q.correct].classList.add('correct');
+
+  if (idx === q.correct) {
+    opts[idx].classList.add('correct');
+    fb.textContent = '🎉 Correct! ' + q.hint;
+    fb.className   = 'quiz-feedback ok';
+    quizScore++;
+    addStars(3);
+    launchConfetti(30);
+  } else {
+    opts[idx].classList.add('wrong');
+    fb.textContent = '❌ Almost! ' + q.hint;
+    fb.className   = 'quiz-feedback err';
+  }
+
+  document.getElementById('nextBtn').style.display = 'block';
+}
+
+function nextQuestion() {
+  quizIdx++;
+  renderQuestion();
+}
+
+function renderScore() {
+  const total  = quizQuestions.length;
+  const pct    = Math.round((quizScore / total) * 100);
+  let emoji, msg;
+  if      (pct === 100) { emoji = '🏆'; msg = 'Perfect Score! You\'re a measurement master!'; }
+  else if (pct >= 75)   { emoji = '🌟'; msg = 'Amazing work! Almost there!'; }
+  else if (pct >= 50)   { emoji = '😊'; msg = 'Good effort! Keep practising!'; }
+  else                  { emoji = '💪'; msg = 'Keep going! You\'ll get it next time!'; }
+
+  document.getElementById('quizArea').innerHTML = `
+    <div class="score-card">
+      <div class="score-emoji">${emoji}</div>
+      <div class="score-title">${msg}</div>
+      <div class="score-val">${quizScore} / ${total}</div>
+      <div class="score-sub">${pct}% correct &nbsp;•&nbsp; ${quizScore * 3} stars earned this round</div>
+      <button class="replay-btn" onclick="initQuiz()">🔁 Play Again</button>
+    </div>`;
+
+  if (pct === 100) launchConfetti(80);
+}
+
+/* ══════════════════════════════════════
+   CONFETTI
+══════════════════════════════════════ */
+const confettiColors = ['#FFD93D','#FF6B35','#F15BB5','#9B5DE5','#00BBF9','#00F5D4'];
+
+function launchConfetti(count) {
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.cssText = [
+      'left:'             + Math.random() * 100 + 'vw',
+      'background:'       + confettiColors[Math.floor(Math.random() * confettiColors.length)],
+      'width:'            + (8 + Math.random() * 8) + 'px',
+      'height:'           + (10 + Math.random() * 10) + 'px',
+      'animation-duration:'  + (1.2 + Math.random() * 1.8) + 's',
+      'animation-delay:'     + (Math.random() * 0.5) + 's',
+      'transform:rotate('    + Math.random() * 360 + 'deg)'
+    ].join(';');
+    document.body.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+  }
+}
+
+/* ──────────── INIT ──────────── */
+initQuiz();
+</script>
+</body>
+</html>

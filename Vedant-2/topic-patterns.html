@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patterns & Skip Counting</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #FFD93D;
+    --orange: #FF6B35;
+    --pink: #F15BB5;
+    --purple: #9B5DE5;
+    --blue: #00BBF9;
+    --green: #00F5D4;
+    --bg: #F8F4FF;
+    --card: #FFFFFF;
+    --text: #2D2D2D;
+    --radius: 20px;
+    --shadow: 0 8px 32px rgba(155,93,229,0.13);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: linear-gradient(135deg, var(--blue) 0%, var(--pink) 100%);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .back-btn {
+    background: rgba(255,255,255,0.25);
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.4); }
+  .nav-title {
+    color: #fff;
+    font-size: clamp(16px, 4vw, 22px);
+    font-weight: 900;
+    flex: 1;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .stars-pill {
+    background: rgba(255,255,255,0.25);
+    color: #fff;
+    font-weight: 800;
+    padding: 5px 14px;
+    border-radius: 50px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+  }
+
+  /* ── TABS ── */
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    background: #fff;
+    border-bottom: 3px solid #EDE8FF;
+    position: sticky;
+    top: 65px;
+    z-index: 99;
+    box-shadow: 0 2px 12px rgba(155,93,229,0.07);
+    overflow-x: auto;
+  }
+  .tab-btn {
+    flex: 1;
+    min-width: 110px;
+    background: none;
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(13px, 3vw, 16px);
+    font-weight: 700;
+    padding: 14px 10px;
+    cursor: pointer;
+    color: #aaa;
+    transition: color 0.2s, box-shadow 0.2s;
+    border-bottom: 4px solid transparent;
+    white-space: nowrap;
+  }
+  .tab-btn.active {
+    color: var(--purple);
+    border-bottom: 4px solid var(--purple);
+  }
+  .tab-btn:hover:not(.active) { color: var(--pink); }
+
+  /* ── PANELS ── */
+  .panel { display: none; padding: 24px 16px 40px; max-width: 860px; margin: 0 auto; }
+  .panel.active { display: block; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 22px 20px;
+    margin-bottom: 24px;
+  }
+  .card-title {
+    font-size: 18px;
+    font-weight: 900;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ── SKIP COUNTING VISUALIZER ── */
+  .skip-btns { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+  .skip-btn {
+    background: var(--purple);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 22px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.15s, background 0.15s;
+  }
+  .skip-btn:hover { transform: scale(1.08); }
+  .skip-btn.active { background: var(--pink); transform: scale(1.08); }
+  .skip-btn[data-n="2"].active  { background: var(--blue); }
+  .skip-btn[data-n="3"].active  { background: var(--green); }
+  .skip-btn[data-n="5"].active  { background: var(--orange); }
+  .skip-btn[data-n="10"].active { background: var(--pink); }
+
+  .number-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .nl-num {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: #EDE8FF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+    transition: background 0.3s, color 0.3s;
+  }
+  .nl-num.lit-2  { background: var(--blue);   color: #fff; }
+  .nl-num.lit-3  { background: var(--green);  color: #222; }
+  .nl-num.lit-5  { background: var(--orange); color: #fff; }
+  .nl-num.lit-10 { background: var(--pink);   color: #fff; }
+  .nl-num.bounce { animation: bounce 0.45s ease; }
+
+  @keyframes bounce {
+    0%   { transform: scale(1); }
+    35%  { transform: scale(1.4) translateY(-6px); }
+    60%  { transform: scale(0.9); }
+    100% { transform: scale(1); }
+  }
+
+  .seq-display {
+    background: #F8F4FF;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-weight: 800;
+    font-size: 16px;
+    color: var(--purple);
+    min-height: 42px;
+    letter-spacing: 1px;
+  }
+
+  /* ── ODD / EVEN ── */
+  .oe-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
+  .oe-input {
+    width: 80px;
+    height: 50px;
+    border-radius: 14px;
+    border: 3px solid var(--purple);
+    font-family: 'Nunito', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    text-align: center;
+    color: var(--purple);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .oe-input:focus { border-color: var(--pink); }
+  .oe-check-btn {
+    background: var(--purple);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 11px 24px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .oe-check-btn:hover { transform: scale(1.07); }
+  .oe-result {
+    font-size: 20px;
+    font-weight: 900;
+    min-height: 32px;
+    transition: all 0.3s;
+  }
+  .oe-result.even { color: var(--blue); }
+  .oe-result.odd  { color: var(--orange); }
+  .oe-result.pop  { animation: pop 0.4s ease; }
+  @keyframes pop {
+    0%   { transform: scale(0.7); opacity: 0; }
+    70%  { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); }
+  }
+
+  .dots-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 8px; min-height: 36px; }
+  .dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: inline-block;
+    animation: popIn 0.3s ease both;
+  }
+  .dot.even-dot { background: var(--blue); }
+  .dot.odd-dot  { background: var(--orange); }
+  .dot.leftover { background: var(--yellow); border: 3px solid var(--orange); }
+
+  @keyframes popIn {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+
+  /* ── NUMBER PATTERNS ── */
+  .pattern-bubbles { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .bubble {
+    background: var(--purple);
+    color: #fff;
+    border-radius: 50%;
+    width: 52px; height: 52px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900;
+    font-size: 17px;
+    animation: float 2.5s ease-in-out infinite;
+    box-shadow: 0 4px 14px rgba(155,93,229,0.3);
+  }
+  .bubble:nth-child(2) { animation-delay: 0.3s; background: var(--pink); }
+  .bubble:nth-child(3) { animation-delay: 0.6s; background: var(--blue); }
+  .bubble:nth-child(4) { animation-delay: 0.9s; background: var(--orange); }
+  .bubble:nth-child(5) { animation-delay: 1.2s; background: var(--green); color: #222; }
+  .bubble.missing {
+    background: #EDE8FF;
+    color: var(--purple);
+    border: 3px dashed var(--purple);
+    font-size: 22px;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-7px); }
+  }
+  .pattern-hint {
+    font-size: 13px;
+    color: #888;
+    margin-top: 8px;
+    font-weight: 600;
+  }
+  .pattern-item { margin-bottom: 18px; }
+  .pattern-label { font-weight: 700; font-size: 14px; color: #555; margin-bottom: 8px; }
+
+  /* ── COLOR/SHAPE PATTERNS ── */
+  .shape-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
+  .shape {
+    width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    border-radius: 8px;
+    animation: float 3s ease-in-out infinite;
+  }
+  .shape:nth-child(even) { animation-delay: 0.5s; }
+
+  .mc-opts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .mc-btn {
+    background: #EDE8FF;
+    border: 2px solid transparent;
+    border-radius: 50px;
+    padding: 8px 18px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .mc-btn:hover { background: var(--purple); color: #fff; }
+  .mc-btn.correct { background: var(--green); color: #222; border-color: #00c9a7; }
+  .mc-btn.wrong   { background: #FF6B6B;      color: #fff; border-color: #e53e3e; animation: shake 0.4s; }
+  .mc-result { font-weight: 800; font-size: 15px; min-height: 24px; margin-top: 8px; }
+  .mc-result.ok  { color: #00c9a7; }
+  .mc-result.bad { color: #e53e3e; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+
+  /* ── FILL THE GAP TAB ── */
+  .ftg-seq {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .ftg-num {
+    width: 56px; height: 52px;
+    background: var(--purple);
+    color: #fff;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900;
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(155,93,229,0.2);
+    animation: float 2.8s ease-in-out infinite;
+  }
+  .ftg-num:nth-child(2) { animation-delay: 0.4s; background: var(--pink); }
+  .ftg-num:nth-child(3) { animation-delay: 0.8s; background: var(--blue); }
+  .ftg-num:nth-child(4) { animation-delay: 1.2s; background: var(--orange); }
+  .ftg-num:nth-child(5) { animation-delay: 1.6s; background: var(--green); color: #222; }
+  .ftg-num:nth-child(6) { animation-delay: 0.2s; background: var(--purple); }
+  .ftg-num:nth-child(7) { animation-delay: 0.6s; background: var(--pink); }
+
+  .ftg-input {
+    width: 56px; height: 52px;
+    border-radius: 14px;
+    border: 3px dashed var(--purple);
+    font-family: 'Nunito', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    text-align: center;
+    color: var(--purple);
+    background: #F8F4FF;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .ftg-input:focus { border-color: var(--pink); background: #fff; }
+  .ftg-input.correct-inp { border-color: var(--green); background: #E0FFF9; color: #00c9a7; }
+  .ftg-input.wrong-inp   { border-color: var(--orange); background: #FFF3EE; color: var(--orange); animation: shake 0.4s; }
+
+  .ftg-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+  .ftg-feedback { font-size: 17px; font-weight: 800; min-height: 26px; }
+  .ftg-feedback.ok  { color: #00c9a7; }
+  .ftg-feedback.bad { color: var(--orange); }
+
+  .btn-primary {
+    background: var(--purple);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 28px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.15s, background 0.2s;
+    box-shadow: 0 4px 16px rgba(155,93,229,0.25);
+  }
+  .btn-primary:hover { transform: scale(1.06); background: #7c3fd4; }
+  .btn-secondary {
+    background: #EDE8FF;
+    color: var(--purple);
+    border: none;
+    border-radius: 50px;
+    padding: 12px 28px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .btn-secondary:hover { transform: scale(1.06); background: #ddd4ff; }
+
+  .ftg-progress { display: flex; gap: 7px; margin-bottom: 18px; }
+  .ftg-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #DDD;
+    transition: background 0.3s;
+  }
+  .ftg-dot.done    { background: var(--green); }
+  .ftg-dot.current { background: var(--purple); transform: scale(1.3); }
+
+  /* ── PLAY TAB ── */
+  .play-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .play-q-num  { font-weight: 800; font-size: 15px; color: #888; }
+  .play-score-badge {
+    background: var(--yellow);
+    color: #333;
+    font-weight: 900;
+    padding: 5px 16px;
+    border-radius: 50px;
+    font-size: 14px;
+  }
+
+  .play-progress-bar {
+    background: #EDE8FF;
+    border-radius: 50px;
+    height: 10px;
+    margin-bottom: 22px;
+    overflow: hidden;
+  }
+  .play-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--purple), var(--pink));
+    border-radius: 50px;
+    transition: width 0.5s ease;
+  }
+
+  .play-question {
+    font-size: clamp(18px, 4.5vw, 24px);
+    font-weight: 900;
+    margin-bottom: 22px;
+    line-height: 1.4;
+    min-height: 60px;
+  }
+
+  .play-opts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .play-opt {
+    background: #F8F4FF;
+    border: 3px solid #EDE8FF;
+    border-radius: 16px;
+    padding: 16px 12px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: clamp(15px, 3.5vw, 18px);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .play-opt:hover:not(:disabled) { border-color: var(--purple); background: #EDE8FF; transform: scale(1.03); }
+  .play-opt.correct { border-color: var(--green); background: #E0FFF9; color: #00897b; animation: correctPop 0.5s ease; }
+  .play-opt.wrong   { border-color: var(--orange); background: #FFF3EE; color: var(--orange); animation: shake 0.4s; }
+
+  @keyframes correctPop {
+    0%  { transform: scale(1); }
+    40% { transform: scale(1.08); }
+    100%{ transform: scale(1); }
+  }
+
+  .play-feedback {
+    font-size: 18px;
+    font-weight: 900;
+    text-align: center;
+    min-height: 30px;
+    margin-bottom: 12px;
+  }
+  .play-feedback.ok  { color: #00c9a7; }
+  .play-feedback.bad { color: var(--orange); }
+
+  .play-next-btn { display: block; margin: 0 auto; }
+
+  /* ── SCORE CARD ── */
+  .score-card {
+    text-align: center;
+    padding: 32px 20px;
+    animation: pop 0.5s ease;
+  }
+  .score-emoji { font-size: 72px; margin-bottom: 12px; }
+  .score-title { font-size: 28px; font-weight: 900; margin-bottom: 8px; }
+  .score-sub   { font-size: 17px; color: #666; font-weight: 600; margin-bottom: 24px; }
+  .score-num {
+    font-size: 56px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 24px;
+  }
+  .replay-btn {
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 36px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 17px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    box-shadow: 0 6px 20px rgba(155,93,229,0.3);
+  }
+  .replay-btn:hover { transform: scale(1.07); }
+
+  /* ── CONFETTI ── */
+  .confetti-piece {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 9999;
+    animation: confettiFall 1.4s ease-in forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(0) rotate(0deg) scale(1);   opacity: 1; }
+    80%  { opacity: 1; }
+    100% { transform: translateY(90vh) rotate(720deg) scale(0.4); opacity: 0; }
+  }
+
+  /* ── SECTION DIVIDER ── */
+  .section-sep {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--purple), transparent);
+    margin: 8px 0 16px;
+    opacity: 0.2;
+    border-radius: 2px;
+  }
+
+  /* responsiveness */
+  @media(max-width: 480px) {
+    .play-opts { grid-template-columns: 1fr; }
+    .nl-num { width: 34px; height: 34px; font-size: 12px; border-radius: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <button class="back-btn" onclick="history.back()">← Back</button>
+  <span class="nav-title">🔁 Patterns &amp; Skip Counting</span>
+  <div class="stars-pill" id="starsPill">⭐ 0 stars</div>
+</nav>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('learn',this)">📖 Learn</button>
+  <button class="tab-btn"        onclick="switchTab('fill',this)">🔢 Fill the Gap</button>
+  <button class="tab-btn"        onclick="switchTab('play',this)">🎮 Play</button>
+</div>
+
+<!-- ════════════════════════════════════════
+     LEARN TAB
+════════════════════════════════════════ -->
+<div id="learn" class="panel active">
+
+  <!-- 1. Skip Counting Visualizer -->
+  <div class="card">
+    <div class="card-title">🔢 Skip Counting Visualiser</div>
+    <div class="skip-btns">
+      <button class="skip-btn" data-n="2"  onclick="skipCount(2,this)">Count by 2</button>
+      <button class="skip-btn" data-n="3"  onclick="skipCount(3,this)">Count by 3</button>
+      <button class="skip-btn" data-n="5"  onclick="skipCount(5,this)">Count by 5</button>
+      <button class="skip-btn" data-n="10" onclick="skipCount(10,this)">Count by 10</button>
+    </div>
+    <div class="number-line" id="numLine"></div>
+    <div class="seq-display" id="seqDisplay">Pick a skip count above! 👆</div>
+  </div>
+
+  <!-- 2. Odd & Even -->
+  <div class="card">
+    <div class="card-title">🔵 Odd &amp; Even Explorer</div>
+    <div class="oe-row">
+      <input class="oe-input" type="number" id="oeInput" min="1" max="20" placeholder="?" />
+      <button class="oe-check-btn" onclick="checkOE()">Check!</button>
+      <div class="oe-result" id="oeResult"></div>
+    </div>
+    <div class="dots-row" id="oeDots"></div>
+  </div>
+
+  <!-- 3. Number Patterns -->
+  <div class="card">
+    <div class="card-title">🔍 Number Patterns</div>
+    <p style="font-size:14px;color:#888;font-weight:600;margin-bottom:16px;">Each sequence has one missing number — can you spot the rule?</p>
+
+    <div class="pattern-item">
+      <div class="pattern-label">Pattern 1 — Rule: +5 each time</div>
+      <div class="pattern-bubbles">
+        <div class="bubble">5</div>
+        <div class="bubble">10</div>
+        <div class="bubble missing">?</div>
+        <div class="bubble">20</div>
+        <div class="bubble">25</div>
+      </div>
+      <div class="pattern-hint">Missing = <strong>15</strong> &nbsp;(5 → 10 → <span style="color:var(--pink)">15</span> → 20 → 25)</div>
+    </div>
+
+    <div class="section-sep"></div>
+
+    <div class="pattern-item">
+      <div class="pattern-label">Pattern 2 — Rule: +2 each time</div>
+      <div class="pattern-bubbles">
+        <div class="bubble">2</div>
+        <div class="bubble">4</div>
+        <div class="bubble">6</div>
+        <div class="bubble missing">?</div>
+        <div class="bubble">10</div>
+      </div>
+      <div class="pattern-hint">Missing = <strong>8</strong> &nbsp;(2 → 4 → 6 → <span style="color:var(--pink)">8</span> → 10)</div>
+    </div>
+
+    <div class="section-sep"></div>
+
+    <div class="pattern-item">
+      <div class="pattern-label">Pattern 3 — Rule: +10 each time</div>
+      <div class="pattern-bubbles">
+        <div class="bubble">10</div>
+        <div class="bubble missing">?</div>
+        <div class="bubble">30</div>
+        <div class="bubble">40</div>
+        <div class="bubble">50</div>
+      </div>
+      <div class="pattern-hint">Missing = <strong>20</strong> &nbsp;(10 → <span style="color:var(--pink)">20</span> → 30 → 40 → 50)</div>
+    </div>
+  </div>
+
+  <!-- 4. Color/Shape Patterns -->
+  <div class="card">
+    <div class="card-title">🔴🔵 Colour &amp; Shape Patterns</div>
+
+    <div class="pattern-item" id="csp1">
+      <div class="pattern-label">What comes next?</div>
+      <div class="shape-row" id="csp1-shapes"></div>
+      <div class="mc-opts" id="csp1-opts"></div>
+      <div class="mc-result" id="csp1-res"></div>
+    </div>
+
+    <div class="section-sep"></div>
+
+    <div class="pattern-item" id="csp2">
+      <div class="pattern-label">What comes next?</div>
+      <div class="shape-row" id="csp2-shapes"></div>
+      <div class="mc-opts" id="csp2-opts"></div>
+      <div class="mc-result" id="csp2-res"></div>
+    </div>
+  </div>
+
+</div><!-- /learn -->
+
+
+<!-- ════════════════════════════════════════
+     FILL THE GAP TAB
+════════════════════════════════════════ -->
+<div id="fill" class="panel">
+  <div class="card">
+    <div class="card-title">🔢 Fill the Missing Numbers!</div>
+    <p style="font-size:14px;color:#888;font-weight:600;margin-bottom:16px;">Type the missing numbers in the boxes.</p>
+
+    <div class="ftg-progress" id="ftgProgress"></div>
+
+    <div id="ftgQuestion"></div>
+
+    <div class="ftg-actions">
+      <button class="btn-primary" onclick="checkFTG()">✅ Check</button>
+      <button class="btn-secondary" id="ftgNextBtn" onclick="nextFTG()" style="display:none">Next →</button>
+    </div>
+    <div class="ftg-feedback" id="ftgFeedback"></div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     PLAY TAB
+════════════════════════════════════════ -->
+<div id="play" class="panel">
+  <div class="card" id="playCard">
+    <div id="playGame">
+      <div class="play-header">
+        <span class="play-q-num" id="playQNum">Question 1 / 8</span>
+        <span class="play-score-badge" id="playScoreBadge">⭐ 0</span>
+      </div>
+      <div class="play-progress-bar"><div class="play-progress-fill" id="playProgressFill" style="width:0%"></div></div>
+      <div class="play-question" id="playQuestion"></div>
+      <div class="play-opts" id="playOpts"></div>
+      <div class="play-feedback" id="playFeedback"></div>
+      <button class="btn-primary play-next-btn" id="playNextBtn" style="display:none" onclick="nextPlayQ()">Next →</button>
+    </div>
+    <div id="scoreCard" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════  JS  ════════════════════════════════════════ -->
+<script>
+/* ─── Global stars ─── */
+let totalStars = 0;
+function addStars(n){
+  totalStars += n;
+  document.getElementById('starsPill').textContent = '⭐ ' + totalStars + ' stars';
+}
+
+/* ─── Tab switching ─── */
+function switchTab(id, btn){
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ══════════════════════════════════
+   SKIP COUNTING VISUALISER
+══════════════════════════════════ */
+let currentSkip = null;
+let skipAnimating = false;
+
+function buildNumberLine(){
+  const nl = document.getElementById('numLine');
+  nl.innerHTML = '';
+  for(let i=1; i<=30; i++){
+    const d = document.createElement('div');
+    d.className = 'nl-num';
+    d.id = 'nl-' + i;
+    d.textContent = i;
+    nl.appendChild(d);
+  }
+}
+buildNumberLine();
+
+function skipCount(n, btn){
+  if(skipAnimating) return;
+  document.querySelectorAll('.skip-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // reset all
+  for(let i=1; i<=30; i++){
+    const el = document.getElementById('nl-'+i);
+    el.className = 'nl-num';
+  }
+
+  currentSkip = n;
+  skipAnimating = true;
+  const multiples = [];
+  for(let i=n; i<=30; i+=n) multiples.push(i);
+
+  const seq = [];
+  let idx = 0;
+
+  function light(){
+    if(idx >= multiples.length){ skipAnimating = false; return; }
+    const num = multiples[idx];
+    const el = document.getElementById('nl-'+num);
+    el.className = 'nl-num lit-'+n+' bounce';
+    el.addEventListener('animationend', ()=> el.classList.remove('bounce'), {once:true});
+
+    seq.push(num);
+    document.getElementById('seqDisplay').textContent = seq.join(', ') + (idx < multiples.length-1 ? ', ...' : ' ✅');
+    idx++;
+    setTimeout(light, 180);
+  }
+  setTimeout(light, 100);
+}
+
+/* ══════════════════════════════════
+   ODD & EVEN
+══════════════════════════════════ */
+function checkOE(){
+  const v = parseInt(document.getElementById('oeInput').value);
+  const res = document.getElementById('oeResult');
+  const dots = document.getElementById('oeDots');
+
+  if(isNaN(v) || v < 1 || v > 20){
+    res.className = 'oe-result';
+    res.textContent = 'Enter 1–20!';
+    dots.innerHTML = '';
+    return;
+  }
+
+  const isEven = v % 2 === 0;
+  res.className = 'oe-result ' + (isEven ? 'even' : 'odd') + ' pop';
+  res.textContent = v + ' is ' + (isEven ? '✅ EVEN' : '🔶 ODD') + '!';
+
+  dots.innerHTML = '';
+  for(let i=1; i<=v; i++){
+    const d = document.createElement('span');
+    d.className = 'dot ' + (isEven ? 'even-dot' : (i < v ? 'odd-dot' : 'leftover'));
+    d.style.animationDelay = (i * 0.05) + 's';
+    dots.appendChild(d);
+  }
+
+  addStars(1);
+}
+
+/* ══════════════════════════════════
+   COLOUR / SHAPE PATTERNS
+══════════════════════════════════ */
+const cspData = [
+  {
+    shapes: ['🔴','🔵','🔴','🔵','🔴','🔵','❓'],
+    options: ['🔴','🔵','🟢','🟡'],
+    correct: '🔴',
+    id: 'csp1'
+  },
+  {
+    shapes: ['🟦','🟡','🟦','🟡','🟦','❓'],
+    options: ['🟡','🟦','🔴','🟢'],
+    correct: '🟡',
+    id: 'csp2'
+  }
+];
+
+cspData.forEach(data => {
+  const sr = document.getElementById(data.id+'-shapes');
+  data.shapes.forEach(s => {
+    const sp = document.createElement('div');
+    sp.className = 'shape';
+    sp.textContent = s;
+    sr.appendChild(sp);
+  });
+
+  const opts = document.getElementById(data.id+'-opts');
+  data.options.forEach(opt => {
+    const b = document.createElement('button');
+    b.className = 'mc-btn';
+    b.textContent = opt;
+    b.onclick = function(){
+      if(opts.dataset.done) return;
+      const res = document.getElementById(data.id+'-res');
+      if(opt === data.correct){
+        b.className = 'mc-btn correct';
+        res.className = 'mc-result ok';
+        res.textContent = '🎉 Correct! The pattern repeats!';
+        addStars(2);
+      } else {
+        b.className = 'mc-btn wrong';
+        res.className = 'mc-result bad';
+        res.textContent = '❌ Try again! Look at what repeats.';
+      }
+      opts.dataset.done = '1';
+    };
+    opts.appendChild(b);
+  });
+});
+
+/* ══════════════════════════════════
+   FILL THE GAP
+══════════════════════════════════ */
+const ftgSequences = [
+  { full:[2,4,6,8,10,12,14],  blanks:[2,5],  label:'Count by 2s' },
+  { full:[5,10,15,20,25,30],  blanks:[1,4],  label:'Count by 5s' },
+  { full:[10,20,30,40,50,60], blanks:[2,5],  label:'Count by 10s' },
+  { full:[3,6,9,12,15,18],    blanks:[1,4],  label:'Count by 3s' },
+  { full:[1,3,5,7,9,11,13],   blanks:[2,5],  label:'Odd numbers (+2)' }
+];
+let ftgIdx = 0;
+let ftgChecked = false;
+
+function buildFTGProgress(){
+  const prog = document.getElementById('ftgProgress');
+  prog.innerHTML = '';
+  ftgSequences.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'ftg-dot' + (i < ftgIdx ? ' done' : (i === ftgIdx ? ' current' : ''));
+    prog.appendChild(d);
+  });
+}
+
+function renderFTG(){
+  ftgChecked = false;
+  document.getElementById('ftgFeedback').textContent = '';
+  document.getElementById('ftgNextBtn').style.display = 'none';
+  buildFTGProgress();
+
+  const seq = ftgSequences[ftgIdx];
+  const container = document.getElementById('ftgQuestion');
+  container.innerHTML = '<div style="font-weight:700;font-size:14px;color:#888;margin-bottom:12px;">Sequence: '+seq.label+'</div><div class="ftg-seq" id="ftgSeq"></div>';
+
+  const row = document.getElementById('ftgSeq');
+  seq.full.forEach((num, i) => {
+    if(seq.blanks.includes(i)){
+      const inp = document.createElement('input');
+      inp.type = 'number';
+      inp.className = 'ftg-input';
+      inp.id = 'ftg-inp-'+i;
+      inp.placeholder = '?';
+      inp.dataset.answer = num;
+      row.appendChild(inp);
+    } else {
+      const box = document.createElement('div');
+      box.className = 'ftg-num';
+      box.textContent = num;
+      row.appendChild(box);
+    }
+  });
+}
+
+function checkFTG(){
+  if(ftgChecked) return;
+  const seq = ftgSequences[ftgIdx];
+  let allCorrect = true;
+  seq.blanks.forEach(i => {
+    const inp = document.getElementById('ftg-inp-'+i);
+    const val = parseInt(inp.value);
+    const ans = parseInt(inp.dataset.answer);
+    if(val === ans){
+      inp.className = 'ftg-input correct-inp';
+    } else {
+      inp.className = 'ftg-input wrong-inp';
+      allCorrect = false;
+    }
+  });
+
+  const fb = document.getElementById('ftgFeedback');
+  if(allCorrect){
+    fb.className = 'ftg-feedback ok';
+    fb.textContent = '🎉 Amazing! All correct!';
+    addStars(3);
+    confetti();
+  } else {
+    fb.className = 'ftg-feedback bad';
+    fb.textContent = '❌ Some are wrong — look at the pattern!';
+  }
+  ftgChecked = true;
+  document.getElementById('ftgNextBtn').style.display = ftgIdx < ftgSequences.length-1 ? 'inline-block' : 'none';
+}
+
+function nextFTG(){
+  ftgIdx = (ftgIdx + 1) % ftgSequences.length;
+  renderFTG();
+}
+
+renderFTG();
+
+/* ══════════════════════════════════
+   PLAY TAB — 8 Questions
+══════════════════════════════════ */
+const playQuestions = [
+  { q:'What comes next?\n2, 4, 6, 8, ___',  opts:['9','10','11','12'],  ans:'10',  fb:'Count by 2s! 8 + 2 = 10 ✅' },
+  { q:'What comes next?\n5, 10, 15, ___, 25', opts:['18','19','20','21'], ans:'20', fb:'Count by 5s! 15 + 5 = 20 ✅' },
+  { q:'Is the number 14 odd or even?',         opts:['Odd','Even','Both','Neither'], ans:'Even', fb:'14 ÷ 2 = 7 — no leftover → EVEN ✅' },
+  { q:'What comes next?\n10, 20, 30, 40, ___', opts:['45','48','50','55'], ans:'50', fb:'Count by 10s! 40 + 10 = 50 ✅' },
+  { q:'Is the number 7 odd or even?',           opts:['Even','Odd','Zero','Both'],   ans:'Odd',  fb:'7 ÷ 2 has a leftover → ODD ✅' },
+  { q:'Fill in the blank:\n3, 6, 9, ___, 15',  opts:['10','11','12','13'], ans:'12', fb:'Count by 3s! 9 + 3 = 12 ✅' },
+  { q:'What comes next in the pattern?\n🔴 🔵 🔴 🔵 ___', opts:['🔴','🔵','🟢','🟡'], ans:'🔴', fb:'The pattern repeats: 🔴🔵🔴🔵 → 🔴 ✅' },
+  { q:'What number is missing?\n__, 4, 6, 8, 10', opts:['1','2','3','5'], ans:'2', fb:'Count by 2s from 2! The missing number is 2 ✅' },
+];
+
+let playIdx   = 0;
+let playScore = 0;
+let playAnswered = false;
+
+function renderPlayQ(){
+  playAnswered = false;
+  const q = playQuestions[playIdx];
+  document.getElementById('playQNum').textContent = 'Question ' + (playIdx+1) + ' / ' + playQuestions.length;
+  document.getElementById('playScoreBadge').textContent = '⭐ ' + playScore;
+  document.getElementById('playProgressFill').style.width = (playIdx / playQuestions.length * 100) + '%';
+  document.getElementById('playQuestion').textContent = q.q;
+  document.getElementById('playFeedback').textContent = '';
+  document.getElementById('playNextBtn').style.display = 'none';
+
+  const optsEl = document.getElementById('playOpts');
+  optsEl.innerHTML = '';
+  q.opts.forEach(opt => {
+    const b = document.createElement('button');
+    b.className = 'play-opt';
+    b.textContent = opt;
+    b.onclick = function(){ answerPlay(opt, b); };
+    optsEl.appendChild(b);
+  });
+}
+
+function answerPlay(chosen, btn){
+  if(playAnswered) return;
+  playAnswered = true;
+  const q = playQuestions[playIdx];
+  const fb = document.getElementById('playFeedback');
+  const allBtns = document.querySelectorAll('.play-opt');
+
+  allBtns.forEach(b => b.disabled = true);
+
+  if(chosen === q.ans){
+    btn.className = 'play-opt correct';
+    fb.className = 'play-feedback ok';
+    fb.textContent = '🎉 ' + q.fb;
+    playScore++;
+    document.getElementById('playScoreBadge').textContent = '⭐ ' + playScore;
+    addStars(2);
+    confetti();
+  } else {
+    btn.className = 'play-opt wrong';
+    fb.className = 'play-feedback bad';
+    fb.textContent = '❌ ' + q.fb;
+    // highlight correct
+    allBtns.forEach(b => { if(b.textContent === q.ans) b.className = 'play-opt correct'; });
+  }
+
+  document.getElementById('playNextBtn').style.display = 'inline-block';
+}
+
+function nextPlayQ(){
+  playIdx++;
+  if(playIdx >= playQuestions.length){
+    showScoreCard();
+  } else {
+    renderPlayQ();
+  }
+}
+
+function showScoreCard(){
+  document.getElementById('playGame').style.display = 'none';
+  const sc = document.getElementById('scoreCard');
+  sc.style.display = 'block';
+  const pct = Math.round(playScore / playQuestions.length * 100);
+  let emoji = '😊', title = 'Good try!';
+  if(pct === 100){ emoji = '🏆'; title = 'Perfect Score! Amazing!'; }
+  else if(pct >= 75){ emoji = '🌟'; title = 'Great Work!'; }
+  else if(pct >= 50){ emoji = '👍'; title = 'Nice Effort!'; }
+  sc.innerHTML = `
+    <div class="score-card">
+      <div class="score-emoji">${emoji}</div>
+      <div class="score-title">${title}</div>
+      <div class="score-sub">You got ${playScore} out of ${playQuestions.length} correct!</div>
+      <div class="score-num">${playScore}/${playQuestions.length}</div>
+      <button class="replay-btn" onclick="replayPlay()">🔄 Play Again</button>
+    </div>`;
+  confetti(); confetti();
+}
+
+function replayPlay(){
+  playIdx = 0; playScore = 0;
+  document.getElementById('playGame').style.display = 'block';
+  document.getElementById('scoreCard').style.display = 'none';
+  renderPlayQ();
+}
+
+renderPlayQ();
+
+/* ══════════════════════════════════
+   CONFETTI
+══════════════════════════════════ */
+const confettiColors = ['#FFD93D','#FF6B35','#F15BB5','#9B5DE5','#00BBF9','#00F5D4'];
+function confetti(){
+  for(let i=0; i<28; i++){
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.left = Math.random()*100 + 'vw';
+    p.style.top  = '-12px';
+    p.style.background = confettiColors[Math.floor(Math.random()*confettiColors.length)];
+    p.style.width  = (8 + Math.random()*8) + 'px';
+    p.style.height = (8 + Math.random()*8) + 'px';
+    p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    p.style.animationDuration = (1 + Math.random()*0.8) + 's';
+    p.style.animationDelay    = (Math.random()*0.4) + 's';
+    document.body.appendChild(p);
+    p.addEventListener('animationend', ()=> p.remove());
+  }
+}
+</script>
+</body>
+</html>

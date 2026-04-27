@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🍕 Fractions — Class 2 Math</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #FFD93D;
+    --orange: #FF6B35;
+    --pink: #F15BB5;
+    --purple: #9B5DE5;
+    --blue: #00BBF9;
+    --green: #00F5D4;
+    --bg: #FFF9F0;
+    --card: #FFFFFF;
+    --text: #2D2D2D;
+    --shadow: 0 4px 20px rgba(0,0,0,0.10);
+    --radius: 20px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 3px 16px rgba(155,93,229,0.35);
+  }
+  .back-btn {
+    background: rgba(255,255,255,0.22);
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.38); transform: scale(1.1); }
+  nav h1 {
+    flex: 1;
+    color: #fff;
+    font-size: 1.45rem;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  }
+  .stars-pill {
+    background: rgba(255,255,255,0.22);
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 30px;
+    display: flex; align-items: center; gap: 5px;
+    min-width: 70px;
+    justify-content: center;
+  }
+
+  /* ── TABS ── */
+  .tab-bar {
+    display: flex;
+    gap: 8px;
+    padding: 18px 20px 0;
+    justify-content: center;
+  }
+  .tab-btn {
+    flex: 1;
+    max-width: 160px;
+    background: #fff;
+    border: 3px solid transparent;
+    border-radius: 50px;
+    padding: 10px 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    color: #888;
+    transition: all 0.2s;
+    box-shadow: var(--shadow);
+  }
+  .tab-btn.active {
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 16px rgba(155,93,229,0.35);
+    transform: translateY(-2px);
+  }
+  .tab-btn:hover:not(.active) { border-color: var(--purple); color: var(--purple); }
+
+  .tab-content { display: none; padding: 22px 16px 40px; max-width: 780px; margin: 0 auto; }
+  .tab-content.active { display: block; }
+
+  /* ── SECTION CARDS ── */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 22px 20px;
+    margin-bottom: 22px;
+    box-shadow: var(--shadow);
+  }
+  .card-title {
+    font-size: 1.15rem;
+    font-weight: 900;
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* ── FRACTION VISUALIZER ── */
+  .frac-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px; }
+  .frac-btn {
+    background: #f0eaff;
+    border: 3px solid var(--purple);
+    color: var(--purple);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 1.1rem;
+    padding: 9px 26px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .frac-btn:hover, .frac-btn.selected {
+    background: var(--purple);
+    color: #fff;
+    transform: scale(1.07);
+    box-shadow: 0 4px 14px rgba(155,93,229,0.4);
+  }
+
+  #pizza-svg-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  #pizza-svg {
+    width: 200px; height: 200px;
+    filter: drop-shadow(0 6px 18px rgba(155,93,229,0.25));
+    transition: transform 0.3s;
+  }
+  #pizza-svg.pop { animation: pop 0.35s ease; }
+  @keyframes pop { 0%{transform:scale(0.88)} 60%{transform:scale(1.08)} 100%{transform:scale(1)} }
+
+  .frac-notation {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--purple);
+    min-height: 50px;
+    text-align: center;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+  }
+  .frac-notation span { display: inline-block; }
+  .frac-fraction {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.5rem;
+    line-height: 1.1;
+    vertical-align: middle;
+  }
+  .frac-fraction .numer { font-size: 2rem; }
+  .frac-fraction .denom { font-size: 2rem; }
+  .frac-fraction .line { width: 100%; height: 4px; background: var(--purple); border-radius: 3px; margin: 2px 0; }
+
+  /* ── FRACTION OF GROUP ── */
+  .emoji-row {
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+    min-height: 52px;
+    margin: 12px 0;
+  }
+  .emoji-item {
+    font-size: 2rem;
+    transition: all 0.3s;
+    filter: grayscale(0.9) opacity(0.45);
+    transform: scale(0.9);
+  }
+  .emoji-item.highlighted {
+    filter: none;
+    transform: scale(1.18);
+    animation: bounce-in 0.3s ease;
+  }
+  @keyframes bounce-in { 0%{transform:scale(0.7)} 70%{transform:scale(1.25)} 100%{transform:scale(1.18)} }
+
+  .group-controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+  .group-controls label { font-weight: 700; font-size: 0.95rem; }
+  input[type=range] {
+    accent-color: var(--purple);
+    width: 140px;
+    cursor: pointer;
+  }
+  .group-frac-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .group-frac-btn {
+    background: #fff0f8;
+    border: 2px solid var(--pink);
+    color: var(--pink);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 7px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .group-frac-btn:hover, .group-frac-btn.sel {
+    background: var(--pink);
+    color: #fff;
+  }
+  .group-result {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: var(--pink);
+    margin-top: 8px;
+    min-height: 32px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  /* ── NUMBER LINE ── */
+  .number-line-wrap {
+    padding: 30px 10px 10px;
+    position: relative;
+  }
+  .nl-track {
+    position: relative;
+    height: 8px;
+    background: linear-gradient(90deg, var(--blue), var(--purple));
+    border-radius: 8px;
+    margin: 0 20px;
+  }
+  .nl-track::before { content:'0'; position:absolute; left:-18px; top:-22px; font-weight:800; font-size:1rem; }
+  .nl-track::after  { content:'1'; position:absolute; right:-14px; top:-22px; font-weight:800; font-size:1rem; }
+  .nl-dot {
+    position: absolute;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    top: 50%; transform: translate(-50%, -50%);
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .nl-dot:hover { transform: translate(-50%, -50%) scale(1.3); }
+  .nl-label {
+    position: absolute;
+    top: -30px;
+    transform: translateX(-50%);
+    font-size: 0.82rem;
+    font-weight: 800;
+    white-space: nowrap;
+    background: #fff;
+    padding: 2px 8px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  }
+  .nl-bottom-label {
+    position: absolute;
+    bottom: -26px;
+    transform: translateX(-50%);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #666;
+    white-space: nowrap;
+  }
+
+  /* ── REAL-LIFE CARDS ── */
+  .rl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
+  .rl-card {
+    background: linear-gradient(135deg, #fff0f8, #f0eaff);
+    border-radius: 16px;
+    padding: 18px 12px;
+    text-align: center;
+    border: 2px solid #e8d8ff;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .rl-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(155,93,229,0.2); }
+  .rl-card .rl-emoji { font-size: 2.5rem; margin-bottom: 8px; }
+  .rl-card .rl-frac { font-size: 1.6rem; font-weight: 900; color: var(--purple); }
+  .rl-card .rl-desc { font-size: 0.88rem; font-weight: 700; color: #555; margin-top: 4px; }
+
+  /* ── SPLIT IT TAB ── */
+  .split-controls { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; }
+  .split-shape-btn {
+    background: #fff0f8;
+    border: 3px solid var(--pink);
+    color: var(--pink);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 0.95rem;
+    padding: 9px 22px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .split-shape-btn:hover, .split-shape-btn.active {
+    background: var(--pink);
+    color: #fff;
+    transform: scale(1.06);
+  }
+  .split-shape-btn.active { box-shadow: 0 4px 14px rgba(241,91,181,0.4); }
+
+  .split-stage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    margin: 10px 0;
+  }
+  #split-svg { width: 220px; height: 220px; overflow: visible; }
+
+  .split-question {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--purple);
+    margin-bottom: 16px;
+    min-height: 32px;
+  }
+  .split-notation {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--orange);
+    min-height: 40px;
+    margin-top: 12px;
+    transition: all 0.3s;
+  }
+
+  /* ── PLAY TAB ── */
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .quiz-progress {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--purple);
+  }
+  .progress-bar-outer {
+    height: 10px;
+    background: #e8d8ff;
+    border-radius: 10px;
+    flex: 1;
+    margin: 0 14px;
+    overflow: hidden;
+  }
+  .progress-bar-inner {
+    height: 100%;
+    background: linear-gradient(90deg, var(--pink), var(--purple));
+    border-radius: 10px;
+    transition: width 0.4s ease;
+  }
+
+  .question-card {
+    background: linear-gradient(135deg, #f0eaff, #fff0f8);
+    border-radius: var(--radius);
+    padding: 22px 20px;
+    margin-bottom: 18px;
+    text-align: center;
+    border: 2px solid #e0d0ff;
+  }
+  .question-text {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .question-visual { margin: 14px auto; display: flex; justify-content: center; }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .option-btn {
+    background: #fff;
+    border: 3px solid #e0d0ff;
+    border-radius: 16px;
+    padding: 14px 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text);
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--purple); background: #f0eaff; transform: scale(1.03); }
+  .option-btn.correct { background: #d4fce9; border-color: #00C476; color: #00885a; }
+  .option-btn.wrong   { background: #ffe0e0; border-color: #FF5555; color: #cc2222; }
+  .option-btn:disabled { cursor: default; }
+
+  .feedback-msg {
+    text-align: center;
+    font-size: 1.15rem;
+    font-weight: 900;
+    min-height: 36px;
+    margin-bottom: 6px;
+    transition: all 0.3s;
+  }
+  .feedback-msg.good { color: #00885a; }
+  .feedback-msg.bad  { color: #cc2222; }
+
+  .next-btn {
+    display: block;
+    margin: 0 auto;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    border: none;
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 900;
+    padding: 12px 36px;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(155,93,229,0.35);
+    transition: all 0.2s;
+    display: none;
+  }
+  .next-btn:hover { transform: scale(1.05); box-shadow: 0 6px 22px rgba(155,93,229,0.45); }
+
+  /* Score Card */
+  #score-card {
+    display: none;
+    text-align: center;
+    padding: 30px 20px;
+  }
+  .score-trophy { font-size: 5rem; margin-bottom: 10px; animation: trophy-pop 0.6s ease; }
+  @keyframes trophy-pop { 0%{transform:scale(0) rotate(-20deg)} 80%{transform:scale(1.15) rotate(5deg)} 100%{transform:scale(1)} }
+  .score-title { font-size: 2rem; font-weight: 900; color: var(--purple); margin-bottom: 8px; }
+  .score-subtitle { font-size: 1.1rem; font-weight: 700; color: #666; margin-bottom: 22px; }
+  .score-stars { font-size: 2.5rem; letter-spacing: 6px; margin-bottom: 22px; }
+  .restart-btn {
+    background: linear-gradient(135deg, var(--orange), var(--pink));
+    border: none;
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    padding: 14px 40px;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(255,107,53,0.4);
+    transition: all 0.2s;
+  }
+  .restart-btn:hover { transform: scale(1.05); }
+
+  /* ── QUIZ SHAPE VISUALS ── */
+  .quiz-shape { width: 100px; height: 100px; }
+
+  /* ── CONFETTI ── */
+  .confetti-piece {
+    position: fixed;
+    width: 10px; height: 14px;
+    border-radius: 3px;
+    pointer-events: none;
+    z-index: 9999;
+    animation: confetti-fall linear forwards;
+  }
+  @keyframes confetti-fall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width: 500px) {
+    .options-grid { grid-template-columns: 1fr; }
+    nav h1 { font-size: 1.2rem; }
+    .frac-notation { font-size: 1.7rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <button class="back-btn" onclick="history.back()" title="Go back">←</button>
+  <h1>🍕 Fractions</h1>
+  <div class="stars-pill" id="nav-stars">⭐ 0</div>
+</nav>
+
+<!-- TABS -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('learn', this)">📖 Learn</button>
+  <button class="tab-btn"        onclick="switchTab('split', this)">✂️ Split It</button>
+  <button class="tab-btn"        onclick="switchTab('play',  this)">🎮 Play</button>
+</div>
+
+<!-- ════════════ LEARN TAB ════════════ -->
+<div class="tab-content active" id="tab-learn">
+
+  <!-- 1. FRACTION VISUALIZER -->
+  <div class="card">
+    <div class="card-title" style="color:var(--purple)">🍕 Fraction Visualizer</div>
+    <div class="frac-btns">
+      <button class="frac-btn" onclick="showFraction(2, this)">½</button>
+      <button class="frac-btn" onclick="showFraction(3, this)">⅓</button>
+      <button class="frac-btn" onclick="showFraction(4, this)">¼</button>
+    </div>
+    <div id="pizza-svg-wrap">
+      <svg id="pizza-svg" viewBox="-110 -110 220 220">
+        <circle cx="0" cy="0" r="100" fill="#FFD93D" stroke="#FF6B35" stroke-width="4"/>
+        <circle cx="0" cy="0" r="100" fill="none" stroke="#FF6B35" stroke-width="4"/>
+        <g id="pizza-slices"></g>
+        <g id="pizza-lines"></g>
+      </svg>
+      <div class="frac-notation" id="frac-notation">
+        <span style="color:#aaa;font-size:1rem;font-weight:700">👆 Pick a fraction above!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. FRACTION OF GROUP -->
+  <div class="card">
+    <div class="card-title" style="color:var(--pink)">🍎 Fraction of a Group</div>
+    <div class="group-controls">
+      <label>Group size:</label>
+      <input type="range" id="group-size-slider" min="2" max="12" step="2" value="4" oninput="updateGroupDisplay()">
+      <span id="group-size-label" style="font-weight:800;font-size:1.1rem">4</span>
+    </div>
+    <div class="group-frac-btns">
+      <button class="group-frac-btn" onclick="highlightGroup(2, this)">½ of group</button>
+      <button class="group-frac-btn" onclick="highlightGroup(4, this)">¼ of group</button>
+    </div>
+    <div class="emoji-row" id="emoji-row"></div>
+    <div class="group-result" id="group-result"></div>
+  </div>
+
+  <!-- 3. NUMBER LINE -->
+  <div class="card">
+    <div class="card-title" style="color:var(--blue)">📏 Fraction Number Line</div>
+    <div class="number-line-wrap" style="padding-bottom:40px">
+      <div class="nl-track">
+        <!-- 1/4 -->
+        <div class="nl-dot" style="left:25%;background:var(--orange)">
+          <div class="nl-label" style="color:var(--orange)">¼</div>
+          <div class="nl-bottom-label">0.25</div>
+        </div>
+        <!-- 1/3 -->
+        <div class="nl-dot" style="left:33.33%;background:var(--green)">
+          <div class="nl-label" style="color:var(--green)">⅓</div>
+          <div class="nl-bottom-label">0.33</div>
+        </div>
+        <!-- 1/2 -->
+        <div class="nl-dot" style="left:50%;background:var(--pink)">
+          <div class="nl-label" style="color:var(--pink)">½</div>
+          <div class="nl-bottom-label">0.50</div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:0.88rem;color:#888;font-weight:700;text-align:center;margin-top:8px">
+      ¼ is the smallest → ⅓ is in the middle → ½ is the biggest of these three!
+    </p>
+  </div>
+
+  <!-- 4. REAL-LIFE EXAMPLES -->
+  <div class="card">
+    <div class="card-title" style="color:var(--orange)">🌟 Real-Life Examples</div>
+    <div class="rl-grid">
+      <div class="rl-card">
+        <div class="rl-emoji">🍕</div>
+        <div class="rl-frac">½</div>
+        <div class="rl-desc">Half of a pizza</div>
+      </div>
+      <div class="rl-card">
+        <div class="rl-emoji">🍊</div>
+        <div class="rl-frac">¼</div>
+        <div class="rl-desc">Quarter of an orange</div>
+      </div>
+      <div class="rl-card">
+        <div class="rl-emoji">🍫</div>
+        <div class="rl-frac">⅓</div>
+        <div class="rl-desc">One-third of chocolate</div>
+      </div>
+      <div class="rl-card">
+        <div class="rl-emoji">🎂</div>
+        <div class="rl-frac">½</div>
+        <div class="rl-desc">Half a birthday cake</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ SPLIT IT TAB ════════════ -->
+<div class="tab-content" id="tab-split">
+  <div class="card">
+    <div class="card-title" style="color:var(--pink)">✂️ Split the Shape!</div>
+    <div class="split-question" id="split-question">Choose how to split the shape below 👇</div>
+    <div class="split-controls">
+      <button class="split-shape-btn" onclick="doSplit(2, this)">Split into Halves</button>
+      <button class="split-shape-btn" onclick="doSplit(3, this)">Split into Thirds</button>
+      <button class="split-shape-btn" onclick="doSplit(4, this)">Split into Quarters</button>
+    </div>
+    <div class="split-stage">
+      <svg id="split-svg" viewBox="-115 -115 230 230">
+        <g id="split-slices">
+          <circle cx="0" cy="0" r="100" fill="#FFD93D" stroke="#FF6B35" stroke-width="4"/>
+        </g>
+        <g id="split-lines"></g>
+      </svg>
+    </div>
+    <div class="split-notation" id="split-notation"></div>
+    <p style="text-align:center;font-size:0.9rem;color:#888;font-weight:700;margin-top:10px">
+      The highlighted piece is <strong style="color:var(--purple)">1 part</strong> of the whole shape!
+    </p>
+  </div>
+
+  <!-- Rectangle split -->
+  <div class="card">
+    <div class="card-title" style="color:var(--blue)">🔷 Split a Rectangle</div>
+    <div class="split-controls">
+      <button class="split-shape-btn" onclick="doRectSplit(2, this)">Halves</button>
+      <button class="split-shape-btn" onclick="doRectSplit(3, this)">Thirds</button>
+      <button class="split-shape-btn" onclick="doRectSplit(4, this)">Quarters</button>
+    </div>
+    <div style="display:flex;justify-content:center;margin:16px 0">
+      <div id="rect-split" style="display:flex;width:300px;height:100px;border-radius:14px;overflow:hidden;border:4px solid var(--blue);gap:3px;background:var(--blue)">
+        <div style="flex:1;background:#e8f8ff"></div>
+      </div>
+    </div>
+    <div class="split-notation" id="rect-notation"></div>
+  </div>
+</div>
+
+<!-- ════════════ PLAY TAB ════════════ -->
+<div class="tab-content" id="tab-play">
+  <div id="quiz-area">
+    <div class="quiz-header">
+      <span class="quiz-progress" id="q-num">Q 1 / 8</span>
+      <div class="progress-bar-outer">
+        <div class="progress-bar-inner" id="q-bar" style="width:12.5%"></div>
+      </div>
+      <span class="quiz-progress" id="q-score-disp">⭐ 0</span>
+    </div>
+    <div class="question-card">
+      <div class="question-text" id="q-text"></div>
+      <div class="question-visual" id="q-visual"></div>
+    </div>
+    <div class="options-grid" id="options-grid"></div>
+    <div class="feedback-msg" id="feedback-msg"></div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next ➜</button>
+  </div>
+  <div id="score-card">
+    <div class="score-trophy" id="score-trophy">🏆</div>
+    <div class="score-title" id="score-title">Awesome!</div>
+    <div class="score-subtitle" id="score-subtitle"></div>
+    <div class="score-stars" id="score-stars"></div>
+    <button class="restart-btn" onclick="restartQuiz()">🔄 Play Again!</button>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════
+   STAR TRACKER
+══════════════════════════════ */
+let totalStars = 0;
+function addStars(n) {
+  totalStars += n;
+  document.getElementById('nav-stars').textContent = '⭐ ' + totalStars;
+}
+
+/* ══════════════════════════════
+   TAB SWITCHING
+══════════════════════════════ */
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'play' && currentQ === 0) startQuiz();
+}
+
+/* ══════════════════════════════
+   PIZZA / FRACTION VISUALIZER
+══════════════════════════════ */
+const COLORS_SLICE = ['#FF6B35','#00BBF9','#00F5D4','#FFD93D'];
+const HIGHLIGHT_COLOR = '#F15BB5';
+
+function polarToXY(angleDeg, r) {
+  const rad = (angleDeg - 90) * Math.PI / 180;
+  return { x: r * Math.cos(rad), y: r * Math.sin(rad) };
+}
+
+function makeSectorPath(startAngle, endAngle, r) {
+  const s = polarToXY(startAngle, r);
+  const e = polarToXY(endAngle, r);
+  const large = (endAngle - startAngle) > 180 ? 1 : 0;
+  return `M0,0 L${s.x.toFixed(2)},${s.y.toFixed(2)} A${r},${r} 0 ${large} 1 ${e.x.toFixed(2)},${e.y.toFixed(2)} Z`;
+}
+
+function showFraction(parts, btn) {
+  document.querySelectorAll('.frac-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+
+  const svg = document.getElementById('pizza-svg');
+  const slicesG = document.getElementById('pizza-slices');
+  const linesG  = document.getElementById('pizza-lines');
+  svg.classList.remove('pop');
+  void svg.offsetWidth;
+  svg.classList.add('pop');
+
+  slicesG.innerHTML = '';
+  linesG.innerHTML  = '';
+
+  const angle = 360 / parts;
+  for (let i = 0; i < parts; i++) {
+    const start = i * angle;
+    const end   = start + angle;
+    const path  = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d', makeSectorPath(start, end, 100));
+    path.setAttribute('fill', i === 0 ? HIGHLIGHT_COLOR : COLORS_SLICE[i % COLORS_SLICE.length]);
+    path.setAttribute('stroke', '#fff');
+    path.setAttribute('stroke-width', '3');
+    path.style.opacity = '0';
+    path.style.transition = `opacity 0.2s ${i * 0.12}s, transform 0.3s ${i * 0.12}s`;
+    slicesG.appendChild(path);
+    setTimeout(() => { path.style.opacity = '1'; }, 60 + i * 120);
+  }
+
+  // Labels inside slices
+  for (let i = 0; i < parts; i++) {
+    const midAngle = i * angle + angle / 2;
+    const pos = polarToXY(midAngle, 58);
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x', pos.x.toFixed(1));
+    t.setAttribute('y', (pos.y + 6).toFixed(1));
+    t.setAttribute('text-anchor','middle');
+    t.setAttribute('font-family','Nunito, sans-serif');
+    t.setAttribute('font-size','14');
+    t.setAttribute('font-weight','900');
+    t.setAttribute('fill','#fff');
+    t.textContent = i === 0 ? '★' : '·';
+    linesG.appendChild(t);
+  }
+
+  // Fraction notation
+  const names = {2:'Half (½)',3:'One-Third (⅓)',4:'One-Fourth (¼)'};
+  const notDiv = document.getElementById('frac-notation');
+  notDiv.innerHTML = `
+    <span class="frac-fraction">
+      <span class="numer">1</span>
+      <span class="line"></span>
+      <span class="denom">${parts}</span>
+    </span>
+    &nbsp; = &nbsp; <span style="font-size:1.3rem;vertical-align:middle;color:var(--pink)">${names[parts]}</span>
+  `;
+}
+
+/* ══════════════════════════════
+   FRACTION OF GROUP
+══════════════════════════════ */
+const EMOJIS = ['🍎','🌟','🎈','🐶','🍩','🦋','🎀','🍦','🐸','🌈','🍓','🚀'];
+let currentGroupDenom = 2;
+let currentGroupBtn = null;
+
+function updateGroupDisplay() {
+  const slider = document.getElementById('group-size-slider');
+  const size = parseInt(slider.value);
+  document.getElementById('group-size-label').textContent = size;
+
+  const row = document.getElementById('emoji-row');
+  const emoji = EMOJIS[Math.floor(size / 2) % EMOJIS.length];
+  row.innerHTML = '';
+  for (let i = 0; i < size; i++) {
+    const span = document.createElement('span');
+    span.className = 'emoji-item';
+    span.textContent = emoji;
+    span.dataset.idx = i;
+    row.appendChild(span);
+  }
+  document.getElementById('group-result').textContent = '';
+  document.querySelectorAll('.group-frac-btn').forEach(b => b.classList.remove('sel'));
+  currentGroupBtn = null;
+}
+
+function highlightGroup(denom, btn) {
+  document.querySelectorAll('.group-frac-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  currentGroupDenom = denom;
+
+  const size = parseInt(document.getElementById('group-size-slider').value);
+  const highlight = Math.floor(size / denom);
+  const items = document.querySelectorAll('#emoji-row .emoji-item');
+  items.forEach((el, i) => {
+    el.classList.toggle('highlighted', i < highlight);
+  });
+  const fracStr = denom === 2 ? '½' : '¼';
+  document.getElementById('group-result').innerHTML =
+    `${fracStr} of ${size} = <strong style="color:var(--purple);font-size:1.5rem">${highlight}</strong> 🎉`;
+}
+
+updateGroupDisplay();
+
+/* ══════════════════════════════
+   SPLIT IT — CIRCLE
+══════════════════════════════ */
+const SPLIT_COLORS = ['#F15BB5','#00BBF9','#00F5D4','#FFD93D','#FF6B35','#9B5DE5'];
+
+function doSplit(parts, btn) {
+  document.querySelectorAll('.split-shape-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const slicesG = document.getElementById('split-slices');
+  const linesG  = document.getElementById('split-lines');
+  slicesG.innerHTML = '';
+  linesG.innerHTML  = '';
+
+  const angle = 360 / parts;
+  for (let i = 0; i < parts; i++) {
+    const start = i * angle;
+    const end   = start + angle;
+    const path  = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d', makeSectorPath(start, end, 100));
+    path.setAttribute('fill', i === 0 ? '#F15BB5' : SPLIT_COLORS[(i + 2) % SPLIT_COLORS.length]);
+    path.setAttribute('stroke', '#fff');
+    path.setAttribute('stroke-width', '4');
+    path.style.transformOrigin = 'center';
+    path.style.opacity = '0';
+    path.style.transition = `opacity 0.25s ${i*0.15}s`;
+    slicesG.appendChild(path);
+    setTimeout(()=>{ path.style.opacity='1'; }, 30 + i*150);
+  }
+  const notations = {2:'½ — one out of 2 equal parts',3:'⅓ — one out of 3 equal parts',4:'¼ — one out of 4 equal parts'};
+  document.getElementById('split-notation').textContent = notations[parts];
+  const questions = {2:'Split into 2 equal halves! The pink piece = ½',3:'Split into 3 equal thirds! The pink piece = ⅓',4:'Split into 4 equal quarters! The pink piece = ¼'};
+  document.getElementById('split-question').textContent = questions[parts];
+}
+
+/* ══════════════════════════════
+   SPLIT IT — RECTANGLE
+══════════════════════════════ */
+const RECT_COLORS = ['#F15BB5','#9B5DE5','#00BBF9','#00F5D4'];
+function doRectSplit(parts, btn) {
+  document.querySelectorAll('#tab-split .split-shape-btn').forEach(b => {
+    if(['Halves','Thirds','Quarters'].includes(b.textContent)) b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  const container = document.getElementById('rect-split');
+  container.innerHTML = '';
+  container.style.gap = '3px';
+  container.style.background = 'var(--blue)';
+  for (let i = 0; i < parts; i++) {
+    const div = document.createElement('div');
+    div.style.flex = '1';
+    div.style.background = i === 0 ? '#F15BB5' : RECT_COLORS[(i+1) % RECT_COLORS.length];
+    div.style.opacity = '0';
+    div.style.transition = `opacity 0.25s ${i*0.15}s`;
+    div.style.display = 'flex';
+    div.style.alignItems = 'center';
+    div.style.justifyContent = 'center';
+    div.style.color = '#fff';
+    div.style.fontWeight = '900';
+    div.style.fontSize = '1rem';
+    div.textContent = i === 0 ? '★' : '';
+    container.appendChild(div);
+    setTimeout(()=>{ div.style.opacity='1'; }, 30 + i*150);
+  }
+  const notations = {2:'½',3:'⅓',4:'¼'};
+  const labels    = {2:'The pink rectangle is ½ of the whole!',3:'The pink rectangle is ⅓ of the whole!',4:'The pink rectangle is ¼ of the whole!'};
+  document.getElementById('rect-notation').textContent = labels[parts];
+}
+
+/* ══════════════════════════════
+   QUIZ
+══════════════════════════════ */
+const questions = [
+  {
+    text: 'What is ½ of 8?',
+    visual: null,
+    options: ['2','3','4','6'],
+    answer: '4',
+    explanation: 'Half of 8 means 8 ÷ 2 = 4 ✅'
+  },
+  {
+    text: 'How many equal parts make ONE-THIRD?',
+    visual: null,
+    options: ['2 parts','3 parts','4 parts','6 parts'],
+    answer: '3 parts',
+    explanation: 'One-third (⅓) means the whole is cut into 3 equal parts!'
+  },
+  {
+    text: 'Which fraction is shown? (Pink slice)',
+    visual: 'circle-half',
+    options: ['½','⅓','¼','¾'],
+    answer: '½',
+    explanation: 'The circle is split into 2 equal parts. Each part = ½'
+  },
+  {
+    text: 'What is ¼ of 12?',
+    visual: null,
+    options: ['2','3','4','6'],
+    answer: '3',
+    explanation: 'One-quarter of 12 means 12 ÷ 4 = 3 ✅'
+  },
+  {
+    text: 'Which fraction is shown? (Pink slice)',
+    visual: 'circle-quarter',
+    options: ['½','⅓','¼','⅔'],
+    answer: '¼',
+    explanation: 'The circle is split into 4 equal parts. Each part = ¼'
+  },
+  {
+    text: 'What is ½ of 10?',
+    visual: null,
+    options: ['2','5','4','8'],
+    answer: '5',
+    explanation: 'Half of 10 means 10 ÷ 2 = 5 ✅'
+  },
+  {
+    text: 'Which fraction is shown? (Pink slice)',
+    visual: 'circle-third',
+    options: ['½','⅓','¼','¾'],
+    answer: '⅓',
+    explanation: 'The circle is split into 3 equal parts. Each part = ⅓'
+  },
+  {
+    text: 'How many equal parts make ONE-QUARTER?',
+    visual: null,
+    options: ['2 parts','3 parts','4 parts','5 parts'],
+    answer: '4 parts',
+    explanation: 'One-quarter (¼) means the whole is cut into 4 equal parts!'
+  }
+];
+
+let currentQ = 0;
+let quizScore = 0;
+let answered  = false;
+
+function buildQuizSVG(type) {
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns,'svg');
+  svg.setAttribute('viewBox','-60 -60 120 120');
+  svg.setAttribute('width','100');
+  svg.setAttribute('height','100');
+
+  const configs = {
+    'circle-half':    { parts: 2 },
+    'circle-third':   { parts: 3 },
+    'circle-quarter': { parts: 4 }
+  };
+  const { parts } = configs[type];
+  const angle = 360 / parts;
+  for (let i = 0; i < parts; i++) {
+    const path = document.createElementNS(ns,'path');
+    path.setAttribute('d', makeSectorPath(i*angle, (i+1)*angle, 55));
+    path.setAttribute('fill', i === 0 ? '#F15BB5' : (i===1?'#FFD93D':i===2?'#00BBF9':'#00F5D4'));
+    path.setAttribute('stroke','#fff');
+    path.setAttribute('stroke-width','3');
+    svg.appendChild(path);
+  }
+  return svg;
+}
+
+function startQuiz() {
+  currentQ = 0;
+  quizScore = 0;
+  answered  = false;
+  document.getElementById('score-card').style.display = 'none';
+  document.getElementById('quiz-area').style.display  = '';
+  document.getElementById('q-score-disp').textContent = '⭐ 0';
+  loadQuestion();
+}
+
+function loadQuestion() {
+  if (currentQ >= questions.length) { showScore(); return; }
+  answered = false;
+  const q = questions[currentQ];
+  document.getElementById('q-num').textContent = `Q ${currentQ+1} / ${questions.length}`;
+  document.getElementById('q-bar').style.width = `${((currentQ+1)/questions.length)*100}%`;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('feedback-msg').textContent = '';
+  document.getElementById('feedback-msg').className = 'feedback-msg';
+  document.getElementById('next-btn').style.display = 'none';
+
+  const visual = document.getElementById('q-visual');
+  visual.innerHTML = '';
+  if (q.visual) {
+    visual.appendChild(buildQuizSVG(q.visual));
+  }
+
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = '';
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = opt;
+    btn.onclick = () => checkAnswer(opt, btn, q);
+    grid.appendChild(btn);
+  });
+}
+
+function checkAnswer(chosen, btn, q) {
+  if (answered) return;
+  answered = true;
+  const correct = chosen === q.answer;
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  document.querySelectorAll('.option-btn').forEach(b => {
+    b.disabled = true;
+    if (b.textContent === q.answer) b.classList.add('correct');
+  });
+  const fb = document.getElementById('feedback-msg');
+  if (correct) {
+    fb.textContent = '🎉 ' + q.explanation;
+    fb.className   = 'feedback-msg good';
+    quizScore++;
+    addStars(1);
+    document.getElementById('q-score-disp').textContent = '⭐ ' + quizScore;
+    spawnConfetti();
+  } else {
+    fb.textContent = '😅 ' + q.explanation;
+    fb.className   = 'feedback-msg bad';
+  }
+  document.getElementById('next-btn').style.display = 'block';
+}
+
+function nextQuestion() {
+  currentQ++;
+  loadQuestion();
+}
+
+function showScore() {
+  document.getElementById('quiz-area').style.display  = 'none';
+  document.getElementById('score-card').style.display = 'block';
+  const pct = quizScore / questions.length;
+  let trophy, title, subtitle;
+  if (pct === 1)       { trophy='🏆'; title='Perfect Score!';  subtitle='You are a Fractions Superstar! 🌟'; }
+  else if (pct >= 0.75){ trophy='🥇'; title='Great Job!';      subtitle='You really know your fractions!'; }
+  else if (pct >= 0.5) { trophy='🥈'; title='Good Try!';       subtitle='Keep practising — you\'re almost there!'; }
+  else                 { trophy='🥉'; title='Keep Going!';     subtitle='Review the Learn tab and try again!'; }
+  document.getElementById('score-trophy').textContent   = trophy;
+  document.getElementById('score-title').textContent    = title;
+  document.getElementById('score-subtitle').textContent = `You got ${quizScore} out of ${questions.length} correct! ${subtitle}`;
+  let stars = '';
+  for (let i = 0; i < Math.round(pct * 5); i++) stars += '⭐';
+  for (let i = Math.round(pct*5); i < 5; i++)  stars += '☆';
+  document.getElementById('score-stars').textContent = stars;
+}
+
+function restartQuiz() { startQuiz(); }
+
+/* ══════════════════════════════
+   CONFETTI
+══════════════════════════════ */
+const confettiColors = ['#FFD93D','#FF6B35','#F15BB5','#9B5DE5','#00BBF9','#00F5D4'];
+function spawnConfetti() {
+  for (let i = 0; i < 38; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + 'vw';
+    piece.style.top  = '-20px';
+    piece.style.background = confettiColors[Math.floor(Math.random()*confettiColors.length)];
+    piece.style.width  = (8 + Math.random()*8) + 'px';
+    piece.style.height = (10 + Math.random()*10) + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '3px';
+    piece.style.animationDuration = (1.2 + Math.random() * 1.6) + 's';
+    piece.style.animationDelay = (Math.random() * 0.4) + 's';
+    document.body.appendChild(piece);
+    setTimeout(() => piece.remove(), 3000);
+  }
+}
+
+/* Init */
+updateGroupDisplay();
+</script>
+</body>
+</html>

@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔷 Geometry — Class 2 Math</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #FFD93D;
+    --orange: #FF6B35;
+    --pink: #F15BB5;
+    --purple: #9B5DE5;
+    --blue: #00BBF9;
+    --green: #00F5D4;
+    --bg: #F8F4FF;
+    --card-bg: #FFFFFF;
+    --text: #2D2D2D;
+    --radius: 20px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    color: var(--text);
+  }
+
+  /* ── TOP NAV ── */
+  .top-nav {
+    background: linear-gradient(135deg, var(--purple) 0%, var(--blue) 100%);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(155,93,229,.35);
+  }
+  .back-btn {
+    background: rgba(255,255,255,.22);
+    border: none;
+    color: #fff;
+    font-size: 1.3rem;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s;
+    flex-shrink: 0;
+  }
+  .back-btn:hover { background: rgba(255,255,255,.38); }
+  .nav-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #fff;
+    flex: 1;
+    letter-spacing: .5px;
+  }
+  .stars-pill {
+    background: rgba(255,255,255,.22);
+    border-radius: 50px;
+    padding: 5px 14px;
+    color: #fff;
+    font-weight: 800;
+    font-size: .95rem;
+    display: flex; align-items: center; gap: 5px;
+    white-space: nowrap;
+  }
+  .stars-pill span { font-size: 1rem; }
+
+  /* ── TABS ── */
+  .tab-bar {
+    display: flex;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,.08);
+    position: sticky;
+    top: 68px;
+    z-index: 99;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 13px 6px;
+    border: none;
+    background: transparent;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: .95rem;
+    cursor: pointer;
+    color: #888;
+    border-bottom: 3px solid transparent;
+    transition: all .2s;
+  }
+  .tab-btn.active {
+    color: var(--purple);
+    border-bottom-color: var(--purple);
+  }
+  .tab-btn:hover:not(.active) { color: var(--blue); }
+
+  .tab-content { display: none; padding: 24px 16px 40px; max-width: 800px; margin: 0 auto; }
+  .tab-content.active { display: block; }
+
+  /* ── SECTION TITLES ── */
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 900;
+    margin-bottom: 18px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, var(--purple), transparent);
+    border-radius: 2px;
+  }
+
+  /* ── 2D SHAPE CARDS ── */
+  .shapes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+  .shape-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 22px 14px 18px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(0,0,0,.07);
+    transition: transform .2s, box-shadow .2s;
+    border: 2.5px solid transparent;
+    user-select: none;
+  }
+  .shape-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(0,0,0,.12);
+  }
+  .shape-card.spin { animation: spinBounce .6s ease; }
+  @keyframes spinBounce {
+    0%   { transform: rotate(0deg) scale(1); }
+    30%  { transform: rotate(180deg) scale(1.2); }
+    60%  { transform: rotate(330deg) scale(.9); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+
+  .shape-visual {
+    width: 80px; height: 80px;
+    margin: 0 auto 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* CSS Shapes */
+  .css-circle {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #fff3 0%, transparent 60%), var(--pink);
+    box-shadow: inset -6px -6px 12px rgba(0,0,0,.18), 4px 4px 12px rgba(241,91,181,.4);
+  }
+  .css-triangle {
+    width: 0; height: 0;
+    border-left: 36px solid transparent;
+    border-right: 36px solid transparent;
+    border-bottom: 72px solid var(--orange);
+    filter: drop-shadow(3px 5px 6px rgba(255,107,53,.4));
+    position: relative;
+  }
+  .css-square {
+    width: 68px; height: 68px;
+    background: linear-gradient(135deg, var(--purple), #c77dff);
+    border-radius: 8px;
+    box-shadow: 4px 4px 14px rgba(155,93,229,.4);
+  }
+  .css-rectangle {
+    width: 80px; height: 52px;
+    background: linear-gradient(135deg, var(--green), #05c8a8);
+    border-radius: 8px;
+    box-shadow: 4px 4px 14px rgba(0,245,212,.4);
+  }
+  .css-pentagon {
+    width: 70px; height: 70px;
+    background: var(--yellow);
+    clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+    box-shadow: 4px 4px 14px rgba(255,217,61,.5);
+  }
+  .css-hexagon {
+    width: 70px; height: 70px;
+    background: var(--blue);
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    box-shadow: 4px 4px 14px rgba(0,187,249,.4);
+  }
+
+  /* 3D CSS shapes */
+  .css-cube {
+    width: 60px; height: 60px;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(20deg) rotateY(30deg);
+    margin: 10px auto;
+  }
+  .cube-face {
+    position: absolute;
+    width: 48px; height: 48px;
+    border: 2px solid rgba(255,255,255,.5);
+  }
+  .cube-front  { background: #9B5DE5; top:12px; left:12px; }
+  .cube-top    { background: #c77dff; top:0;    left:12px; transform: skewX(-40deg); height:14px; }
+  .cube-right  { background: #7b3fbf; top:12px; left:52px; transform: skewY(-50deg); width:14px; }
+
+  .css-sphere {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 28%, #fff 0%, var(--blue) 45%, #005f7f 100%);
+    box-shadow: 6px 8px 18px rgba(0,187,249,.5), inset -8px -8px 16px rgba(0,0,0,.2);
+  }
+  .css-cylinder-wrap {
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .cyl-top {
+    width: 60px; height: 16px;
+    background: #05c8a8;
+    border-radius: 50%;
+    box-shadow: 0 2px 0 #039b83;
+  }
+  .cyl-body {
+    width: 60px; height: 48px;
+    background: linear-gradient(90deg, #00a886 0%, var(--green) 40%, #00c4a0 70%, #009a7e 100%);
+  }
+  .cyl-bottom {
+    width: 60px; height: 16px;
+    background: #039b83;
+    border-radius: 50%;
+  }
+  .css-cone-wrap { display: flex; flex-direction: column; align-items: center; }
+  .cone-top {
+    width: 0; height: 0;
+    border-left: 28px solid transparent;
+    border-right: 28px solid transparent;
+    border-bottom: 52px solid var(--orange);
+  }
+  .cone-bottom {
+    width: 56px; height: 16px;
+    background: #c94f20;
+    border-radius: 50%;
+    margin-top: -4px;
+  }
+
+  .shape-name {
+    font-size: 1rem;
+    font-weight: 900;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .shape-meta {
+    font-size: .78rem;
+    font-weight: 700;
+    color: #777;
+    margin-bottom: 8px;
+  }
+  .shape-fact {
+    font-size: .74rem;
+    color: #555;
+    line-height: 1.4;
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 6px 8px;
+  }
+
+  /* ── SIDES & CORNERS COUNTER ── */
+  .counter-section {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.07);
+    margin-bottom: 10px;
+  }
+  .counter-section label {
+    font-weight: 800;
+    font-size: 1rem;
+    display: block;
+    margin-bottom: 10px;
+  }
+  .counter-select {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 16px;
+    border: 2.5px solid var(--purple);
+    border-radius: 12px;
+    background: #fff;
+    color: var(--text);
+    cursor: pointer;
+    outline: none;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  .counter-row {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .counter-box {
+    background: linear-gradient(135deg, var(--purple), var(--blue));
+    color: #fff;
+    border-radius: 18px;
+    padding: 20px 32px;
+    text-align: center;
+    min-width: 130px;
+  }
+  .counter-box.orange { background: linear-gradient(135deg, var(--orange), var(--yellow)); }
+  .counter-num {
+    font-size: 2.8rem;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .counter-label { font-size: .85rem; font-weight: 800; opacity: .9; margin-top: 4px; }
+  .count-tick { animation: tickUp .15s ease-out; }
+  @keyframes tickUp {
+    0%  { transform: scale(.8); opacity:.5; }
+    100%{ transform: scale(1);  opacity:1; }
+  }
+
+  /* ── IDENTIFY TAB ── */
+  .identify-card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: 0 4px 18px rgba(0,0,0,.07);
+    margin-bottom: 20px;
+  }
+  .identify-shape-area {
+    width: 130px; height: 130px;
+    margin: 0 auto 20px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .identify-question {
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: var(--purple);
+  }
+  .identify-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+  .id-opt-btn {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 14px;
+    border: 2.5px solid #e0d0ff;
+    border-radius: 14px;
+    background: #fff;
+    cursor: pointer;
+    transition: all .2s;
+    color: var(--text);
+  }
+  .id-opt-btn:hover { background: var(--bg); border-color: var(--purple); }
+  .id-opt-btn.correct { background: #d4ffee; border-color: var(--green); color: #007a5e; }
+  .id-opt-btn.wrong   { background: #ffe0e0; border-color: #ff6b6b; color: #cc0000; }
+  .id-opt-btn.shake   { animation: shake .5s; }
+  @keyframes shake {
+    0%,100%{ transform: translateX(0); }
+    20%    { transform: translateX(-8px); }
+    40%    { transform: translateX(8px); }
+    60%    { transform: translateX(-6px); }
+    80%    { transform: translateX(6px); }
+  }
+
+  .feedback-box {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: .95rem;
+    display: none;
+  }
+  .feedback-box.show { display: block; }
+  .feedback-box.good { background: #d4ffee; color: #007a5e; }
+  .feedback-box.bad  { background: #ffe0e0; color: #cc3333; }
+
+  .next-btn {
+    display: none;
+    margin: 18px auto 0;
+    padding: 12px 32px;
+    background: linear-gradient(135deg, var(--purple), var(--blue));
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform .15s;
+  }
+  .next-btn.show { display: block; }
+  .next-btn:hover { transform: scale(1.05); }
+
+  .id-score-row {
+    display: flex; gap: 12px; justify-content: center; margin-bottom: 16px;
+    font-weight: 800; font-size: 1rem;
+  }
+  .id-score-badge {
+    padding: 6px 16px; border-radius: 50px;
+    background: #d4ffee; color: #007a5e;
+  }
+  .id-score-badge.wrong-badge { background: #ffe0e0; color: #cc3333; }
+
+  /* ── CONFETTI ── */
+  .confetti-piece {
+    position: fixed;
+    width: 10px; height: 10px;
+    top: -10px;
+    border-radius: 2px;
+    animation: confettiFall linear forwards;
+    pointer-events: none;
+    z-index: 9999;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ── PLAY TAB ── */
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+  .quiz-progress-bar {
+    height: 10px;
+    background: #e0d0ff;
+    border-radius: 10px;
+    margin-bottom: 22px;
+    overflow: hidden;
+  }
+  .quiz-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--purple), var(--blue));
+    border-radius: 10px;
+    transition: width .4s ease;
+  }
+  .quiz-q-num {
+    font-weight: 800;
+    font-size: .9rem;
+    color: #888;
+  }
+  .quiz-q-text {
+    font-size: 1.18rem;
+    font-weight: 800;
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 22px 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.06);
+    line-height: 1.5;
+    text-align: center;
+  }
+  .quiz-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .quiz-opt {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 16px 10px;
+    border: 2.5px solid #e0d0ff;
+    border-radius: 14px;
+    background: #fff;
+    cursor: pointer;
+    transition: all .2s;
+    color: var(--text);
+    text-align: center;
+  }
+  .quiz-opt:hover:not(:disabled) { background: var(--bg); border-color: var(--purple); }
+  .quiz-opt.correct { background: #d4ffee; border-color: var(--green); color: #007a5e; }
+  .quiz-opt.wrong   { background: #ffe0e0; border-color: #ff6b6b; color: #cc0000; }
+  .quiz-opt:disabled { cursor: default; }
+
+  .quiz-next-btn {
+    display: none;
+    margin: 0 auto;
+    padding: 13px 36px;
+    background: linear-gradient(135deg, var(--purple), var(--blue));
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform .15s;
+  }
+  .quiz-next-btn.show { display: block; }
+  .quiz-next-btn:hover { transform: scale(1.05); }
+
+  /* Score Card */
+  .score-card {
+    display: none;
+    text-align: center;
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 36px 24px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.07);
+  }
+  .score-card.show { display: block; }
+  .score-emoji { font-size: 4rem; margin-bottom: 12px; }
+  .score-big {
+    font-size: 3.5rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--purple), var(--blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .score-msg { font-size: 1.1rem; font-weight: 700; color: #555; margin: 8px 0 22px; }
+  .score-retry-btn {
+    padding: 13px 36px;
+    background: linear-gradient(135deg, var(--orange), var(--yellow));
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform .15s;
+  }
+  .score-retry-btn:hover { transform: scale(1.05); }
+
+  .stars-earned { font-size: 1.6rem; margin-bottom: 6px; }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .shapes-grid { grid-template-columns: 1fr 1fr; }
+    .quiz-options { grid-template-columns: 1fr; }
+    .identify-options { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <button class="back-btn" onclick="history.back()" title="Go back">←</button>
+  <div class="nav-title">🔷 Geometry</div>
+  <div class="stars-pill"><span>⭐</span> <span id="total-stars">0</span> stars</div>
+</nav>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('learn', this)">📖 Learn</button>
+  <button class="tab-btn" onclick="switchTab('identify', this)">🔍 Identify</button>
+  <button class="tab-btn" onclick="switchTab('play', this)">🎮 Play</button>
+</div>
+
+<!-- ════════════════════════════════════════
+     LEARN TAB
+═══════════════════════════════════════════ -->
+<div id="tab-learn" class="tab-content active">
+
+  <div class="section-title">🔵 2D Shapes</div>
+  <div class="shapes-grid">
+
+    <div class="shape-card" style="border-color:#F15BB5" onclick="spinCard(this)">
+      <div class="shape-visual"><div class="css-circle"></div></div>
+      <div class="shape-name">Circle</div>
+      <div class="shape-meta">0 sides · 0 corners</div>
+      <div class="shape-fact">🌀 A circle is perfectly round — all points are the same distance from the centre!</div>
+    </div>
+
+    <div class="shape-card" style="border-color:#FF6B35" onclick="spinCard(this)">
+      <div class="shape-visual"><div class="css-triangle"></div></div>
+      <div class="shape-name">Triangle</div>
+      <div class="shape-meta">3 sides · 3 corners</div>
+      <div class="shape-fact">🍕 A slice of pizza is a triangle! The pyramids are made of triangles too.</div>
+    </div>
+
+    <div class="shape-card" style="border-color:#9B5DE5" onclick="spinCard(this)">
+      <div class="shape-visual"><div class="css-square"></div></div>
+      <div class="shape-name">Square</div>
+      <div class="shape-meta">4 sides · 4 corners</div>
+      <div class="shape-fact">⬛ All 4 sides of a square are exactly the same length. It's a special rectangle!</div>
+    </div>
+
+    <div class="shape-card" style="border-color:#00F5D4" onclick="spinCard(this)">
+      <div class="shape-visual"><div class="css-rectangle"></div></div>
+      <div class="shape-name">Rectangle</div>
+      <div class="shape-meta">4 sides · 4 corners</div>
+      <div class="shape-fact">📱 Your phone screen, a door, a book — all rectangles! Opposite sides are equal.</div>
+    </div>
+
+    <div class="shape-card" style="border-color:#FFD93D" onclick="spinCard(this)">
+      <div class="shape-visual"><div class="css-pentagon"></div></div>
+      <div class="shape-name">Pentagon</div>
+      <div class="shape-meta">5 sides · 5 corners</div>
+      <div class="shape-fact">⭐ The famous USA Pentagon building has 5 sides! A star has 5 points.</div>
+    </div>
+
+    <div class="shape-card" style="border-color:#00BBF9" onclick="spinCard(this)">
+      <div class="shape-visual"><div class="css-hexagon"></div></div>
+      <div class="shape-name">Hexagon</div>
+      <div class="shape-meta">6 sides · 6 corners</div>
+      <div class="shape-fact">🍯 Honeybees build their honeycombs in hexagons — it's the strongest pattern!</div>
+    </div>
+
+  </div>
+
+  <div class="section-title">🧊 3D Shapes</div>
+  <div class="shapes-grid">
+
+    <div class="shape-card" style="border-color:#9B5DE5" onclick="spinCard(this)">
+      <div class="shape-visual">
+        <div class="css-cube">
+          <div class="cube-face cube-front"></div>
+          <div class="cube-face cube-top"></div>
+          <div class="cube-face cube-right"></div>
+        </div>
+      </div>
+      <div class="shape-name">Cube</div>
+      <div class="shape-meta">6 faces · 12 edges · 8 vertices</div>
+      <div class="shape-fact">🎲 A dice is a cube! All 6 faces are equal squares.</div>
+    </div>
+
+    <div class="shape-card" style="border-color:#00BBF9" onclick="spinCard(this)">
+      <div class="shape-visual"><div class="css-sphere"></div></div>
+      <div class="shape-name">Sphere</div>
+      <div class="shape-meta">1 curved face · 0 edges · 0 vertices</div>
+      <div class="shape-fact">⚽ A ball, the sun, bubbles — all spheres! Perfectly round in 3D.</div>
+    </div>
+
+    <div class="shape-card" style="border-color:#00F5D4" onclick="spinCard(this)">
+      <div class="shape-visual">
+        <div class="css-cylinder-wrap">
+          <div class="cyl-top"></div>
+          <div class="cyl-body"></div>
+          <div class="cyl-bottom"></div>
+        </div>
+      </div>
+      <div class="shape-name">Cylinder</div>
+      <div class="shape-meta">3 faces · 2 edges · 0 vertices</div>
+      <div class="shape-fact">🥤 A tin can, a water bottle, a drum — all cylinders! Circles on top and bottom.</div>
+    </div>
+
+    <div class="shape-card" style="border-color:#FF6B35" onclick="spinCard(this)">
+      <div class="shape-visual">
+        <div class="css-cone-wrap">
+          <div class="cone-top"></div>
+          <div class="cone-bottom"></div>
+        </div>
+      </div>
+      <div class="shape-name">Cone</div>
+      <div class="shape-meta">2 faces · 1 edge · 1 vertex</div>
+      <div class="shape-fact">🍦 An ice-cream cone, a traffic cone — they taper to a point at the top!</div>
+    </div>
+
+  </div>
+
+  <!-- SIDES & CORNERS COUNTER -->
+  <div class="section-title">🔢 Sides &amp; Corners Counter</div>
+  <div class="counter-section">
+    <label>Pick a shape to count its parts:</label>
+    <select class="counter-select" id="counter-select" onchange="animateCounter()">
+      <option value="circle">Circle</option>
+      <option value="triangle">Triangle</option>
+      <option value="square">Square</option>
+      <option value="rectangle">Rectangle</option>
+      <option value="pentagon">Pentagon</option>
+      <option value="hexagon">Hexagon</option>
+    </select>
+    <div class="counter-row">
+      <div class="counter-box">
+        <div class="counter-num" id="cnt-sides">0</div>
+        <div class="counter-label">Sides</div>
+      </div>
+      <div class="counter-box orange">
+        <div class="counter-num" id="cnt-corners">0</div>
+        <div class="counter-label">Corners</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════════
+     IDENTIFY TAB
+═══════════════════════════════════════════ -->
+<div id="tab-identify" class="tab-content">
+
+  <div class="id-score-row">
+    <div class="id-score-badge">✅ <span id="id-correct">0</span> correct</div>
+    <div class="id-score-badge wrong-badge">❌ <span id="id-wrong">0</span> wrong</div>
+  </div>
+
+  <div class="identify-card">
+    <div class="identify-question">What shape is this? 🤔</div>
+    <div class="identify-shape-area" id="identify-shape-area"></div>
+    <div class="identify-options" id="identify-options"></div>
+    <div class="feedback-box" id="id-feedback"></div>
+    <button class="next-btn" id="id-next-btn" onclick="nextIdentify()">Next Shape ➜</button>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════════
+     PLAY TAB
+═══════════════════════════════════════════ -->
+<div id="tab-play" class="tab-content">
+
+  <div id="quiz-area">
+    <div class="quiz-header">
+      <div class="quiz-q-num" id="quiz-q-num">Question 1 of 8</div>
+      <div class="quiz-q-num" id="quiz-score-live">⭐ 0 pts</div>
+    </div>
+    <div class="quiz-progress-bar">
+      <div class="quiz-progress-fill" id="quiz-progress-fill" style="width:0%"></div>
+    </div>
+    <div class="quiz-q-text" id="quiz-q-text"></div>
+    <div class="quiz-options" id="quiz-options"></div>
+    <button class="quiz-next-btn" id="quiz-next-btn" onclick="nextQuestion()">Next ➜</button>
+  </div>
+
+  <div class="score-card" id="score-card">
+    <div class="score-emoji" id="score-emoji">🎉</div>
+    <div class="stars-earned" id="stars-earned"></div>
+    <div class="score-big" id="score-big">0 / 8</div>
+    <div class="score-msg" id="score-msg"></div>
+    <button class="score-retry-btn" onclick="restartQuiz()">🔄 Play Again</button>
+  </div>
+
+</div>
+
+<!-- CANVAS for confetti -->
+<div id="confetti-container"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════════════
+const SHAPE_DATA = {
+  circle:    { sides: 0, corners: 0 },
+  triangle:  { sides: 3, corners: 3 },
+  square:    { sides: 4, corners: 4 },
+  rectangle: { sides: 4, corners: 4 },
+  pentagon:  { sides: 5, corners: 5 },
+  hexagon:   { sides: 6, corners: 6 },
+};
+
+// Shapes available for Identify game (name, HTML for big version, options pool)
+const ID_SHAPES = [
+  {
+    name: 'Circle',
+    html: `<div style="width:110px;height:110px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff3 0%,transparent 60%),#F15BB5;box-shadow:inset -8px -8px 16px rgba(0,0,0,.18),6px 6px 18px rgba(241,91,181,.4);"></div>`,
+    fact: '🌀 A circle has NO corners and NO sides — it is perfectly round!'
+  },
+  {
+    name: 'Triangle',
+    html: `<div style="width:0;height:0;border-left:55px solid transparent;border-right:55px solid transparent;border-bottom:110px solid #FF6B35;filter:drop-shadow(4px 6px 8px rgba(255,107,53,.4));"></div>`,
+    fact: '🍕 A triangle always has 3 sides and 3 corners!'
+  },
+  {
+    name: 'Square',
+    html: `<div style="width:100px;height:100px;background:linear-gradient(135deg,#9B5DE5,#c77dff);border-radius:10px;box-shadow:5px 5px 18px rgba(155,93,229,.4);"></div>`,
+    fact: '⬛ A square has 4 equal sides and 4 equal corners!'
+  },
+  {
+    name: 'Rectangle',
+    html: `<div style="width:120px;height:76px;background:linear-gradient(135deg,#00F5D4,#05c8a8);border-radius:10px;box-shadow:5px 5px 18px rgba(0,245,212,.4);"></div>`,
+    fact: '📱 A rectangle has 4 sides — opposite sides are the same length!'
+  },
+  {
+    name: 'Pentagon',
+    html: `<div style="width:110px;height:110px;background:#FFD93D;clip-path:polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%);box-shadow:5px 5px 18px rgba(255,217,61,.5);"></div>`,
+    fact: '⭐ A pentagon has 5 sides and 5 corners!'
+  },
+  {
+    name: 'Hexagon',
+    html: `<div style="width:110px;height:110px;background:#00BBF9;clip-path:polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);box-shadow:5px 5px 18px rgba(0,187,249,.4);"></div>`,
+    fact: '🍯 A hexagon has 6 sides and 6 corners — like a honeycomb cell!'
+  },
+];
+
+const ALL_NAMES = ID_SHAPES.map(s => s.name);
+
+// ── QUIZ QUESTIONS ──
+const QUIZ_QS = [
+  { q: "How many sides does a triangle have? 🔺", opts: ["2","3","4","5"], ans: "3" },
+  { q: "Which shape has NO corners and NO sides? 🔵", opts: ["Square","Triangle","Circle","Rectangle"], ans: "Circle" },
+  { q: "A cube has ___ faces.", opts: ["4","5","6","8"], ans: "6" },
+  { q: "How many corners does a square have? ⬛", opts: ["2","3","4","6"], ans: "4" },
+  { q: "A pentagon has how many sides? ⭐", opts: ["4","5","6","7"], ans: "5" },
+  { q: "Which 3D shape looks like a ball? 🏀", opts: ["Cube","Cylinder","Cone","Sphere"], ans: "Sphere" },
+  { q: "How many sides does a hexagon have? 🍯", opts: ["5","6","7","8"], ans: "6" },
+  { q: "A cube has ___ edges.", opts: ["8","10","12","16"], ans: "12" },
+];
+
+// ══════════════════════════════════════════════════════
+//  GLOBAL STATE
+// ══════════════════════════════════════════════════════
+let totalStars = 0;
+let idCorrect = 0, idWrong = 0;
+let currentIdShape = null;
+let idAnswered = false;
+
+let quizIdx = 0;
+let quizScore = 0;
+let quizAnswered = false;
+
+// ══════════════════════════════════════════════════════
+//  TAB SWITCHING
+// ══════════════════════════════════════════════════════
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'identify' && currentIdShape === null) newIdentifyRound();
+  if (name === 'play' && quizIdx === 0 && !quizAnswered) renderQuestion();
+}
+
+// ══════════════════════════════════════════════════════
+//  LEARN TAB
+// ══════════════════════════════════════════════════════
+function spinCard(el) {
+  el.classList.remove('spin');
+  void el.offsetWidth; // reflow
+  el.classList.add('spin');
+}
+
+// Counter
+(function initCounter() {
+  animateCounter();
+})();
+
+function animateCounter() {
+  const shape = document.getElementById('counter-select').value;
+  const data = SHAPE_DATA[shape];
+  countUp('cnt-sides', data.sides);
+  countUp('cnt-corners', data.corners);
+}
+
+function countUp(elId, target) {
+  const el = document.getElementById(elId);
+  let current = 0;
+  el.textContent = 0;
+  if (target === 0) { el.textContent = 0; return; }
+  const step = Math.ceil(target / 8);
+  const interval = setInterval(() => {
+    current = Math.min(current + step, target);
+    el.textContent = current;
+    el.classList.remove('count-tick');
+    void el.offsetWidth;
+    el.classList.add('count-tick');
+    if (current >= target) clearInterval(interval);
+  }, 80);
+}
+
+// ══════════════════════════════════════════════════════
+//  IDENTIFY TAB
+// ══════════════════════════════════════════════════════
+function newIdentifyRound() {
+  idAnswered = false;
+  const idx = Math.floor(Math.random() * ID_SHAPES.length);
+  currentIdShape = ID_SHAPES[idx];
+
+  // Draw shape
+  const area = document.getElementById('identify-shape-area');
+  area.innerHTML = currentIdShape.html;
+
+  // Build 4 options: correct + 3 random wrong
+  const wrongs = ALL_NAMES.filter(n => n !== currentIdShape.name);
+  shuffle(wrongs);
+  const choices = [currentIdShape.name, wrongs[0], wrongs[1], wrongs[2]];
+  shuffle(choices);
+
+  const optContainer = document.getElementById('identify-options');
+  optContainer.innerHTML = '';
+  choices.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'id-opt-btn';
+    btn.textContent = c;
+    btn.onclick = () => checkIdentify(c, btn);
+    optContainer.appendChild(btn);
+  });
+
+  // Reset feedback
+  const fb = document.getElementById('id-feedback');
+  fb.className = 'feedback-box';
+  fb.textContent = '';
+  document.getElementById('id-next-btn').classList.remove('show');
+}
+
+function checkIdentify(choice, btn) {
+  if (idAnswered) return;
+  idAnswered = true;
+
+  const fb = document.getElementById('id-feedback');
+  const allBtns = document.querySelectorAll('.id-opt-btn');
+  allBtns.forEach(b => {
+    if (b.textContent === currentIdShape.name) b.classList.add('correct');
+  });
+
+  if (choice === currentIdShape.name) {
+    btn.classList.add('correct');
+    fb.textContent = '🎉 Correct! ' + currentIdShape.fact;
+    fb.className = 'feedback-box good show';
+    idCorrect++;
+    document.getElementById('id-correct').textContent = idCorrect;
+    addStars(2);
+    launchConfetti();
+  } else {
+    btn.classList.add('wrong');
+    btn.classList.add('shake');
+    fb.textContent = '❌ Oops! The answer is ' + currentIdShape.name + '. ' + currentIdShape.fact;
+    fb.className = 'feedback-box bad show';
+    idWrong++;
+    document.getElementById('id-wrong').textContent = idWrong;
+  }
+
+  document.getElementById('id-next-btn').classList.add('show');
+}
+
+function nextIdentify() {
+  newIdentifyRound();
+}
+
+// ══════════════════════════════════════════════════════
+//  PLAY TAB (QUIZ)
+// ══════════════════════════════════════════════════════
+function renderQuestion() {
+  quizAnswered = false;
+  const q = QUIZ_QS[quizIdx];
+  document.getElementById('quiz-q-num').textContent = `Question ${quizIdx + 1} of ${QUIZ_QS.length}`;
+  document.getElementById('quiz-score-live').textContent = `⭐ ${quizScore} pts`;
+  document.getElementById('quiz-progress-fill').style.width = ((quizIdx / QUIZ_QS.length) * 100) + '%';
+  document.getElementById('quiz-q-text').textContent = q.q;
+
+  const optsEl = document.getElementById('quiz-options');
+  optsEl.innerHTML = '';
+  q.opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = opt;
+    btn.onclick = () => checkQuiz(opt, btn);
+    optsEl.appendChild(btn);
+  });
+
+  document.getElementById('quiz-next-btn').classList.remove('show');
+  document.getElementById('quiz-area').style.display = 'block';
+  document.getElementById('score-card').classList.remove('show');
+}
+
+function checkQuiz(choice, btn) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+
+  const q = QUIZ_QS[quizIdx];
+  const allBtns = document.querySelectorAll('.quiz-opt');
+  allBtns.forEach(b => {
+    b.disabled = true;
+    if (b.textContent === q.ans) b.classList.add('correct');
+  });
+
+  if (choice === q.ans) {
+    btn.classList.add('correct');
+    quizScore++;
+    addStars(1);
+    document.getElementById('quiz-score-live').textContent = `⭐ ${quizScore} pts`;
+    launchConfetti();
+  } else {
+    btn.classList.add('wrong');
+  }
+
+  document.getElementById('quiz-next-btn').classList.add('show');
+}
+
+function nextQuestion() {
+  quizIdx++;
+  if (quizIdx >= QUIZ_QS.length) {
+    showScoreCard();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showScoreCard() {
+  document.getElementById('quiz-area').style.display = 'none';
+  const card = document.getElementById('score-card');
+  card.classList.add('show');
+
+  document.getElementById('quiz-progress-fill').style.width = '100%';
+  document.getElementById('score-big').textContent = `${quizScore} / ${QUIZ_QS.length}`;
+
+  const pct = quizScore / QUIZ_QS.length;
+  let emoji, msg, stars;
+  if (pct === 1)       { emoji='🏆'; msg='Perfect score! You are a geometry superstar!'; stars='⭐⭐⭐⭐⭐'; }
+  else if (pct >= .75) { emoji='🎉'; msg='Amazing work! You really know your shapes!'; stars='⭐⭐⭐⭐'; }
+  else if (pct >= .5)  { emoji='😊'; msg='Good job! Keep practising and you\'ll ace it!'; stars='⭐⭐⭐'; }
+  else                 { emoji='💪'; msg='Keep trying! You can do it!'; stars='⭐⭐'; }
+
+  document.getElementById('score-emoji').textContent = emoji;
+  document.getElementById('score-msg').textContent = msg;
+  document.getElementById('stars-earned').textContent = stars;
+
+  addStars(quizScore);
+  if (pct === 1) launchConfetti(80);
+}
+
+function restartQuiz() {
+  quizIdx = 0;
+  quizScore = 0;
+  renderQuestion();
+}
+
+// ══════════════════════════════════════════════════════
+//  STARS
+// ══════════════════════════════════════════════════════
+function addStars(n) {
+  totalStars += n;
+  document.getElementById('total-stars').textContent = totalStars;
+}
+
+// ══════════════════════════════════════════════════════
+//  CONFETTI
+// ══════════════════════════════════════════════════════
+const CONFETTI_COLORS = ['#FFD93D','#FF6B35','#F15BB5','#9B5DE5','#00BBF9','#00F5D4'];
+
+function launchConfetti(count = 40) {
+  const container = document.getElementById('confetti-container');
+  for (let i = 0; i < count; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.cssText = `
+      left: ${Math.random() * 100}vw;
+      background: ${CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)]};
+      width: ${6 + Math.random() * 8}px;
+      height: ${6 + Math.random() * 8}px;
+      border-radius: ${Math.random() > .5 ? '50%' : '2px'};
+      animation-duration: ${1.2 + Math.random() * 1.6}s;
+      animation-delay: ${Math.random() * .5}s;
+    `;
+    container.appendChild(piece);
+    piece.addEventListener('animationend', () => piece.remove());
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  UTILITY
+// ══════════════════════════════════════════════════════
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ── INIT on load ──
+window.addEventListener('DOMContentLoaded', () => {
+  animateCounter();
+  renderQuestion();
+});
+</script>
+</body>
+</html>
