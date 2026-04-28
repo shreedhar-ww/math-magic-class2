@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Numbers up to 1000 — Math Magic</title>
+<title>Numbers up to 99 Lakhs — Math Magic</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
 
@@ -11,6 +11,7 @@
 :root{
   --yellow:#FFD93D; --orange:#FF6B35; --pink:#F15BB5;
   --purple:#9B5DE5; --blue:#00BBF9; --green:#00F5D4;
+  --teal:#00C9A7; --deep-purple:#5A0EA8;
   --bg:#FFF9F0; --card:#fff;
 }
 body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overflow-x:hidden;}
@@ -69,35 +70,23 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
   text-align:center; margin-bottom:20px;
 }
 .pv-number{
-  font-size:4rem; font-weight:900; color:#333;
-  letter-spacing:8px; line-height:1;
+  font-size:3rem; font-weight:900; color:#333;
+  letter-spacing:4px; line-height:1;
   animation:popNum .4s cubic-bezier(.34,1.56,.64,1);
 }
 @keyframes popNum{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
-.pv-labels{
-  display:flex; justify-content:center; gap:0; margin-top:6px;
-}
-.pv-label{
-  font-size:.75rem; font-weight:900; width:60px; text-align:center;
-}
-.pv-label.h{color:var(--orange);}
-.pv-label.t{color:var(--purple);}
-.pv-label.o{color:var(--blue);}
 
 /* blocks area */
 .blocks-area{
   display:flex; justify-content:center; align-items:flex-end;
-  gap:20px; min-height:120px; margin:16px 0;
+  gap:12px; min-height:120px; margin:16px 0; flex-wrap:wrap;
 }
 .block-col{display:flex; flex-direction:column; align-items:center; gap:4px;}
-.block-col label{font-size:.8rem; font-weight:900; margin-top:6px;}
-.block-col.h label{color:var(--orange);}
-.block-col.t label{color:var(--purple);}
-.block-col.o label{color:var(--blue);}
+.block-col label{font-size:.75rem; font-weight:900; margin-top:6px; text-align:center;}
 
-/* hundred block */
+/* hundred block (orange) */
 .hblock{
-  width:48px; height:48px; background:var(--orange);
+  width:44px; height:44px; background:var(--orange);
   border-radius:8px; display:grid; grid-template-columns:repeat(5,1fr);
   grid-template-rows:repeat(5,1fr); gap:1px; padding:3px;
   box-shadow:2px 3px 0 rgba(0,0,0,.2);
@@ -105,9 +94,9 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
 }
 .hblock span{background:rgba(255,255,255,.35); border-radius:1px;}
 
-/* ten rod */
+/* ten rod (pink) */
 .trod{
-  width:16px; height:56px; background:var(--purple);
+  width:14px; height:50px; background:var(--pink);
   border-radius:6px; display:flex; flex-direction:column;
   gap:1px; padding:2px;
   box-shadow:2px 3px 0 rgba(0,0,0,.2);
@@ -115,37 +104,72 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
 }
 .trod span{flex:1; background:rgba(255,255,255,.35); border-radius:1px;}
 
-/* unit cube */
+/* unit cube (yellow) */
 .ucube{
-  width:18px; height:18px; background:var(--blue);
-  border-radius:5px;
+  width:16px; height:16px; background:var(--yellow);
+  border-radius:4px; border:1.5px solid rgba(0,0,0,.1);
   box-shadow:1px 2px 0 rgba(0,0,0,.2);
   animation:dropIn .3s cubic-bezier(.34,1.56,.64,1);
 }
+
+/* large tile for TH, TTH, L, TL */
+.big-tile{
+  border-radius:14px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:10px 14px; min-width:60px; min-height:60px;
+  font-size:1.1rem; font-weight:900; color:#fff;
+  box-shadow:3px 4px 0 rgba(0,0,0,.2);
+  animation:dropIn .3s cubic-bezier(.34,1.56,.64,1);
+  text-align:center; line-height:1.2;
+}
+.big-tile.th { background:var(--teal); }
+.big-tile.tth{ background:var(--blue); }
+.big-tile.lakh{ background:var(--purple); }
+.big-tile.tlakh{ background:var(--deep-purple); }
+
 @keyframes dropIn{from{transform:translateY(-20px) scale(.5);opacity:0}to{transform:none;opacity:1}}
 
 /* sliders */
-.slider-row{display:flex; flex-direction:column; gap:14px; margin-top:8px;}
+.slider-row{display:flex; flex-direction:column; gap:10px; margin-top:8px;}
 .slider-item{display:flex; align-items:center; gap:12px;}
-.slider-item label{font-weight:900; font-size:.9rem; min-width:90px;}
-.slider-item label.h{color:var(--orange);}
-.slider-item label.t{color:var(--purple);}
-.slider-item label.o{color:var(--blue);}
+.slider-item label{font-weight:900; font-size:.85rem; min-width:110px;}
 input[type=range]{
-  flex:1; accent-color:var(--purple);
-  height:8px; border-radius:4px;
+  flex:1; height:8px; border-radius:4px;
 }
+input[type=range].sl-tlakh { accent-color:var(--deep-purple); }
+input[type=range].sl-lakh  { accent-color:var(--purple); }
+input[type=range].sl-tth   { accent-color:var(--blue); }
+input[type=range].sl-th    { accent-color:var(--teal); }
+input[type=range].sl-h     { accent-color:var(--orange); }
+input[type=range].sl-t     { accent-color:var(--pink); }
+input[type=range].sl-o     { accent-color:var(--yellow); }
+
 .slider-val{
   font-weight:900; font-size:1rem; min-width:24px; text-align:center;
 }
+
+/* label colors */
+.lc-tlakh{color:var(--deep-purple);}
+.lc-lakh {color:var(--purple);}
+.lc-tth  {color:var(--blue);}
+.lc-th   {color:var(--teal);}
+.lc-h    {color:var(--orange);}
+.lc-t    {color:var(--pink);}
+.lc-o    {color:#b8860b;}
 
 /* number name */
 .num-name-box{
   background:linear-gradient(135deg,#FF6B35,#FFD93D);
   border-radius:16px; padding:16px 20px; text-align:center;
-  color:#fff; font-size:1.3rem; font-weight:900;
+  color:#fff; font-size:1.15rem; font-weight:900;
   margin-top:16px; letter-spacing:.5px;
   animation:popNum .4s cubic-bezier(.34,1.56,.64,1);
+}
+
+/* equation box */
+.eq-box{
+  text-align:center; font-size:.85rem; font-weight:900; color:#555;
+  margin-bottom:12px; line-height:1.6; word-break:break-word;
 }
 
 /* ── compare section ── */
@@ -155,7 +179,7 @@ input[type=range]{
 }
 .cnum{
   background:var(--yellow); border-radius:16px;
-  padding:12px 20px; font-size:2rem; font-weight:900;
+  padding:12px 16px; font-size:1.6rem; font-weight:900;
   cursor:pointer; user-select:none;
   box-shadow:0 4px 0 rgba(0,0,0,.15);
   transition:transform .15s;
@@ -174,8 +198,8 @@ input[type=range]{
 }
 .order-bubble{
   background:linear-gradient(135deg,var(--blue),var(--purple));
-  color:#fff; font-size:1.2rem; font-weight:900;
-  padding:10px 16px; border-radius:50px;
+  color:#fff; font-size:1rem; font-weight:900;
+  padding:8px 14px; border-radius:50px;
   box-shadow:0 3px 0 rgba(0,0,0,.15);
   animation:slideIn .3s ease forwards;
   opacity:0;
@@ -194,14 +218,14 @@ input[type=range]{
   box-shadow:0 6px 20px rgba(0,0,0,.09); margin-bottom:20px;
 }
 .qcard .qnum{
-  font-size:3.5rem; font-weight:900; color:#333; margin-bottom:6px;
+  font-size:2.8rem; font-weight:900; color:#333; margin-bottom:6px;
 }
 .qcard .qask{font-size:1.1rem; color:#666; font-weight:700; margin-bottom:24px;}
 
 .options{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
 .opt{
   padding:14px; border:3px solid #eee; border-radius:16px;
-  font-size:1.1rem; font-weight:900; cursor:pointer;
+  font-size:1rem; font-weight:900; cursor:pointer;
   background:#fff; transition:all .2s;
   font-family:'Nunito',sans-serif;
 }
@@ -256,7 +280,7 @@ input[type=range]{
 100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
 
 /* ─────────────────────────────────────────
-   SCREEN 3 — CHART (number names reference)
+   SCREEN 3 — CHART
 ───────────────────────────────────────── */
 .chart-table{width:100%; border-collapse:collapse;}
 .chart-table th{
@@ -265,13 +289,13 @@ input[type=range]{
 }
 .chart-table td{
   padding:10px 14px; border-bottom:1px solid #f0f0f0;
-  font-weight:700; font-size:.95rem;
+  font-weight:700; font-size:.9rem;
 }
 .chart-table tr:nth-child(even) td{background:#fafafa;}
 .chart-table tr:hover td{background:#FFF3E0;}
 .num-badge{
   background:var(--orange); color:#fff; border-radius:8px;
-  padding:2px 10px; font-weight:900; font-size:.9rem;
+  padding:2px 10px; font-weight:900; font-size:.85rem; white-space:nowrap;
 }
 
 </style>
@@ -281,7 +305,7 @@ input[type=range]{
 <!-- TOP NAV -->
 <div class="topnav">
   <button class="back-btn" onclick="history.back()">←</button>
-  <h1>🔢 Numbers up to 1000</h1>
+  <h1>🔢 Numbers up to 99 Lakhs</h1>
   <div class="stars-pill">⭐ 12</div>
 </div>
 
@@ -302,38 +326,49 @@ input[type=range]{
     <div class="scard-title">🧱 Place Value Builder</div>
 
     <div class="pv-display">
-      <div class="pv-number" id="pvNum">462</div>
-      <div class="pv-labels">
-        <div class="pv-label h">Hundreds</div>
-        <div class="pv-label t">Tens</div>
-        <div class="pv-label o">Ones</div>
-      </div>
+      <div class="pv-number" id="pvNum">4,52,316</div>
     </div>
 
     <!-- blocks -->
     <div class="blocks-area" id="blocksArea"></div>
 
     <!-- equation -->
-    <div style="text-align:center;font-size:1rem;font-weight:900;color:#555;margin-bottom:16px;" id="pvEq"></div>
+    <div class="eq-box" id="pvEq"></div>
 
     <!-- sliders -->
     <div class="slider-row">
       <div class="slider-item">
-        <label class="h">Hundreds <span class="slider-val" id="hVal">4</span></label>
-        <input type="range" min="0" max="9" value="4" id="hSlide" oninput="updatePV()"/>
+        <label class="lc-tlakh">Ten-Lakhs &nbsp;<span class="slider-val" id="tlVal">0</span></label>
+        <input type="range" class="sl-tlakh" min="0" max="9" value="0" id="tlSlide" oninput="updatePV()"/>
       </div>
       <div class="slider-item">
-        <label class="t">Tens &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="slider-val" id="tVal">6</span></label>
-        <input type="range" min="0" max="9" value="6" id="tSlide" oninput="updatePV()"/>
+        <label class="lc-lakh">Lakhs &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="slider-val" id="lVal">4</span></label>
+        <input type="range" class="sl-lakh" min="0" max="9" value="4" id="lSlide" oninput="updatePV()"/>
       </div>
       <div class="slider-item">
-        <label class="o">Ones &nbsp;&nbsp;&nbsp;&nbsp;<span class="slider-val" id="oVal">2</span></label>
-        <input type="range" min="0" max="9" value="2" id="oSlide" oninput="updatePV()"/>
+        <label class="lc-tth">Ten-Thous. &nbsp;<span class="slider-val" id="tthVal">5</span></label>
+        <input type="range" class="sl-tth" min="0" max="9" value="5" id="tthSlide" oninput="updatePV()"/>
+      </div>
+      <div class="slider-item">
+        <label class="lc-th">Thousands &nbsp;<span class="slider-val" id="thVal">2</span></label>
+        <input type="range" class="sl-th" min="0" max="9" value="2" id="thSlide" oninput="updatePV()"/>
+      </div>
+      <div class="slider-item">
+        <label class="lc-h">Hundreds &nbsp;&nbsp;&nbsp;<span class="slider-val" id="hVal">3</span></label>
+        <input type="range" class="sl-h" min="0" max="9" value="3" id="hSlide" oninput="updatePV()"/>
+      </div>
+      <div class="slider-item">
+        <label class="lc-t">Tens &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="slider-val" id="tVal">1</span></label>
+        <input type="range" class="sl-t" min="0" max="9" value="1" id="tSlide" oninput="updatePV()"/>
+      </div>
+      <div class="slider-item">
+        <label class="lc-o">Ones &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="slider-val" id="oVal">6</span></label>
+        <input type="range" class="sl-o" min="0" max="9" value="6" id="oSlide" oninput="updatePV()"/>
       </div>
     </div>
 
     <!-- number name -->
-    <div class="num-name-box" id="numName">Four Hundred and Sixty-Two</div>
+    <div class="num-name-box" id="numName">Four Lakh Fifty-Two Thousand Three Hundred and Sixteen</div>
   </div>
 
   <!-- COMPARE NUMBERS -->
@@ -341,9 +376,9 @@ input[type=range]{
     <div class="scard-title">⚖️ Greater Than / Less Than</div>
     <p style="color:#888;font-size:.9rem;margin-bottom:14px;font-weight:700;">Tap a number to generate new ones!</p>
     <div class="compare-row">
-      <div class="cnum" id="cA" onclick="newCompare()">350</div>
+      <div class="cnum" id="cA" onclick="newCompare()">3,50,241</div>
       <div class="csymbol" id="cSym">?</div>
-      <div class="cnum" id="cB" onclick="newCompare()">210</div>
+      <div class="cnum" id="cB" onclick="newCompare()">2,10,899</div>
     </div>
     <div style="text-align:center;" id="compareHint"></div>
     <div style="text-align:center;margin-top:12px;">
@@ -383,7 +418,7 @@ input[type=range]{
 ══════════════════════════════ -->
 <div id="chart" class="screen">
   <div class="scard">
-    <div class="scard-title">📋 Number Names (1 – 1000)</div>
+    <div class="scard-title">📋 Number Names (1 – 99,99,999)</div>
     <table class="chart-table">
       <thead><tr><th>Number</th><th>Name</th><th>Place Value</th></tr></thead>
       <tbody id="chartBody"></tbody>
@@ -404,78 +439,159 @@ function switchTab(id, el){
   if(id==='chart') buildChart();
 }
 
-// ─── number name ───
+// ─── Indian format ───
+function indianFormat(n){
+  if(n===0) return '0';
+  const s=n.toString();
+  if(s.length<=3) return s;
+  const last3=s.slice(-3);
+  const rest=s.slice(0,-3);
+  // group rest in 2s from right
+  const parts=[];
+  let r=rest;
+  while(r.length>2){ parts.unshift(r.slice(-2)); r=r.slice(0,-2); }
+  if(r.length) parts.unshift(r);
+  return parts.join(',')+','+last3;
+}
+
+// ─── toWords (Indian system, up to 99,99,999) ───
 const ones=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine',
   'Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
-const tens=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+const tensW=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+
+function twoDigitWords(n){
+  if(n===0) return '';
+  if(n<20) return ones[n];
+  const t=Math.floor(n/10), o=n%10;
+  return tensW[t]+(o?'-'+ones[o]:'');
+}
+
 function toWords(n){
   if(n===0) return 'Zero';
-  if(n===1000) return 'One Thousand';
-  let w='';
-  if(n>=100){ w+=ones[Math.floor(n/100)]+' Hundred'; n%=100; if(n) w+=' and '; }
-  if(n>=20){ w+=tens[Math.floor(n/10)]; if(n%10) w+='-'+ones[n%10]; }
-  else if(n>0){ w+=ones[n]; }
-  return w;
+  let parts=[];
+  // Ten-Lakhs digit (10,00,000 – 90,00,000)
+  const lakh=Math.floor(n/100000); n%=100000;
+  if(lakh>0) parts.push(twoDigitWords(lakh)+' Lakh');
+  // Ten-Thousands + Thousands
+  const thousands=Math.floor(n/1000); n%=1000;
+  if(thousands>0) parts.push(twoDigitWords(thousands)+' Thousand');
+  // Hundreds
+  const h=Math.floor(n/100); n%=100;
+  if(h>0) parts.push(ones[h]+' Hundred');
+  // Tens + Ones
+  if(n>0){
+    const andWord=(parts.length>0)?'and ':'';
+    parts.push(andWord+twoDigitWords(n));
+  }
+  return parts.join(' ');
 }
 
 // ─── place value ───
 function updatePV(){
-  const h=+document.getElementById('hSlide').value;
-  const t=+document.getElementById('tSlide').value;
-  const o=+document.getElementById('oSlide').value;
+  let tl=+document.getElementById('tlSlide').value;
+  let l =+document.getElementById('lSlide').value;
+  let tth=+document.getElementById('tthSlide').value;
+  let th =+document.getElementById('thSlide').value;
+  let h  =+document.getElementById('hSlide').value;
+  let t  =+document.getElementById('tSlide').value;
+  let o  =+document.getElementById('oSlide').value;
+
+  document.getElementById('tlVal').textContent=tl;
+  document.getElementById('lVal').textContent=l;
+  document.getElementById('tthVal').textContent=tth;
+  document.getElementById('thVal').textContent=th;
   document.getElementById('hVal').textContent=h;
   document.getElementById('tVal').textContent=t;
   document.getElementById('oVal').textContent=o;
-  const num=h*100+t*10+o;
+
+  const num=tl*1000000+l*100000+tth*10000+th*1000+h*100+t*10+o;
+
   // number display
   const el=document.getElementById('pvNum');
-  el.textContent=num||'0';
+  el.textContent=indianFormat(num)||'0';
   el.style.animation='none'; void el.offsetWidth; el.style.animation='popNum .4s cubic-bezier(.34,1.56,.64,1)';
+
   // equation
+  const eqParts=[];
+  if(tl) eqParts.push(`${tl}×10L`);
+  if(l)  eqParts.push(`${l}×L`);
+  if(tth)eqParts.push(`${tth}×TTH`);
+  if(th) eqParts.push(`${th}×TH`);
+  if(h)  eqParts.push(`${h}×H`);
+  if(t)  eqParts.push(`${t}×T`);
+  if(o)  eqParts.push(`${o}×1`);
   document.getElementById('pvEq').textContent=
-    `${num} = ${h}×100 + ${t}×10 + ${o}×1`;
+    eqParts.length ? indianFormat(num)+' = '+eqParts.join(' + ') : '';
+
   // blocks
   const area=document.getElementById('blocksArea');
   area.innerHTML='';
-  // hundreds
+
+  function addTile(cls, count, label, abbr){
+    if(count<=0) return;
+    const col=document.createElement('div'); col.className='block-col';
+    const tile=document.createElement('div');
+    tile.className='big-tile '+cls;
+    tile.innerHTML=`<span style="font-size:1.4rem;">${count}</span><span style="font-size:.7rem;opacity:.85;">${abbr}</span>`;
+    tile.style.animationDelay='0s';
+    col.appendChild(tile);
+    const lbl=document.createElement('label'); lbl.textContent=label;
+    col.appendChild(lbl);
+    area.appendChild(col);
+  }
+
+  if(tl) addTile('tlakh', tl, 'Ten-Lakh'+(tl>1?'s':''), 'TL');
+  if(l)  addTile('lakh',  l,  'Lakh'+(l>1?'s':''),     'L');
+  if(tth)addTile('tth',  tth, 'Ten-Thousand'+(tth>1?'s':''), 'TTH');
+  if(th) addTile('th',   th,  'Thousand'+(th>1?'s':''), 'TH');
+
+  // hundreds — small grid blocks (orange)
   if(h>0){
-    const col=document.createElement('div'); col.className='block-col h';
+    const col=document.createElement('div'); col.className='block-col';
     for(let i=0;i<h;i++){
       const b=document.createElement('div'); b.className='hblock';
       b.style.animationDelay=(i*.07)+'s';
       for(let j=0;j<25;j++){const sp=document.createElement('span'); b.appendChild(sp);}
       col.appendChild(b);
     }
-    const lbl=document.createElement('label'); lbl.textContent=`${h} Hundred${h>1?'s':''}`;
+    const lbl=document.createElement('label');
+    lbl.style.color='var(--orange)';
+    lbl.textContent=`${h} Hundred${h>1?'s':''}`;
     col.appendChild(lbl); area.appendChild(col);
   }
-  // tens
+  // tens — rods (pink)
   if(t>0){
-    const col=document.createElement('div'); col.className='block-col t';
+    const col=document.createElement('div'); col.className='block-col';
     for(let i=0;i<t;i++){
       const r=document.createElement('div'); r.className='trod';
       r.style.animationDelay=(i*.07)+'s';
       for(let j=0;j<10;j++){const sp=document.createElement('span'); r.appendChild(sp);}
       col.appendChild(r);
     }
-    const lbl=document.createElement('label'); lbl.textContent=`${t} Ten${t>1?'s':''}`;
+    const lbl=document.createElement('label');
+    lbl.style.color='var(--pink)';
+    lbl.textContent=`${t} Ten${t>1?'s':''}`;
     col.appendChild(lbl); area.appendChild(col);
   }
-  // ones
+  // ones — cubes (yellow)
   if(o>0){
-    const col=document.createElement('div'); col.className='block-col o';
+    const col=document.createElement('div'); col.className='block-col';
     const wrap=document.createElement('div');
-    wrap.style.cssText='display:flex;flex-wrap:wrap;gap:3px;max-width:90px;justify-content:center;';
+    wrap.style.cssText='display:flex;flex-wrap:wrap;gap:3px;max-width:80px;justify-content:center;';
     for(let i=0;i<o;i++){
       const c=document.createElement('div'); c.className='ucube';
       c.style.animationDelay=(i*.07)+'s';
       wrap.appendChild(c);
     }
     col.appendChild(wrap);
-    const lbl=document.createElement('label'); lbl.textContent=`${o} One${o>1?'s':''}`;
+    const lbl=document.createElement('label');
+    lbl.style.color='#b8860b';
+    lbl.textContent=`${o} One${o>1?'s':''}`;
     col.appendChild(lbl); area.appendChild(col);
   }
-  if(!h&&!t&&!o) area.innerHTML='<div style="color:#aaa;font-weight:700;padding:20px;">Move the sliders! 👆</div>';
+
+  if(!num) area.innerHTML='<div style="color:#aaa;font-weight:700;padding:20px;">Move the sliders! 👆</div>';
+
   // name
   const nameEl=document.getElementById('numName');
   nameEl.textContent=toWords(num);
@@ -484,11 +600,11 @@ function updatePV(){
 updatePV();
 
 // ─── compare ───
-let cNums=[350,210];
+let cNums=[350241,210899];
 function newCompare(){
-  cNums=[Math.floor(Math.random()*900)+100, Math.floor(Math.random()*900)+100];
-  document.getElementById('cA').textContent=cNums[0];
-  document.getElementById('cB').textContent=cNums[1];
+  cNums=[Math.floor(Math.random()*9900000)+1, Math.floor(Math.random()*9900000)+1];
+  document.getElementById('cA').textContent=indianFormat(cNums[0]);
+  document.getElementById('cB').textContent=indianFormat(cNums[1]);
   document.getElementById('cSym').textContent='?';
   document.getElementById('compareHint').innerHTML='';
 }
@@ -500,19 +616,18 @@ function revealCompare(){
   el.textContent=sym;
   el.style.animation='none'; void el.offsetWidth; el.style.animation='popNum .3s ease';
   document.getElementById('compareHint').innerHTML=
-    `<span style="font-weight:900;color:var(--purple);font-size:1rem;">${a} is ${word} ${b}</span>`;
+    `<span style="font-weight:900;color:var(--purple);font-size:1rem;">${indianFormat(a)} is ${word} ${indianFormat(b)}</span>`;
 }
 
 // ─── order ───
-let orderSet=[145,320,78,512,260];
+let orderSet=[145320,78512,260000,523716,10050];
 function newOrderSet(){
-  orderSet=Array.from({length:5},()=>Math.floor(Math.random()*900)+10);
+  orderSet=Array.from({length:5},()=>Math.floor(Math.random()*9900000)+10);
   document.getElementById('orderRow').innerHTML='';
   document.getElementById('orderLabel').textContent='';
-  // show scrambled
   orderSet.forEach((n,i)=>{
     const b=document.createElement('div'); b.className='order-bubble';
-    b.textContent=n; b.style.animationDelay=(i*.08)+'s'; b.style.background='linear-gradient(135deg,#aaa,#888)';
+    b.textContent=indianFormat(n); b.style.animationDelay=(i*.08)+'s'; b.style.background='linear-gradient(135deg,#aaa,#888)';
     document.getElementById('orderRow').appendChild(b);
   });
 }
@@ -521,7 +636,7 @@ function showOrder(dir){
   const row=document.getElementById('orderRow'); row.innerHTML='';
   sorted.forEach((n,i)=>{
     const b=document.createElement('div'); b.className='order-bubble';
-    b.textContent=n; b.style.animationDelay=(i*.1)+'s';
+    b.textContent=indianFormat(n); b.style.animationDelay=(i*.1)+'s';
     if(dir==='desc') b.style.background='linear-gradient(135deg,var(--pink),var(--purple))';
     row.appendChild(b);
   });
@@ -532,26 +647,37 @@ newOrderSet();
 
 // ─── QUIZ ───
 const QUESTIONS=[
-  {type:'name',  n:500},
-  {type:'pv',    n:347},
-  {type:'compare',a:612,b:621},
-  {type:'name',  n:815},
-  {type:'pv',    n:209},
-  {type:'order', nums:[150,430,80,320]},
-  {type:'compare',a:999,b:900},
-  {type:'name',  n:730},
+  {type:'name',    n:500},
+  {type:'pv',      n:4523716 > 1000000 ? 452371 : 452371},
+  {type:'compare', a:6,12000, b:6,21000},
+  {type:'name',    n:85000},
+  {type:'pv',      n:209},
+  {type:'order',   nums:[150000,430000,8000,320000]},
+  {type:'compare', a:999999, b:900000},
+  {type:'name',    n:500000},
 ];
+
+// rebuild questions properly (no syntax errors from above)
+const QUIZ=[
+  {type:'name',    n:500},
+  {type:'pv',      n:4523716},
+  {type:'compare', a:6120000, b:6210000},
+  {type:'name',    n:8500000},
+  {type:'pv',      n:2090000},
+  {type:'order',   nums:[1500000,4300000,800000,3200000,9500000]},
+  {type:'compare', a:9999999, b:9000000},
+  {type:'name',    n:5000000},
+];
+
 let qi=0, score=0, answered=false;
 
 function initQuiz(){qi=0;score=0;answered=false;renderQ();}
 
 function renderQ(){
   const area=document.getElementById('quizArea');
-  if(qi>=QUESTIONS.length){
-    showFinish(); return;
-  }
-  document.getElementById('quizScore').textContent=`Question ${qi+1} of ${QUESTIONS.length}  |  ⭐ ${score}`;
-  const q=QUESTIONS[qi];
+  if(qi>=QUIZ.length){ showFinish(); return; }
+  document.getElementById('quizScore').textContent=`Question ${qi+1} of ${QUIZ.length}  |  ⭐ ${score}`;
+  const q=QUIZ[qi];
   answered=false;
   let html='';
 
@@ -560,7 +686,7 @@ function renderQ(){
     const wrongs=genWrongNames(q.n,correct);
     const opts=shuffle([correct,...wrongs]);
     html=`<div class="qcard">
-      <div class="qnum">${q.n}</div>
+      <div class="qnum">${indianFormat(q.n)}</div>
       <div class="qask">What is the number name?</div>
       <div class="options">${opts.map(o=>`<button class="opt" onclick="checkAns(this,'${escQ(o)}','${escQ(correct)}')">${o}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div>
@@ -568,18 +694,31 @@ function renderQ(){
     <button class="next-btn" id="nxt" onclick="nextQ()">Next ➡</button>`;
   }
   else if(q.type==='pv'){
-    const h=Math.floor(q.n/100), t=Math.floor((q.n%100)/10), o=q.n%10;
-    const correct=`${h} Hundreds, ${t} Tens, ${o} Ones`;
-    const wrongs=[
-      `${t} Hundreds, ${h} Tens, ${o} Ones`,
-      `${h} Hundreds, ${o} Tens, ${t} Ones`,
-      `${o} Hundreds, ${t} Tens, ${h} Ones`,
-    ];
-    const opts=shuffle([correct,...wrongs]);
+    const tl=Math.floor(q.n/1000000);
+    const l =Math.floor((q.n%1000000)/100000);
+    const tth=Math.floor((q.n%100000)/10000);
+    const th=Math.floor((q.n%10000)/1000);
+    const h =Math.floor((q.n%1000)/100);
+    const t =Math.floor((q.n%100)/10);
+    const o =q.n%10;
+    const parts=[];
+    if(tl) parts.push(`${tl} Ten-Lakhs`);
+    if(l)  parts.push(`${l} Lakh${l>1?'s':''}`);
+    if(tth)parts.push(`${tth} Ten-Thousands`);
+    if(th) parts.push(`${th} Thousand${th>1?'s':''}`);
+    if(h)  parts.push(`${h} Hundred${h>1?'s':''}`);
+    if(t)  parts.push(`${t} Ten${t>1?'s':''}`);
+    if(o)  parts.push(`${o} One${o>1?'s':''}`);
+    const correct=parts.join(', ');
+    // generate wrong by swapping two values
+    const wrong1=genWrongPV(tl,l,tth,th,h,t,o,1);
+    const wrong2=genWrongPV(tl,l,tth,th,h,t,o,2);
+    const wrong3=genWrongPV(tl,l,tth,th,h,t,o,3);
+    const opts=shuffle([correct,wrong1,wrong2,wrong3]);
     html=`<div class="qcard">
-      <div class="qnum">${q.n}</div>
+      <div class="qnum">${indianFormat(q.n)}</div>
       <div class="qask">What are the place values?</div>
-      <div class="options">${opts.map(o=>`<button class="opt" onclick="checkAns(this,'${escQ(o)}','${escQ(correct)}')">${o}</button>`).join('')}</div>
+      <div class="options" style="grid-template-columns:1fr;">${opts.map(o=>`<button class="opt" style="text-align:left;font-size:.9rem;" onclick="checkAns(this,'${escQ(o)}','${escQ(correct)}')">${o}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div>
     </div>
     <button class="next-btn" id="nxt" onclick="nextQ()">Next ➡</button>`;
@@ -588,7 +727,7 @@ function renderQ(){
     const correct= q.a>q.b ? '>' : q.a<q.b ? '<' : '=';
     const opts=shuffle(['>','<','=']);
     html=`<div class="qcard">
-      <div class="qnum">${q.a} ___ ${q.b}</div>
+      <div class="qnum">${indianFormat(q.a)} ___ ${indianFormat(q.b)}</div>
       <div class="qask">Fill in &gt;, &lt; or = ?</div>
       <div class="options" style="grid-template-columns:1fr 1fr 1fr;">${opts.map(o=>`<button class="opt" style="font-size:2rem;" onclick="checkAns(this,'${o}','${correct}')">${o}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div>
@@ -596,21 +735,40 @@ function renderQ(){
     <button class="next-btn" id="nxt" onclick="nextQ()">Next ➡</button>`;
   }
   else if(q.type==='order'){
-    const asc=[...q.nums].sort((a,b)=>a-b).join(', ');
-    const wrong1=[...q.nums].sort((a,b)=>b-a).join(', ');
-    const wrong2=shuffle([...q.nums]).join(', ');
-    const wrong3=shuffle([...q.nums]).join(', ');
+    const asc=[...q.nums].sort((a,b)=>a-b).map(indianFormat).join(', ');
+    const wrong1=[...q.nums].sort((a,b)=>b-a).map(indianFormat).join(', ');
+    const wrong2=shuffle([...q.nums]).map(indianFormat).join(', ');
+    const wrong3=shuffle([...q.nums]).map(indianFormat).join(', ');
     const opts=shuffle([asc,wrong1,wrong2,wrong3]);
     html=`<div class="qcard">
-      <div style="font-size:1.4rem;font-weight:900;margin-bottom:8px;">${shuffle([...q.nums]).join('  ·  ')}</div>
+      <div style="font-size:1.2rem;font-weight:900;margin-bottom:8px;">${shuffle([...q.nums]).map(indianFormat).join('  ·  ')}</div>
       <div class="qask">Arrange in Ascending Order (smallest first)</div>
-      <div class="options" style="grid-template-columns:1fr;">${opts.map(o=>`<button class="opt" style="text-align:left;" onclick="checkAns(this,'${o}','${asc}')">${o}</button>`).join('')}</div>
+      <div class="options" style="grid-template-columns:1fr;">${opts.map(o=>`<button class="opt" style="text-align:left;font-size:.9rem;" onclick="checkAns(this,'${escQ(o)}','${escQ(asc)}')">${o}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div>
     </div>
     <button class="next-btn" id="nxt" onclick="nextQ()">Next ➡</button>`;
   }
 
   area.innerHTML=html;
+}
+
+function genWrongPV(tl,l,tth,th,h,t,o, variant){
+  // swap two digits to make a plausible wrong answer
+  let arr=[tl,l,tth,th,h,t,o];
+  const labels=['Ten-Lakhs','Lakhs','Ten-Thousands','Thousands','Hundreds','Tens','Ones'];
+  const plurals=['Ten-Lakhs','Lakhs','Ten-Thousands','Thousands','Hundreds','Tens','Ones'];
+  if(variant===1){ let tmp=arr[5]; arr[5]=arr[6]; arr[6]=tmp; }
+  else if(variant===2){ let tmp=arr[3]; arr[3]=arr[4]; arr[4]=tmp; }
+  else { let tmp=arr[1]; arr[1]=arr[2]; arr[2]=tmp; }
+  const parts=[];
+  if(arr[0]) parts.push(`${arr[0]} Ten-Lakhs`);
+  if(arr[1]) parts.push(`${arr[1]} Lakh${arr[1]>1?'s':''}`);
+  if(arr[2]) parts.push(`${arr[2]} Ten-Thousands`);
+  if(arr[3]) parts.push(`${arr[3]} Thousand${arr[3]>1?'s':''}`);
+  if(arr[4]) parts.push(`${arr[4]} Hundred${arr[4]>1?'s':''}`);
+  if(arr[5]) parts.push(`${arr[5]} Ten${arr[5]>1?'s':''}`);
+  if(arr[6]) parts.push(`${arr[6]} One${arr[6]>1?'s':''}`);
+  return parts.join(', ') || 'Zero';
 }
 
 function checkAns(btn, chosen, correct){
@@ -626,18 +784,17 @@ function checkAns(btn, chosen, correct){
   } else {
     btn.classList.add('wrong');
     fb.innerHTML=`😅 Oops! The answer is <strong>${correct}</strong>`; fb.className='feedback wrong';
-    // highlight correct
     document.querySelectorAll('.opt').forEach(o=>{
       if(o.textContent===correct) o.classList.add('correct');
     });
   }
-  document.getElementById('quizScore').textContent=`Question ${qi+1} of ${QUESTIONS.length}  |  ⭐ ${score}`;
+  document.getElementById('quizScore').textContent=`Question ${qi+1} of ${QUIZ.length}  |  ⭐ ${score}`;
 }
 
 function nextQ(){ qi++; renderQ(); }
 
 function showFinish(){
-  const pct=Math.round(score/QUESTIONS.length*100);
+  const pct=Math.round(score/QUIZ.length*100);
   const msg= pct===100 ? '🌟 Perfect Score! You are a Math Star!' :
              pct>=75  ? '🎊 Great job! Almost perfect!' :
              pct>=50  ? '👍 Good effort! Keep practising!' : '💪 Keep going! You can do it!';
@@ -646,26 +803,30 @@ function showFinish(){
       <div class="big">${pct===100?'🏆':'🎯'}</div>
       <h2>Quiz Done!</h2>
       <p>${msg}</p>
-      <div class="score-big">${score} / ${QUESTIONS.length} ⭐</div><br>
+      <div class="score-big">${score} / ${QUIZ.length} ⭐</div><br>
       <button class="retry-btn" onclick="initQuiz()">🔄 Try Again</button>
     </div>`;
   if(pct===100) confettiBurst(80);
-  document.getElementById('quizScore').textContent=`Final Score: ${score} / ${QUESTIONS.length}`;
+  document.getElementById('quizScore').textContent=`Final Score: ${score} / ${QUIZ.length}`;
 }
 
 // helpers
 function genWrongNames(n, correct){
   const pool=[];
-  const candidates=[n+100,n-100,n+10,n-10,n+1,n-1,
-    Math.floor(Math.random()*900)+10, Math.floor(Math.random()*900)+10];
-  for(const c of candidates){
-    if(c>0&&c<=1000&&c!==n){
+  const deltas=[1000000,-1000000,100000,-100000,10000,-10000,1000,-1000];
+  for(const d of deltas){
+    const c=n+d;
+    if(c>0&&c<=9900000&&c!==n){
       const w=toWords(c);
       if(w!==correct&&!pool.includes(w)) pool.push(w);
       if(pool.length===3) break;
     }
   }
-  while(pool.length<3) pool.push(toWords(Math.floor(Math.random()*900)+10));
+  while(pool.length<3){
+    const r=Math.floor(Math.random()*9899990)+10;
+    const w=toWords(r);
+    if(w!==correct&&!pool.includes(w)) pool.push(w);
+  }
   return pool.slice(0,3);
 }
 function shuffle(a){return a.sort(()=>Math.random()-.5);}
@@ -673,26 +834,53 @@ function escQ(s){return s.replace(/'/g,"\\'");}
 
 // ─── chart ───
 const chartRows=[
-  [1,'One','1 One'],[2,'Two','2 Ones'],[5,'Five','5 Ones'],[10,'Ten','1 Ten'],
-  [12,'Twelve','1 Ten, 2 Ones'],[20,'Twenty','2 Tens'],[25,'Twenty-Five','2 Tens, 5 Ones'],
-  [50,'Fifty','5 Tens'],[99,'Ninety-Nine','9 Tens, 9 Ones'],[100,'One Hundred','1 Hundred'],
-  [150,'One Hundred and Fifty','1 Hundred, 5 Tens'],
-  [200,'Two Hundred','2 Hundreds'],
-  [256,'Two Hundred and Fifty-Six','2 Hundreds, 5 Tens, 6 Ones'],
-  [300,'Three Hundred','3 Hundreds'],
-  [462,'Four Hundred and Sixty-Two','4 Hundreds, 6 Tens, 2 Ones'],
-  [500,'Five Hundred','5 Hundreds'],
-  [750,'Seven Hundred and Fifty','7 Hundreds, 5 Tens'],
-  [999,'Nine Hundred and Ninety-Nine','9 Hundreds, 9 Tens, 9 Ones'],
-  [1000,'One Thousand','10 Hundreds'],
+  [1,      'One',                        '1 One'],
+  [2,      'Two',                        '2 Ones'],
+  [5,      'Five',                       '5 Ones'],
+  [10,     'Ten',                        '1 Ten'],
+  [12,     'Twelve',                     '1 Ten, 2 Ones'],
+  [20,     'Twenty',                     '2 Tens'],
+  [25,     'Twenty-Five',               '2 Tens, 5 Ones'],
+  [50,     'Fifty',                      '5 Tens'],
+  [99,     'Ninety-Nine',               '9 Tens, 9 Ones'],
+  [100,    'One Hundred',               '1 Hundred'],
+  [150,    'One Hundred and Fifty',     '1 Hundred, 5 Tens'],
+  [256,    'Two Hundred and Fifty-Six', '2 Hundreds, 5 Tens, 6 Ones'],
+  [500,    'Five Hundred',              '5 Hundreds'],
+  [999,    'Nine Hundred and Ninety-Nine', '9 Hundreds, 9 Tens, 9 Ones'],
+  [1000,   'One Thousand',              '1 Thousand'],
+  [1500,   'One Thousand Five Hundred', '1 Thousand, 5 Hundreds'],
+  [10000,  'Ten Thousand',              '1 Ten-Thousand'],
+  [45000,  'Forty-Five Thousand',       '4 Ten-Thousands, 5 Thousands'],
+  [50000,  'Fifty Thousand',            '5 Ten-Thousands'],
+  [99999,  'Ninety-Nine Thousand Nine Hundred and Ninety-Nine', '9 Ten-Thousands, 9 Thousands, 9 Hundreds, 9 Tens, 9 Ones'],
+  [100000, 'One Lakh',                  '1 Lakh'],
+  [150000, 'One Lakh Fifty Thousand',   '1 Lakh, 5 Ten-Thousands'],
+  [250000, 'Two Lakh Fifty Thousand',   '2 Lakhs, 5 Ten-Thousands'],
+  [500000, 'Five Lakh',                 '5 Lakhs'],
+  [523716, 'Five Lakh Twenty-Three Thousand Seven Hundred and Sixteen', '5 Lakhs, 2 Ten-Thousands, 3 Thousands, 7 Hundreds, 1 Ten, 6 Ones'],
+  [999999, 'Nine Lakh Ninety-Nine Thousand Nine Hundred and Ninety-Nine', '9 Lakhs, 9 Ten-Thousands, 9 Thousands, 9 Hundreds, 9 Tens, 9 Ones'],
+  [1000000,'Ten Lakh',                  '1 Ten-Lakh'],
+  [1500000,'Fifteen Lakh',              '1 Ten-Lakh, 5 Lakhs'],
+  [2000000,'Twenty Lakh',               '2 Ten-Lakhs'],
+  [2500000,'Twenty-Five Lakh',          '2 Ten-Lakhs, 5 Lakhs'],
+  [3000000,'Thirty Lakh',               '3 Ten-Lakhs'],
+  [4500000,'Forty-Five Lakh',           '4 Ten-Lakhs, 5 Lakhs'],
+  [5000000,'Fifty Lakh',                '5 Ten-Lakhs'],
+  [5234567,'Fifty-Two Lakh Thirty-Four Thousand Five Hundred and Sixty-Seven', '5 Ten-Lakhs, 2 Lakhs, 3 Ten-Thousands, 4 Thousands, 5 Hundreds, 6 Tens, 7 Ones'],
+  [7500000,'Seventy-Five Lakh',         '7 Ten-Lakhs, 5 Lakhs'],
+  [9000000,'Ninety Lakh',               '9 Ten-Lakhs'],
+  [9900000,'Ninety-Nine Lakh',          '9 Ten-Lakhs, 9 Lakhs'],
+  [9999999,'Ninety-Nine Lakh Ninety-Nine Thousand Nine Hundred and Ninety-Nine', '9 Ten-Lakhs, 9 Lakhs, 9 Ten-Thousands, 9 Thousands, 9 Hundreds, 9 Tens, 9 Ones'],
 ];
+
 let chartBuilt=false;
 function buildChart(){
   if(chartBuilt) return; chartBuilt=true;
   const tb=document.getElementById('chartBody');
   chartRows.forEach(([n,name,pv])=>{
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td><span class="num-badge">${n}</span></td><td>${name}</td><td style="color:#888;font-size:.85rem;">${pv}</td>`;
+    tr.innerHTML=`<td><span class="num-badge">${indianFormat(n)}</span></td><td>${name}</td><td style="color:#888;font-size:.8rem;">${pv}</td>`;
     tb.appendChild(tr);
   });
 }

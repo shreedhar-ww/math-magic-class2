@@ -38,17 +38,34 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
 
 /* ══ COLUMN SUBTRACTION ══ */
 .num-inputs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;}
-.num-input{width:90px;padding:10px 8px;text-align:center;font-size:1.5rem;font-weight:900;font-family:'Nunito',sans-serif;border:3px solid #ddd;border-radius:14px;background:#fff;outline:none;transition:border-color .2s;}
+.num-input{width:120px;padding:10px 8px;text-align:center;font-size:1.5rem;font-weight:900;font-family:'Nunito',sans-serif;border:3px solid #ddd;border-radius:14px;background:#fff;outline:none;transition:border-color .2s;}
 .num-input:focus{border-color:var(--blue);}
 
-.col-add{display:flex;flex-direction:column;align-items:center;max-width:320px;margin:0 auto;gap:0;}
-.col-row{display:grid;grid-template-columns:repeat(4,60px);gap:4px;justify-content:center;align-items:center;}
-.col-cell{width:60px;height:62px;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:900;border-radius:12px;transition:all .3s;position:relative;}
+/* Dynamic column layout */
+.col-add{
+  display:flex;flex-direction:column;align-items:center;
+  max-width:600px;margin:0 auto;gap:0;
+  overflow-x:auto;
+}
+.col-row{
+  display:flex;flex-direction:row;
+  gap:4px;justify-content:center;align-items:center;
+  min-width:fit-content;
+}
+.col-cell{
+  width:60px;height:62px;display:flex;align-items:center;justify-content:center;
+  font-size:2rem;font-weight:900;border-radius:12px;
+  transition:all .3s;position:relative;flex-shrink:0;
+}
 .col-cell.digit{background:#e8f4ff;color:#333;}
 .col-cell.minus{color:var(--blue);font-size:2.2rem;}
 .col-cell.blank{background:transparent;}
+.col-cell.place-label{
+  background:transparent;font-size:.7rem;font-weight:900;
+  color:#999;height:28px;letter-spacing:.5px;
+}
 
-/* borrow: crossed out original, small new value above */
+/* borrow: crossed out original, small new value top-right */
 .col-cell.borrowed{background:#ffe8e8;color:#ccc;text-decoration:line-through;text-decoration-color:#FF4757;}
 .col-cell .new-val{
   position:absolute;top:4px;right:6px;
@@ -57,7 +74,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
   animation:popIn .4s cubic-bezier(.34,1.56,.64,1);
 }
 .col-cell.result{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;border-radius:12px;animation:popIn .5s cubic-bezier(.34,1.56,.64,1);}
-.col-cell.result.blank{background:transparent;}
+.col-cell.result.blank{background:transparent;animation:none;}
 
 .divider{width:100%;height:4px;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:2px;margin:6px 0;}
 @keyframes popIn{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
@@ -91,7 +108,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .wp-text{font-size:1rem;font-weight:700;color:#444;line-height:1.7;text-align:center;}
 .wp-answer{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:14px;}
-.wp-input{width:90px;padding:10px;text-align:center;font-size:1.5rem;font-weight:900;border:3px solid #ddd;border-radius:14px;font-family:'Nunito',sans-serif;outline:none;transition:border-color .2s;}
+.wp-input{width:110px;padding:10px;text-align:center;font-size:1.5rem;font-weight:900;border:3px solid #ddd;border-radius:14px;font-family:'Nunito',sans-serif;outline:none;transition:border-color .2s;}
 .wp-input:focus{border-color:var(--blue);}
 .wp-check{padding:10px 20px;background:linear-gradient(135deg,var(--blue),var(--purple));border:none;border-radius:50px;color:#fff;font-size:1rem;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;}
 .wp-fb{font-size:1rem;font-weight:900;margin-top:10px;text-align:center;min-height:28px;}
@@ -99,7 +116,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
 /* ══ QUIZ ══ */
 .quiz-score{font-size:1rem;font-weight:900;color:#aaa;margin-bottom:20px;text-align:center;}
 .qcard{background:#fff;border-radius:24px;padding:28px 22px;box-shadow:0 6px 20px rgba(0,0,0,.09);margin-bottom:20px;text-align:center;}
-.qcard .qnum{font-size:2.8rem;font-weight:900;color:#333;margin-bottom:6px;letter-spacing:2px;}
+.qcard .qnum{font-size:2.4rem;font-weight:900;color:#333;margin-bottom:6px;letter-spacing:2px;}
 .qcard .qask{font-size:1rem;color:#888;font-weight:700;margin-bottom:20px;}
 .options{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .opt{padding:14px;border:3px solid #eee;border-radius:16px;font-size:1.1rem;font-weight:900;cursor:pointer;background:#fff;transition:all .2s;font-family:'Nunito',sans-serif;}
@@ -143,42 +160,19 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
   <!-- Column subtraction stepper -->
   <div class="scard">
     <div class="scard-title">📐 Column Subtraction — Step by Step</div>
-    <p style="color:#aaa;font-size:.9rem;font-weight:700;margin-bottom:14px;">Enter two numbers and see the borrowing method!</p>
+    <p style="color:#aaa;font-size:.9rem;font-weight:700;margin-bottom:14px;">Enter two numbers (up to 6 digits) and see the borrowing method!</p>
 
     <div class="num-inputs">
-      <input class="num-input" id="numA" type="number" min="10" max="999" value="700"/>
+      <input class="num-input" id="numA" type="number" min="10" max="999999" value="700"/>
       <span style="font-size:2rem;font-weight:900;color:var(--blue);line-height:58px;">−</span>
-      <input class="num-input" id="numB" type="number" min="1"  max="998" value="245"/>
+      <input class="num-input" id="numB" type="number" min="1"  max="999998" value="245"/>
     </div>
     <div style="text-align:center;margin-bottom:14px;">
       <button class="sbtn go" onclick="startSub()">▶ Start</button>
     </div>
 
-    <!-- column layout: 4 cols = [sign, H, T, O] -->
-    <div class="col-add" id="colSub" style="display:none;">
-      <!-- row A -->
-      <div class="col-row" id="rowA">
-        <div class="col-cell blank"></div>
-        <div class="col-cell digit" id="a2"></div>
-        <div class="col-cell digit" id="a1"></div>
-        <div class="col-cell digit" id="a0"></div>
-      </div>
-      <!-- row B -->
-      <div class="col-row">
-        <div class="col-cell minus">−</div>
-        <div class="col-cell digit" id="b2"></div>
-        <div class="col-cell digit" id="b1"></div>
-        <div class="col-cell digit" id="b0"></div>
-      </div>
-      <div class="divider"></div>
-      <!-- result -->
-      <div class="col-row">
-        <div class="col-cell blank"></div>
-        <div class="col-cell result blank" id="r2"></div>
-        <div class="col-cell result blank" id="r1"></div>
-        <div class="col-cell result blank" id="r0"></div>
-      </div>
-    </div>
+    <!-- dynamically built column layout -->
+    <div class="col-add" id="colSub" style="display:none;"></div>
 
     <div class="step-explain" id="stepExp" style="display:none;"></div>
     <div class="step-btns" id="stepBtns" style="display:none;">
@@ -236,155 +230,213 @@ function switchTab(id,el){
   if(id==='learn') resetBorrow();
 }
 
-// ══════════════════════════════
-//  COLUMN SUBTRACTION STEPPER
-// ══════════════════════════════
+// ══════════════════════════════════════════════════════════════
+//  DYNAMIC COLUMN SUBTRACTION STEPPER
+// ══════════════════════════════════════════════════════════════
+const PLACE_NAMES  = ['Ones','Tens','Hundreds','Thousands','Ten-Thousands','Hundred-Thousands'];
+const PLACE_ABBREV = ['O',   'T',   'H',       'TH',       'TTH',          'HTH'];
+
 let steps=[], stepIdx=0;
+// references to DOM cell elements (index 0 = ones)
+let aEls=[], bEls=[], resultEls=[];
 
 function startSub(){
-  let A=Math.min(999,Math.max(10,+document.getElementById('numA').value||700));
-  let B=Math.min(998,Math.max(1, +document.getElementById('numB').value||245));
-  if(B>=A){ B=A-1; document.getElementById('numB').value=B; }
+  let A = Math.min(999999, Math.max(10, +document.getElementById('numA').value || 700));
+  let B = Math.min(A-1,    Math.max(1,  +document.getElementById('numB').value || 245));
+  document.getElementById('numA').value = A;
+  document.getElementById('numB').value = B;
 
-  document.getElementById('numA').value=A;
+  // ── extract digits (index 0 = ones place) ──
+  const numCols = Math.max(A.toString().length, (A-B).toString().length);
+  const aDigits = [], bDigits = [];
+  let tmp = A, tmp2 = B;
+  for(let i=0; i<numCols; i++){
+    aDigits.push(tmp % 10); tmp = Math.floor(tmp / 10);
+    bDigits.push(tmp2 % 10); tmp2 = Math.floor(tmp2 / 10);
+  }
 
-  const a0=A%10,       a1=Math.floor(A/10)%10, a2=Math.floor(A/100);
-  const b0=B%10,       b1=Math.floor(B/10)%10, b2=Math.floor(B/100);
+  // ── simulate cascading borrows ──
+  // eff[i] = effective digit of A in column i after all borrows resolved
+  const eff = [...aDigits];
+  // borrowedFrom[i] = true if column i was borrowed FROM (gave 1 to column i-1)
+  const borrowedFrom = new Array(numCols).fill(false);
+  // borrowedInto[i] = true if column i received +10 from borrowing
+  const borrowedInto = new Array(numCols).fill(false);
 
-  // static: fill B digits
-  setCell('b0',b0); setCell('b1',b1); setCell('b2',b2);
-  // fill A digits initially (may be overwritten by borrowing steps)
-  setCell('a0',a0); setCell('a1',a1); setCell('a2',a2);
-  // reset results
-  ['r0','r1','r2'].forEach(id=>{
-    const el=document.getElementById(id);
-    el.textContent=''; el.className='col-cell result blank';
-  });
-  // remove any previous new-val overlays
-  ['a0','a1','a2'].forEach(id=>{
-    const el=document.getElementById(id);
-    el.className='col-cell digit';
-    el.querySelectorAll('.new-val').forEach(n=>n.remove());
-  });
-
-  document.getElementById('colSub').style.display='flex';
-  document.getElementById('stepExp').style.display='block';
-  document.getElementById('stepBtns').style.display='flex';
-
-  // ── work out borrowing ──
-  // We'll track effective digits after borrowing
-  let eff=[a0,a1,a2]; // [ones, tens, hundreds]
-  let borrowed=[false,false,false];
-  let newVals=[null,null,null];
-
-  // ones
-  let need0=false, need1=false;
-  if(eff[0]<b0){
-    // borrow from tens — but tens might be 0, cascade
-    if(eff[1]===0 && eff[2]>0){
-      // borrow hundreds into tens first
-      newVals[2]=eff[2]-1; borrowed[2]=true;
-      newVals[1]=9; borrowed[1]=true; // tens becomes 9 after giving 10 to ones
-      // actually: hundreds gives 10 to tens column → tens becomes 10+eff[1]-1=9 (gave 1 to ones)
-      // let's do it simply:
-      eff[2]--; eff[1]+=10; // borrow from hundreds to tens
+  for(let i=0; i<numCols; i++){
+    if(eff[i] < bDigits[i]){
+      // need to borrow: find nearest non-zero column to the left
+      let j = i + 1;
+      while(j < numCols && eff[j] === 0) j++;
+      if(j < numCols){
+        // cascade: columns i+1 … j-1 were zero, they each get 9 after cascading
+        eff[j]--;
+        borrowedFrom[j] = true;
+        for(let k = j-1; k > i; k--){
+          eff[k] = 9;
+          borrowedFrom[k] = true;
+          borrowedInto[k] = true;
+        }
+        eff[i] += 10;
+        borrowedInto[i] = true;
+      }
     }
-    eff[1]--; eff[0]+=10;
-    newVals[0]=eff[0]; borrowed[0]=true; // a0 will show 10+a0 effectively
-    if(!newVals[1]&&borrowed[1]) newVals[1]=eff[1];
-    else if(!newVals[1]) newVals[1]=eff[1];
-  }
-  if(eff[1]<b1){
-    eff[2]--; eff[1]+=10;
-    if(!borrowed[1]) newVals[1]=eff[1]; borrowed[1]=true;
-    if(!borrowed[2]){ newVals[2]=eff[2]; borrowed[2]=true; }
   }
 
-  const r0=eff[0]-b0, r1=eff[1]-b1, r2=eff[2]-b2;
+  // result digits
+  const rDigits = aDigits.map((d,i) => eff[i] - bDigits[i]);
 
-  steps=[];
+  // ── build DOM ──
+  const container = document.getElementById('colSub');
+  container.innerHTML = '';
+  container.style.display = 'flex';
+  aEls = []; bEls = []; resultEls = [];
+
+  // helper: make a cell
+  function makeCell(cls, text=''){
+    const d = document.createElement('div');
+    d.className = 'col-cell ' + cls;
+    d.textContent = text;
+    return d;
+  }
+
+  // ROW A (top number, with borrow annotation slots)
+  const rowA = document.createElement('div'); rowA.className='col-row';
+  // sign placeholder (blank)
+  rowA.appendChild(makeCell('blank'));
+  // digits right-to-left in display = highest index first
+  for(let i=numCols-1; i>=0; i--){
+    const cell = makeCell('digit', aDigits[i]);
+    aEls[i] = cell;
+    rowA.appendChild(cell);
+  }
+  container.appendChild(rowA);
+
+  // ROW B (bottom number with − sign)
+  const rowB = document.createElement('div'); rowB.className='col-row';
+  rowB.appendChild(makeCell('minus', '−'));
+  for(let i=numCols-1; i>=0; i--){
+    const cell = makeCell('digit', bDigits[i] === 0 ? '0' : bDigits[i]);
+    bEls[i] = cell;
+    rowB.appendChild(cell);
+  }
+  container.appendChild(rowB);
+
+  // DIVIDER
+  const div = document.createElement('div'); div.className='divider';
+  container.appendChild(div);
+
+  // RESULT ROW
+  const rowR = document.createElement('div'); rowR.className='col-row';
+  rowR.appendChild(makeCell('blank'));
+  for(let i=numCols-1; i>=0; i--){
+    const cell = makeCell('col-cell result blank');
+    // fix: use plain div, not "col-cell col-cell result blank"
+    cell.className = 'col-cell result blank';
+    resultEls[i] = cell;
+    rowR.appendChild(cell);
+  }
+  container.appendChild(rowR);
+
+  // PLACE-VALUE LABEL ROW
+  const rowL = document.createElement('div'); rowL.className='col-row';
+  rowL.appendChild(makeCell('place-label blank'));
+  for(let i=numCols-1; i>=0; i--){
+    rowL.appendChild(makeCell('place-label', PLACE_ABBREV[i]||''));
+  }
+  container.appendChild(rowL);
+
+  // ── build steps ──
+  steps = [];
 
   // Step 0: intro
   steps.push({
-    explain:`👉 We are solving <strong>${A} − ${B}</strong>.<br>Start from the <strong>Ones</strong> column (right side). Is ${a0} big enough to subtract ${b0}?`,
-    action:()=>{}
+    explain: `👉 We are solving <strong>${A} − ${B}</strong>.<br>Start from the <strong>Ones</strong> column on the right. Work column by column leftwards.`,
+    action: () => {}
   });
 
-  // Step 1: ones
-  if(borrowed[0]){
+  // One or two steps per column
+  for(let i=0; i<numCols; i++){
+    const placeName = PLACE_NAMES[i] || `Column ${i+1}`;
+    const orig = aDigits[i];
+    const effVal = eff[i];
+    const sub = bDigits[i];
+    const res = rDigits[i];
+
+    if(borrowedInto[i]){
+      // borrow step first
+      steps.push({
+        explain: `😮 <strong>${placeName}:</strong> ${orig} < ${sub} — can't subtract!<br>
+                  We <strong style="color:var(--red);">borrow</strong> from the ${PLACE_NAMES[i+1]||'next'} column.<br>
+                  ${placeName} digit becomes <strong>${effVal}</strong> (${orig} + 10).`,
+        action: () => {
+          markBorrowed(i, orig, effVal);
+          // also show the column we borrowed from decreasing
+          // find which column was the borrow source
+          let src = i+1;
+          while(src < numCols && borrowedFrom[src] && borrowedInto[src]) src++;
+          if(src < numCols && borrowedFrom[src]){
+            markBorrowed(src, aDigits[src], eff[src]);
+          }
+          // cascade intermediates
+          for(let k=i+1; k<src; k++){
+            if(borrowedFrom[k] && borrowedInto[k]) markBorrowed(k, 0, 9);
+          }
+        }
+      });
+    }
+
     steps.push({
-      explain:`😮 ${a0} is <strong>less than</strong> ${b0} — we can't subtract!<br>So we <strong style="color:var(--red);">borrow 1 ten</strong> from the Tens column.<br>Ones becomes <strong>${eff[0]}</strong> (${a0} + 10).`,
-      action:()=>{
-        markBorrowed('a0', a0, eff[0]);
-        if(newVals[1]!==null) markBorrowed('a1', a1, eff[1]===eff[0]?a1-1:eff[1]);
-      }
+      explain: `✅ <strong>${placeName}:</strong> ${effVal} − ${sub} = <strong>${res}</strong>`,
+      action: () => { revealResult(i, res); }
     });
   }
+
+  // Final step: done
   steps.push({
-    explain:`✅ <strong>Ones:</strong> ${eff[0]} − ${b0} = <strong>${r0}</strong>`,
-    action:()=>{ revealResult('r0',r0); }
+    explain: `🎉 <strong>${A} − ${B} = ${A-B}</strong> — Amazing! You used column subtraction like a pro! 🦸`,
+    action: () => { confettiBurst(30); }
   });
 
-  // Step 2: tens
-  if(borrowed[1] && eff[1]!==a1){
-    const showTens = newVals[1]!==null ? newVals[1] : eff[1];
-    steps.push({
-      explain:`😮 Tens column: we already gave away 1 ten.<br>Now we have <strong>${showTens}</strong> tens. Is ${showTens} ≥ ${b1}?${showTens<b1?' No — borrow from Hundreds!':''}`,
-      action:()=>{ if(showTens<b1) markBorrowed('a2',a2,eff[2]); }
-    });
-  }
-  steps.push({
-    explain:`✅ <strong>Tens:</strong> ${eff[1]} − ${b1} = <strong>${r1}</strong>`,
-    action:()=>{ revealResult('r1',r1); }
-  });
+  document.getElementById('stepExp').style.display = 'block';
+  document.getElementById('stepBtns').style.display = 'flex';
 
-  // Step 3: hundreds
-  steps.push({
-    explain:`✅ <strong>Hundreds:</strong> ${eff[2]} − ${b2} = <strong>${r2}</strong>`,
-    action:()=>{ revealResult('r2',r2); }
-  });
-
-  // Step 4: done
-  steps.push({
-    explain:`🎉 <strong>${A} − ${B} = ${A-B}</strong> — Amazing! You used borrowing like a pro! 🦸`,
-    action:()=>{ confettiBurst(25); }
-  });
-
-  stepIdx=0; applyStep(0);
+  stepIdx = 0;
+  applyStep(0);
 }
 
-function setCell(id,val){
-  const el=document.getElementById(id);
-  el.textContent=(val===0&&id[0]==='a'&&val===0)?'0':val||'';
-  // show 0 properly
-  el.textContent=val;
-}
-
-function markBorrowed(id, orig, newV){
-  const el=document.getElementById(id);
-  el.className='col-cell digit borrowed';
-  el.textContent=orig;
-  // add new value overlay
-  const nv=document.createElement('span'); nv.className='new-val'; nv.textContent=newV;
+function markBorrowed(colIdx, orig, newV){
+  const el = aEls[colIdx];
+  if(!el) return;
+  el.className = 'col-cell digit borrowed';
+  el.textContent = orig;
   el.querySelectorAll('.new-val').forEach(n=>n.remove());
+  const nv = document.createElement('span');
+  nv.className = 'new-val';
+  nv.textContent = newV;
   el.appendChild(nv);
 }
 
-function revealResult(id,val){
-  const el=document.getElementById(id);
-  el.textContent=val;
-  el.className='col-cell result';
-  el.style.animation='none'; void el.offsetWidth; el.style.animation='popIn .5s cubic-bezier(.34,1.56,.64,1)';
+function revealResult(colIdx, val){
+  const el = resultEls[colIdx];
+  if(!el) return;
+  el.textContent = val;
+  el.className = 'col-cell result';
+  el.style.animation = 'none';
+  void el.offsetWidth;
+  el.style.animation = 'popIn .5s cubic-bezier(.34,1.56,.64,1)';
 }
 
 function applyStep(idx){
-  const exp=document.getElementById('stepExp');
-  exp.innerHTML=steps[idx].explain;
-  exp.style.animation='none'; void exp.offsetWidth; exp.style.animation='fadeIn .3s ease';
+  const exp = document.getElementById('stepExp');
+  exp.innerHTML = steps[idx].explain;
+  exp.style.animation = 'none';
+  void exp.offsetWidth;
+  exp.style.animation = 'fadeIn .3s ease';
   steps[idx].action();
 }
-function nextStep(){ if(stepIdx<steps.length-1){ stepIdx++; applyStep(stepIdx); }}
-function prevStep(){ if(stepIdx>0){ stepIdx--; } }
+function nextStep(){ if(stepIdx < steps.length-1){ stepIdx++; applyStep(stepIdx); }}
+function prevStep(){ if(stepIdx > 0){ stepIdx--; } }
 
 // ══════════════════════════════
 //  BORROW VISUAL (32 - 8)
@@ -405,11 +457,6 @@ function renderBorrow(phase){
   scene.innerHTML='';
   const desc=document.getElementById('borrowDesc');
   const title=document.getElementById('borrowTitle');
-
-  // Phase 0: show 3 tens + 2 ones = 32
-  // Phase 1: try to take 8 from 2 ones — can't!
-  // Phase 2: break one ten into 10 ones → 2 tens + 12 ones
-  // Phase 3: take away 8 → 2 tens + 4 ones = 24
 
   if(phase===0){
     title.textContent='32 − 8 = ?';
@@ -441,14 +488,12 @@ function appendGroup(scene,label,count,type,warn,highlight){
   for(let i=0;i<count;i++){
     const sq=document.createElement('div');
     if(type==='ten'){
-      // draw as a rod (vertical)
       sq.style.cssText=`width:18px;height:52px;border-radius:6px;background:linear-gradient(135deg,var(--blue),var(--purple));box-shadow:1px 2px 0 rgba(0,0,0,.15);animation:popIn .3s ease;animation-delay:${i*.06}s;opacity:0;animation-fill-mode:forwards;`;
     } else if(type==='one'){
       sq.className='sq active';
       if(warn) sq.style.cssText='width:22px;height:22px;border-radius:5px;background:var(--red);animation:popIn .3s ease;';
       if(highlight) sq.style.cssText+=`animation-delay:${i*.04}s;background:linear-gradient(135deg,var(--orange),var(--yellow));`;
     } else {
-      // taken
       sq.className='sq removed';
     }
     grid.appendChild(sq);
@@ -471,11 +516,28 @@ const WP_POOL=[
   (a,b)=>({emoji:'💧',text:`A water tank has <strong>${a}</strong> litres of water. <strong>${b}</strong> litres are used. How many litres are left?`,ans:a-b}),
 ];
 
+function wpRandPair(){
+  // mix of 2-digit, 3-digit, and 4-digit problems
+  const pick = rnd(3);
+  if(pick === 0){
+    const b = rnd(40)+10;
+    const a = b + rnd(50)+10;
+    return [a,b];
+  } else if(pick === 1){
+    const b = rnd(400)+50;
+    const a = b + rnd(300)+100;
+    return [a,b];
+  } else {
+    const b = rnd(3000)+500;
+    const a = b + rnd(2000)+500;
+    return [a,b];
+  }
+}
+
 function newWordProblems(){
   const container=document.getElementById('wpCards'); container.innerHTML='';
   shuffle([...WP_POOL]).slice(0,3).forEach((fn,i)=>{
-    const b=rnd(40)+10;
-    const a=b+rnd(50)+10;
+    const [a,b] = wpRandPair();
     const {emoji,text,ans}=fn(a,b);
     container.innerHTML+=`
     <div class="wp-card">
@@ -501,22 +563,32 @@ function checkWP(i,ans){
 //  QUIZ
 // ══════════════════════════════
 function genQ(){
-  const type=rnd(4);
-  if(type===0){
+  const type = rnd(6);
+  if(type === 0){
+    // 2-digit
     const a=rnd(80)+20, b=rnd(a-1)+1;
-    return {q:`${a} − ${b}`,ans:a-b,wrongs:[a-b+10,a-b-5,a-b+1,a+b]};
-  } else if(type===1){
+    return {q:`${a} − ${b}`, ans:a-b, wrongs:[a-b+10,a-b-5,a-b+1,a+b]};
+  } else if(type === 1){
+    // 3-digit
     const a=rnd(700)+200, b=rnd(150)+10;
-    return {q:`${a} − ${b}`,ans:a-b,wrongs:[a-b+10,a-b-10,a-b+100,a-b-1]};
-  } else if(type===2){
+    return {q:`${a} − ${b}`, ans:a-b, wrongs:[a-b+10,a-b-10,a-b+100,a-b-1]};
+  } else if(type === 2){
     // fill blank: a − ___ = c
     const c=rnd(80)+10, b=rnd(60)+5;
     const a=c+b;
-    return {q:`${a} − ___ = ${c}`,ans:b,wrongs:[b+10,b-5,c,a]};
+    return {q:`${a} − ___ = ${c}`, ans:b, wrongs:[b+10,b-5,c,a]};
+  } else if(type === 3){
+    // 4-digit
+    const a=rnd(5000)+3000, b=rnd(1500)+200;
+    return {q:`${a} − ${b}`, ans:a-b, wrongs:[a-b+100,a-b-100,a-b+1000,a-b+50]};
+  } else if(type === 4){
+    // 5-digit
+    const a=rnd(50000)+30000, b=rnd(9000)+1000;
+    return {q:`${a} − ${b}`, ans:a-b, wrongs:[a-b+1000,a-b-1000,a-b+500,a-b+200]};
   } else {
-    // which is bigger to subtract correctly
-    const a=rnd(500)+300, b=rnd(200)+50;
-    return {q:`${a} − ${b}`,ans:a-b,wrongs:[a-b+100,a-b-100,b-a<0?b:a-b+50,a+b]};
+    // 3-digit with borrow across zeros
+    const a=rnd(400)+300, b=rnd(200)+50;
+    return {q:`${a} − ${b}`, ans:a-b, wrongs:[a-b+100,a-b-100,b-a<0?b:a-b+50,a+b]};
   }
 }
 
