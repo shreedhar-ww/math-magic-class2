@@ -326,8 +326,21 @@ input[type=range].sl-o     { accent-color:var(--yellow); }
   <div class="scard">
     <div class="scard-title">🧱 Place Value Builder</div>
 
+    <!-- Digit selector -->
+    <div style="display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;margin-bottom:18px;background:#fff5e0;padding:12px 16px;border-radius:16px;border:2px dashed var(--orange);">
+      <span style="font-weight:900;color:var(--purple);font-size:.95rem;">🎯 Focus on:</span>
+      <select id="digitSel" onchange="setDigits(this.value)" style="font-family:Nunito;font-weight:900;font-size:1rem;padding:8px 14px;border-radius:50px;border:3px solid var(--orange);background:#fff;color:var(--orange);cursor:pointer;outline:none;">
+        <option value="3">3 digits (up to 999)</option>
+        <option value="4">4 digits (up to 9,999)</option>
+        <option value="5" selected>5 digits (up to 99,999)</option>
+        <option value="6">6 digits (up to 9,99,999)</option>
+        <option value="7">7 digits (up to 99,99,999)</option>
+      </select>
+      <button class="sbtn-mini" onclick="randomizeSliders()" style="font-family:Nunito;font-weight:900;font-size:.9rem;padding:8px 14px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--green),var(--blue));color:#111;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.15);">🎲 Random</button>
+    </div>
+
     <div class="pv-display">
-      <div class="pv-number" id="pvNum">4,52,316</div>
+      <div class="pv-number" id="pvNum">0</div>
     </div>
 
     <!-- blocks -->
@@ -337,39 +350,39 @@ input[type=range].sl-o     { accent-color:var(--yellow); }
     <div class="eq-box" id="pvEq"></div>
 
     <!-- sliders -->
-    <div class="slider-row">
-      <div class="slider-item">
+    <div class="slider-row" id="sliderRow">
+      <div class="slider-item" data-pos="6">
         <label class="lc-tlakh">Ten-Lakhs &nbsp;<span class="slider-val" id="tlVal">0</span></label>
         <input type="range" class="sl-tlakh" min="0" max="9" value="0" id="tlSlide" oninput="updatePV()"/>
       </div>
-      <div class="slider-item">
-        <label class="lc-lakh">Lakhs &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="slider-val" id="lVal">4</span></label>
-        <input type="range" class="sl-lakh" min="0" max="9" value="4" id="lSlide" oninput="updatePV()"/>
+      <div class="slider-item" data-pos="5">
+        <label class="lc-lakh">Lakhs &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="slider-val" id="lVal">0</span></label>
+        <input type="range" class="sl-lakh" min="0" max="9" value="0" id="lSlide" oninput="updatePV()"/>
       </div>
-      <div class="slider-item">
-        <label class="lc-tth">Ten-Thous. &nbsp;<span class="slider-val" id="tthVal">5</span></label>
-        <input type="range" class="sl-tth" min="0" max="9" value="5" id="tthSlide" oninput="updatePV()"/>
+      <div class="slider-item" data-pos="4">
+        <label class="lc-tth">Ten-Thous. &nbsp;<span class="slider-val" id="tthVal">0</span></label>
+        <input type="range" class="sl-tth" min="0" max="9" value="0" id="tthSlide" oninput="updatePV()"/>
       </div>
-      <div class="slider-item">
-        <label class="lc-th">Thousands &nbsp;<span class="slider-val" id="thVal">2</span></label>
-        <input type="range" class="sl-th" min="0" max="9" value="2" id="thSlide" oninput="updatePV()"/>
+      <div class="slider-item" data-pos="3">
+        <label class="lc-th">Thousands &nbsp;<span class="slider-val" id="thVal">0</span></label>
+        <input type="range" class="sl-th" min="0" max="9" value="0" id="thSlide" oninput="updatePV()"/>
       </div>
-      <div class="slider-item">
-        <label class="lc-h">Hundreds &nbsp;&nbsp;&nbsp;<span class="slider-val" id="hVal">3</span></label>
-        <input type="range" class="sl-h" min="0" max="9" value="3" id="hSlide" oninput="updatePV()"/>
+      <div class="slider-item" data-pos="2">
+        <label class="lc-h">Hundreds &nbsp;&nbsp;&nbsp;<span class="slider-val" id="hVal">0</span></label>
+        <input type="range" class="sl-h" min="0" max="9" value="0" id="hSlide" oninput="updatePV()"/>
       </div>
-      <div class="slider-item">
-        <label class="lc-t">Tens &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="slider-val" id="tVal">1</span></label>
-        <input type="range" class="sl-t" min="0" max="9" value="1" id="tSlide" oninput="updatePV()"/>
+      <div class="slider-item" data-pos="1">
+        <label class="lc-t">Tens &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="slider-val" id="tVal">0</span></label>
+        <input type="range" class="sl-t" min="0" max="9" value="0" id="tSlide" oninput="updatePV()"/>
       </div>
-      <div class="slider-item">
-        <label class="lc-o">Ones &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="slider-val" id="oVal">6</span></label>
-        <input type="range" class="sl-o" min="0" max="9" value="6" id="oSlide" oninput="updatePV()"/>
+      <div class="slider-item" data-pos="0">
+        <label class="lc-o">Ones &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="slider-val" id="oVal">0</span></label>
+        <input type="range" class="sl-o" min="0" max="9" value="0" id="oSlide" oninput="updatePV()"/>
       </div>
     </div>
 
     <!-- number name -->
-    <div class="num-name-box" id="numName">Four Lakh Fifty-Two Thousand Three Hundred and Sixteen</div>
+    <div class="num-name-box" id="numName">Zero</div>
   </div>
 
   <!-- COMPARE NUMBERS -->
@@ -593,7 +606,33 @@ function updatePV(){
   nameEl.textContent=toWords(num);
   nameEl.style.animation='none'; void nameEl.offsetWidth; nameEl.style.animation='popNum .4s cubic-bezier(.34,1.56,.64,1)';
 }
-updatePV();
+// ─── digit-count focus ───
+let DIGITS=5;
+const SLIDER_IDS=['oSlide','tSlide','hSlide','thSlide','tthSlide','lSlide','tlSlide']; // index = pos
+function setDigits(n){
+  DIGITS=+n;
+  // Show only sliders with pos < DIGITS, reset hidden ones to 0
+  document.querySelectorAll('#sliderRow .slider-item').forEach(item=>{
+    const pos=+item.dataset.pos;
+    if(pos<DIGITS){
+      item.style.display='flex';
+    } else {
+      item.style.display='none';
+      const inp=item.querySelector('input[type=range]');
+      if(inp) inp.value=0;
+    }
+  });
+  updatePV();
+}
+function randomizeSliders(){
+  document.querySelectorAll('#sliderRow .slider-item').forEach(item=>{
+    const pos=+item.dataset.pos;
+    const inp=item.querySelector('input[type=range]');
+    if(pos<DIGITS && inp) inp.value=Math.floor(Math.random()*10);
+  });
+  updatePV();
+}
+setDigits(5);
 
 // ─── compare ───
 let cNums=[350241,210899];
