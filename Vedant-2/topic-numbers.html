@@ -74,7 +74,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
   letter-spacing:4px; line-height:1;
   animation:popNum .4s cubic-bezier(.34,1.56,.64,1);
 }
-@keyframes popNum{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes popNum{from{transform:scale(.6)}to{transform:scale(1)}}
 
 /* blocks area */
 .blocks-area{
@@ -127,8 +127,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
 .big-tile.lakh{ background:var(--purple); }
 .big-tile.tlakh{ background:var(--deep-purple); }
 
-@keyframes dropIn{from{transform:translateY(-20px) scale(.5);opacity:0}to{transform:none;opacity:1}}
-.big-tile,.hblock,.trod,.ucube{animation-fill-mode:forwards;}
+@keyframes dropIn{from{transform:translateY(-20px) scale(.6)}to{transform:none}}
 
 /* sliders */
 .slider-row{display:flex; flex-direction:column; gap:10px; margin-top:8px;}
